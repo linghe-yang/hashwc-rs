@@ -1,5 +1,5 @@
-use hashwc_types::{Error, Policy};
 use num_bigint::BigUint;
+use types::{Error, Policy};
 use wcss::{Circuit, Limits, Setup};
 fn policy(weights: &[u64], threshold: u64) -> Policy {
     Policy::new(

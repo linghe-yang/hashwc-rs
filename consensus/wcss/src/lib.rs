@@ -1,8 +1,8 @@
 //! Hash-only computational secret sharing over an exact weighted monotone circuit.
 pub mod circuit;
 pub use circuit::{Circuit, Limits, Op};
-use hashwc_crypto::{Block, edge_pad, equal, hash, input_commitment, wire_commitment, xor};
-use hashwc_types::{Error, Policy, Result};
+use crypto::{Block, edge_pad, equal, hash, input_commitment, wire_commitment, xor};
+use types::{Error, Policy, Result};
 use zeroize::Zeroizing;
 
 #[derive(Clone, Debug)]

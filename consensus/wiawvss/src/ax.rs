@@ -1,5 +1,5 @@
-use hashwc_crypto::{Block, equal, expand, hash, random, xor};
-use hashwc_types::{Error, Instance, Result};
+use crypto::{Block, equal, expand, hash, random, xor};
+use types::{Error, Instance, Result};
 use wcss::Setup;
 use zeroize::{Zeroize, ZeroizeOnDrop, Zeroizing};
 

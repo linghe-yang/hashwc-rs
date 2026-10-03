@@ -1,5 +1,5 @@
-use hashwc_crypto::{expand, hash};
-use hashwc_types::{Error, Instance, Policy};
+use crypto::{expand, hash};
+use types::{Error, Instance, Policy};
 use wiawvss::{Context, Limits, Opening, PrivateShare, Public, Setup, ax};
 fn fixture() -> (Setup, Context, Opening, Public, Vec<PrivateShare>) {
     let p = Policy::from_strings(&["1", "2", "3", "4"].map(str::to_owned), "6").unwrap();

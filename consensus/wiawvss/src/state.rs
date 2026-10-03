@@ -2,10 +2,10 @@
 //! private channels. WRBC/WRA are upstream state machines, not local reimplementations.
 use crate::{Context, Opening, PrivateShare, Public, Recovery, Setup, ax};
 use anyhow::{Result, ensure};
-use hashwc_crypto::Block;
-use hashwc_types::Error;
+use crypto::Block;
 use sdc_types::{InstanceId, WeightedMembership};
 use std::{collections::BTreeMap, sync::Arc};
+use types::Error;
 
 #[derive(Clone, Debug)]
 pub enum Message {

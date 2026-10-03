@@ -1,6 +1,6 @@
 use super::*;
-use hashwc_types::{Instance, Policy};
 use std::collections::VecDeque;
+use types::{Instance, Policy};
 #[test]
 fn malicious_dealer_with_valid_ax_binding_but_tampered_absent_input_produces_common_bottom() {
     let policy = Policy::from_strings(&["1"; 7].map(str::to_owned), "2").unwrap();
@@ -21,12 +21,12 @@ fn malicious_dealer_with_valid_ax_binding_but_tampered_absent_input_produces_com
     };
     let (mut public, shares) = ax::generate(&setup, &context, &opening).unwrap();
     public.base.inputs[6][0] ^= 1;
-    let material = hashwc_crypto::expand(
+    let material = crypto::expand(
         b"AX/derive",
         &[&context.id(), &opening.message, &opening.randomness],
         128,
     );
-    let root = hashwc_crypto::hash(
+    let root = crypto::hash(
         b"coins/token",
         &[
             &material[96..],
@@ -35,7 +35,7 @@ fn malicious_dealer_with_valid_ax_binding_but_tampered_absent_input_produces_com
         ],
     );
     public.base.tag = [0; 32];
-    public.base.tag = hashwc_crypto::hash(
+    public.base.tag = crypto::hash(
         b"transcript",
         &[&context.id(), &root, &public.base.encode()],
     );

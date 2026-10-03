@@ -1,5 +1,5 @@
 use clap::{Parser, Subcommand, ValueEnum};
-use hashwc_config::{Config, Protocol};
+use config::{Config, Protocol};
 use wcss::{Limits, Setup};
 #[derive(Parser)]
 #[command(

@@ -1,5 +1,5 @@
-use hashwc_types::{Instance, Policy};
 use std::sync::Arc;
+use types::{Instance, Policy};
 use wiawvss::{Context, Event, Limits, Message, Opening, Setup, State};
 
 struct Network {

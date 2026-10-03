@@ -1,5 +1,5 @@
-use hashwc_types::Policy;
 use serde::{Deserialize, Serialize};
+use types::Policy;
 #[derive(Clone, Copy, Debug, Default, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "lowercase")]
 pub enum Protocol {

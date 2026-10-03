@@ -1,5 +1,5 @@
 [package]
-name = "hashwc-node"
+name = "node"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -8,7 +8,7 @@ license.workspace = true
 name = "node"
 path = "src/main.rs"
 [dependencies]
-hashwc-config.workspace = true
+config.workspace = true
 wiawvss.workspace = true
 wcss.workspace = true
 anyhow.workspace = true

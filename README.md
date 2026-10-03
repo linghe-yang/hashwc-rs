@@ -25,7 +25,7 @@
 cargo test --workspace --locked
 cargo clippy --workspace --all-targets --locked -- -D warnings
 cargo fmt --all -- --check
-cargo run --locked -p hashwc-node -- check-config --config config/examples/local.json --protocol wiawvss
+cargo run --locked -p node -- check-config --config config/examples/local.json --protocol wiawvss
 ~~~
 
 check-config 会读取配置、检查异步模型约束、构造公开电路，并输出参数统计；它不是分布式运行或性能测试。JSON 的 protocol 也可选择协议。目前只有 wiawvss 一种；未知协议会被拒绝。

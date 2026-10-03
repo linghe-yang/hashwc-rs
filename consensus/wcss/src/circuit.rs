@@ -1,6 +1,6 @@
-use hashwc_types::{Error, Policy, Result};
 use num_bigint::BigUint;
 use std::collections::BTreeMap;
+use types::{Error, Policy, Result};
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub enum Op {

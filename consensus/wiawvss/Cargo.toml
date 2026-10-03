@@ -5,8 +5,8 @@ edition.workspace = true
 rust-version.workspace = true
 license.workspace = true
 [dependencies]
-hashwc-types.workspace = true
-hashwc-crypto.workspace = true
+types.workspace = true
+crypto.workspace = true
 wcss.workspace = true
 zeroize.workspace = true
 log.workspace = true

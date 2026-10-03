@@ -9,9 +9,9 @@ rust-version = "1.99"
 license = "Apache-2.0"
 
 [workspace.dependencies]
-hashwc-types = { path = "types" }
-hashwc-crypto = { path = "crypto" }
-hashwc-config = { path = "config" }
+types = { path = "types" }
+crypto = { path = "crypto" }
+config = { path = "config" }
 wcss = { path = "consensus/wcss" }
 wiawvss = { path = "consensus/wiawvss" }
 num-bigint = "0.4"
