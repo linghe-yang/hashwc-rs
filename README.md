@@ -1,48 +1,83 @@
 # hashwc-rs
 
-加权 hash-based 随机币的 Rust 实现。当前完成第一阶段：**WCSS + AX + hash commitment 的 wiAwVSS**。
+基于 AX、WCSS 和 hash commitment 的加权 common coin。Rust stable / 2024 edition，已在 Rust 1.99.0 上验证。程序从 main.rs 启动，运行方式由命令行和参数文件决定，不使用协议 feature 分支。
 
-项目使用 Rust stable（本次验证为 1.99.0）和 Rust 2024 edition。旧版 Narwhal/Tusk、beacon、Rubato、DPSS、DAGRider、存储、网络实现和 Python benchmark 已移除，Cargo.lock 已重新生成并应纳入版本控制。协议通过配置或命令行选择，不再使用协议 feature 开关。
-
-## 目录
+## 组成
 
 | 目录 | 职责 |
 | --- | --- |
-| types | 任意精度整数权重、访问策略、实例标识及错误语义 |
-| crypto | SHAKE256、带域分离的 input/wire commitments、加密掩码 |
-| config | JSON 配置及运行时协议选择 |
-| consensus/wcss | 按二进制权重构造单调电路、token 共享和重构 |
-| consensus/wiawvss | AX 全份额恢复、完整记录核验、WRBC/WRA 组合状态机 |
-| node | main.rs 命令入口、毫秒时间戳日志 |
+| consensus/wcss | 不展开虚拟参与方的加权电路秘密共享 |
+| consensus/wiawvss | AX、完整份额恢复、共享状态机、可验证终止证据 |
+| consensus/commoncoin | context.rs 异步入口、共享完成、Gather、整向量 BinAA、恢复和聚合 |
+| recovery | 每方本地独立采样、配额计算、一次性 RBC 名单接纳 |
+| network | 私有份额及恢复消息的加密通信封装 |
+| config | 直接重导出外部 Node，读取节点文件，检查子协议端口 |
+| types / crypto | 公开策略、实例标识、哈希及承诺 |
+| node | main.rs，配置检查和单次随机币运行 |
 
-外部 WRBC、WRA 来自 [Secure-Distributed-Computing-Protocols](https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols/tree/79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)，固定提交为 79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e。它们使用的 WAVID 及传递依赖由 Cargo 引入。本项目未重写这些原语；外部库自身的旧版传递依赖仍由它维护，已验证可与当前 stable 共同构建。
+consensus 各 crate 的具体算法和状态机统一放在 src/protocol/。src/lib.rs 负责模块声明与公开接口重导出；异步入口、消息定义及动作分发分别放在 context.rs、msg.rs、process.rs（按需提供）。WCSS 是同步原语，不额外设置异步入口。
 
-## 使用
+为方便科研测试，本项目自有结构体的字段统一使用 pub，便于直接构造、查看和修改状态；外部依赖保持原样。
 
-在项目目录中执行（WSL/Linux）：
+WRBC、WRA、WGather、WBinAA 直接使用 [Secure-Distributed-Computing-Protocols](https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols/tree/79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)，固定提交为 79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e。本项目未重新实现这些原语。运行时调用它们的 Context，通过 tokio channels 交互，各自拥有独立网络服务。
+
+## 验证与入口
 
 ~~~sh
 cargo test --workspace --locked
 cargo clippy --workspace --all-targets --locked -- -D warnings
 cargo fmt --all -- --check
-cargo run --locked -p node -- check-config --config config/examples/local.json --protocol wiawvss
+cargo run --locked -p node -- check-config --config config/examples/local.json --parameters config/examples/coin.json
 ~~~
 
-check-config 会读取配置、检查异步模型约束、构造公开电路，并输出参数统计；它不是分布式运行或性能测试。JSON 的 protocol 也可选择协议。目前只有 wiawvss 一种；未知协议会被拒绝。
+每个节点的配置文件是外部 crate 的 config::Node，包含 net_map、weights、weight_threshold、session_id、sk_map 等原有字段。没有自建替代 Node 的结构体。节点的公开成员顺序、权重、门限和 session_id 必须一致；sk_map 中成对共享的 32 字节密钥须在对应两方一致。
 
-日志沿用 log + env_logger，总是启用毫秒时间戳，支持 RUST_LOG 和 -v。状态机记录 shared、reconstructed 和 bottom 事件及 party/dealer/epoch，不记录秘密、token 或 AX 随机数。
+config/examples/local.json 是节点 0 的格式示例，含演示密钥，只用于配置检查。运行实验时需要生成完整的各节点配置和新会话标识；不能只复制该文件修改 id。
 
-## 当前实现边界
+独立的 common coin 参数文件仅包含：
 
-- 使用公开正整数权重，不展开成虚拟节点。WCSS 支持任意合法门限；异步 wiAwVSS 额外要求 0 < T <= W/3，实际腐化权重必须满足 B < T。
-- WCSS 使用参考实现中的 binary-carry + Batcher odd-even 排序网络，并做常量折叠、公共门复用和不可达门裁剪。规模依赖参与方数量和权重位长。
-- 采用 256 位 token、SHAKE256 域分离哈希、规范的 32 字节大端 p25519 消息编码。AX 内层共享完整 256 位密钥，不对密钥取模。
-- 重构有效份额不足返回 InsufficientShares，继续等待；授权集合发现不一致返回 InvalidCommitment，对应本地 ⊥。成功恢复消息、随机数及所有参与方的份额。
-- 本阶段的 wiAwVSS 使用 WRBC 固定**完整公开记录**，在持有公开记录和有效私有 token 后向 WRA 输入 true。其额外通信成本不能用于声称已达到附件新版 striped-storage 的复杂度。
-- State 是可接入异步网络的独立参与方状态机。模块测试真实调用外部原语的状态机，通过队列模拟私密认证信道、乱序、重复和静默故障；尚未实现 TCP 驱动或执行多进程测试。
-- begin_reconstruction() 是显式释放接口。后续随机币必须在整个 BinAA 系数向量冻结后调用，不能因共享完成就提前调用。此阶段没有实现外层随机币、WGather/BinAA 编排、恢复委员会、systematic striped 存储和终止证书。
-- Python local benchmark、result 数据、带宽/延迟统计及 plot 留待后续阶段。当前未输出随机币性能数据。
+~~~json
+{
+  "epoch": 0,
+  "coverage_bits": 40,
+  "rounding_bits": 64,
+  "port_stride": null
+}
+~~~
 
-接口、状态语义、编码与论文对应关系见 [阶段一协议说明](docs/phase1.md)。
+参数的含义及接口见 [完整随机币说明](docs/commoncoin.md)。准备好各方 Node 配置后，每方入口是：
 
-当前工作目录没有 Git 元数据。清理前的项目已存放于本地 .reference/legacy-project.tar.gz，仅供回溯，不参与构建；附件的参考源码也放在被忽略的 .reference/ 中。
+~~~sh
+cargo run --release --locked -p node -- run --config path/to/node0.json --parameters config/examples/coin.json
+~~~
+
+run 输出一次随机币后继续服务迟到的参与方，直到显式中断。这里只提供 Rust 运行入口；未创建或修改 Python benchmark，也未执行多进程性能实验。
+
+## 独立端口
+
+设节点 i 的 net_map 基础端口为 b_i，步长 s 默认等于参与方数 n：
+
+| 服务 | 端口 |
+| --- | --- |
+| WRBC：公开共享记录与采样名单 | b_i |
+| WRA：共享完成 | b_i + s |
+| WGather | b_i + 2s |
+| WBinAA | b_i + 3s |
+| 私有份额 | b_i + 4s |
+| 恢复 token 与终止证据 | b_i + 5s |
+
+本地用相同 IP 和不同基础端口，例如 20000+i；远程用不同 IP 和相同基础端口，例如各主机均为 20000。端口通过 Node::with_protocol_port_offset() 派生。启动前检查跨节点、跨服务冲突及 u16 溢出。因上游监听器使用 IPv4 wildcard，要求显式 IPv4 peer 地址，loopback 别名按同一主机处理。
+
+私有份额和恢复通道在上游 MAC 认证 TCP 之上增加 AES-256-GCM 加密；密钥绑定组件、会话、发送方和接收方。没有要求公钥、证书或额外可信设置。
+
+## 协议范围
+
+当前已经实现完整的单次随机币控制流程：独立采样并 RBC 声明 → wiAwVSS 共享完成 → WGather → 整向量 WBinAA 冻结 → 定向恢复和可验证终止 → 精确整数聚合。条件为静态腐化、私密认证可靠异步信道、实际腐化权重 B < T <= W/3。
+
+当前继续使用阶段一的**完整公开记录 WRBC**。这实现了随机币的恢复和终止语义，但不是附件最终的 compact-header / systematic-striped-storage 优化。上游 WRBC 内部虽使用 WAVID，也不能据此声称已实现论文该优化的通信复杂度。
+
+Rust 测试包括确定性消息调度、静默故障、恶意 dealer、伪造拒绝、迟到名单和冻结屏障；另有单进程 tokio + loopback TCP 测试，实际启动每方六个独立服务。它们不是多进程 benchmark，没有输出带宽或延迟实验数据。
+
+日志沿用 log + env_logger，毫秒时间戳；共享完成、Gather、冻结、终止和 coin 输出均记录公开事件，不记录私有 token、AX 随机数或尚未公开的贡献。
+
+历史阶段一说明见 [phase1.md](docs/phase1.md)。清理前的旧项目和附件参考代码保存在被忽略的 .reference/ 中，不参与构建。

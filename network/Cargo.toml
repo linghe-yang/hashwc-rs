@@ -1,0 +1,18 @@
+[package]
+name = "network"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+[dependencies]
+sdc-config.workspace = true
+sdc-util.workspace = true
+sdc-types.workspace = true
+crypto.workspace = true
+serde.workspace = true
+bincode.workspace = true
+aes-gcm.workspace = true
+getrandom.workspace = true
+zeroize.workspace = true
+anyhow.workspace = true
+tokio.workspace = true

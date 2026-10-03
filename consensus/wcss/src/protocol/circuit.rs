@@ -30,9 +30,9 @@ impl Default for Limits {
 }
 #[derive(Clone, Debug)]
 pub struct Circuit {
-    policy: Policy,
-    gates: Vec<Gate>,
-    output: usize,
+    pub policy: Policy,
+    pub gates: Vec<Gate>,
+    pub output: usize,
 }
 impl Circuit {
     pub fn build(policy: Policy, limits: Limits) -> Result<Self> {
@@ -129,9 +129,9 @@ impl Circuit {
     }
 }
 struct Builder {
-    circuit: Circuit,
-    intern: BTreeMap<(Op, usize, usize), usize>,
-    limit: usize,
+    pub circuit: Circuit,
+    pub intern: BTreeMap<(Op, usize, usize), usize>,
+    pub limit: usize,
 }
 impl Builder {
     fn gate(&mut self, op: Op, a: usize, b: usize) -> Result<usize> {

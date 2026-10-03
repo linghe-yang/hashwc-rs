@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = ["types", "crypto", "config", "consensus/wcss", "consensus/wiawvss", "node"]
+members = ["types", "crypto", "config", "consensus/wcss", "consensus/wiawvss", "consensus/commoncoin", "recovery", "network", "node"]
 
 [workspace.package]
 version = "0.1.0"
@@ -31,3 +31,15 @@ clap = { version = "4.5", features = ["derive"] }
 sdc-types = { package = "types", git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e" }
 wrbc = { git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e" }
 wra = { git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e" }
+
+commoncoin = { path = "consensus/commoncoin" }
+recovery = { path = "recovery" }
+network = { path = "network" }
+tokio = { version = "1", features = ["full"] }
+num-rational = "0.4"
+bincode = "1.3"
+aes-gcm = "0.10"
+sdc-config = { package = "config", git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e" }
+sdc-util = { package = "util", git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e" }
+wgather = { package = "wgather", git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e" }
+wbinaa = { package = "wbinaa", git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e" }

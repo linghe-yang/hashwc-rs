@@ -6,9 +6,9 @@ use zeroize::{Zeroize, ZeroizeOnDrop, Zeroizing};
 const MAGIC: &[u8; 8] = b"HWAX0001";
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Context {
-    instance: Instance,
-    associated_data: Vec<u8>,
-    id: Block,
+    pub instance: Instance,
+    pub associated_data: Vec<u8>,
+    pub id: Block,
 }
 impl Context {
     pub fn new(setup: &Setup, instance: Instance, associated_data: Vec<u8>) -> Result<Self> {

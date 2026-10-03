@@ -1,6 +1,6 @@
 //! AX + WCSS + hash commitments, composed with upstream WRBC/WRA.
-pub mod ax;
-pub mod state;
-pub use ax::{Context, Opening, PrivateShare, Public, Recovery};
-pub use state::{Action, Event, Message, State};
+pub mod msg;
+pub mod protocol;
+pub use msg::{Action, Event, Message};
+pub use protocol::*;
 pub use wcss::{Limits, Setup};

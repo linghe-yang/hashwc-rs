@@ -1,0 +1,29 @@
+[package]
+name = "commoncoin"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+[dependencies]
+types.workspace = true
+crypto.workspace = true
+config.workspace = true
+network.workspace = true
+recovery.workspace = true
+wiawvss.workspace = true
+wcss.workspace = true
+sdc-config.workspace = true
+sdc-types.workspace = true
+sdc-util.workspace = true
+wrbc.workspace = true
+wra.workspace = true
+wgather.workspace = true
+wbinaa.workspace = true
+tokio.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+num-bigint.workspace = true
+num-traits.workspace = true
+anyhow.workspace = true
+log.workspace = true
+zeroize.workspace = true

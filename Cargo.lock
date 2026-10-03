@@ -253,10 +253,39 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1d07550c9036bf2ae0c684c4297d503f838287c83c53686d05370d0e139ae570"
 
 [[package]]
+name = "commoncoin"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "config 0.1.0",
+ "config 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
+ "crypto 0.1.0",
+ "log",
+ "network",
+ "num-bigint 0.4.8",
+ "num-traits",
+ "recovery",
+ "serde",
+ "serde_json",
+ "tokio",
+ "types 0.1.0",
+ "types 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
+ "util",
+ "wbinaa",
+ "wcss",
+ "wgather",
+ "wiawvss",
+ "wra",
+ "wrbc",
+ "zeroize",
+]
+
+[[package]]
 name = "config"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "config 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
  "serde",
  "serde_json",
  "types 0.1.0",
@@ -704,15 +733,34 @@ dependencies = [
 ]
 
 [[package]]
+name = "network"
+version = "0.1.0"
+dependencies = [
+ "aes-gcm",
+ "anyhow",
+ "bincode",
+ "config 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
+ "crypto 0.1.0",
+ "getrandom 0.4.3",
+ "serde",
+ "tokio",
+ "types 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
+ "util",
+ "zeroize",
+]
+
+[[package]]
 name = "node"
 version = "0.1.0"
 dependencies = [
  "anyhow",
  "clap",
+ "commoncoin",
  "config 0.1.0",
  "env_logger",
  "log",
  "serde_json",
+ "tokio",
  "wcss",
  "wiawvss",
 ]
@@ -769,6 +817,17 @@ version = "0.1.46"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c92800bd69a1eac91786bcfe9da64a897eb72911b8dc3095decbd07429e8048b"
 dependencies = [
+ "num-integer",
+ "num-traits",
+]
+
+[[package]]
+name = "num-rational"
+version = "0.4.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f83d14da390562dca69fc84082e73e548e1ad308d24accdedd2720017cb37824"
+dependencies = [
+ "num-bigint 0.4.8",
  "num-integer",
  "num-traits",
 ]
@@ -1059,6 +1118,18 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "678054eb77286b51581ba43620cc911abf02758c91f93f479767aed0f90458b2"
 dependencies = [
  "rand_core 0.3.2",
+]
+
+[[package]]
+name = "recovery"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "getrandom 0.4.3",
+ "num-bigint 0.4.8",
+ "num-rational",
+ "num-traits",
+ "types 0.1.0",
 ]
 
 [[package]]
@@ -1470,6 +1541,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "wbinaa"
+version = "0.1.0"
+source = "git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e#79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e"
+dependencies = [
+ "anyhow",
+ "bincode",
+ "config 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
+ "crypto 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
+ "log",
+ "num-bigint 0.2.6",
+ "num-traits",
+ "serde",
+ "tokio",
+ "types 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
+ "util",
+]
+
+[[package]]
 name = "wcss"
 version = "0.1.0"
 dependencies = [
@@ -1480,12 +1569,31 @@ dependencies = [
 ]
 
 [[package]]
+name = "wgather"
+version = "0.1.0"
+source = "git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e#79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e"
+dependencies = [
+ "anyhow",
+ "bincode",
+ "config 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
+ "crypto 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
+ "log",
+ "num-bigint 0.2.6",
+ "num-traits",
+ "serde",
+ "tokio",
+ "types 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
+ "util",
+]
+
+[[package]]
 name = "wiawvss"
 version = "0.1.0"
 dependencies = [
  "anyhow",
  "crypto 0.1.0",
  "log",
+ "serde",
  "types 0.1.0",
  "types 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
  "wcss",

@@ -1,0 +1,6 @@
+{
+  "epoch": 0,
+  "coverage_bits": 40,
+  "rounding_bits": 64,
+  "port_stride": null
+}

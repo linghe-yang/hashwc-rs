@@ -1,54 +1,36 @@
 //! Transport-independent per-party protocol. Sender IDs MUST come from authenticated
 //! private channels. WRBC/WRA are upstream state machines, not local reimplementations.
-use crate::{Context, Opening, PrivateShare, Public, Recovery, Setup, ax};
+use crate::{Context, Opening, PrivateShare, Public, Setup, ax};
 use anyhow::{Result, ensure};
 use crypto::Block;
 use sdc_types::{InstanceId, WeightedMembership};
 use std::{collections::BTreeMap, sync::Arc};
 use types::Error;
 
-#[derive(Clone, Debug)]
-pub enum Message {
-    Public(wrbc::ProtMsg),
-    Completion(wra::ProtMsg),
-    Private(PrivateShare),
-    Open(PrivateShare),
-}
-#[derive(Clone, Debug)]
-pub struct Action {
-    pub recipient: usize,
-    pub message: Message,
-}
-#[derive(Debug)]
-pub enum Event {
-    Shared,
-    Reconstructed(Recovery),
-    Bottom,
-    InvalidPublic,
-}
+pub use crate::msg::{Action, Event, Message};
 
 pub struct State {
-    setup: Arc<Setup>,
-    context: Context,
-    id: usize,
-    instance: InstanceId,
-    membership: WeightedMembership,
-    broadcast: wrbc::State,
-    completion: Option<wra::State>,
-    public: Option<Public>,
-    private: Option<PrivateShare>,
-    pending_private: Option<PrivateShare>,
-    pending_completion: BTreeMap<(usize, u8), wra::ProtMsg>,
-    pending_open: BTreeMap<usize, PrivateShare>,
-    opened: BTreeMap<usize, PrivateShare>,
-    complete: bool,
-    opening_requested: bool,
-    released: bool,
-    terminated: bool,
-    started: bool,
-    invalid: bool,
-    outgoing: Vec<Action>,
-    events: Vec<Event>,
+    pub setup: Arc<Setup>,
+    pub context: Context,
+    pub id: usize,
+    pub instance: InstanceId,
+    pub membership: WeightedMembership,
+    pub broadcast: wrbc::State,
+    pub completion: Option<wra::State>,
+    pub public: Option<Public>,
+    pub private: Option<PrivateShare>,
+    pub pending_private: Option<PrivateShare>,
+    pub pending_completion: BTreeMap<(usize, u8), wra::ProtMsg>,
+    pub pending_open: BTreeMap<usize, PrivateShare>,
+    pub opened: BTreeMap<usize, PrivateShare>,
+    pub complete: bool,
+    pub opening_requested: bool,
+    pub released: bool,
+    pub terminated: bool,
+    pub started: bool,
+    pub invalid: bool,
+    pub outgoing: Vec<Action>,
+    pub events: Vec<Event>,
 }
 impl State {
     pub fn new(setup: Arc<Setup>, context: Context, id: usize) -> Result<Self> {

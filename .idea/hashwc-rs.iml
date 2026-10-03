@@ -12,6 +12,10 @@
       <sourceFolder url="file://$MODULE_DIR$/crypto/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/node/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/types/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/consensus/commoncoin/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/network/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/recovery/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/recovery/tests" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />

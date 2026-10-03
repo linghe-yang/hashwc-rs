@@ -3,14 +3,14 @@ use types::{Instance, Policy};
 use wiawvss::{Context, Event, Limits, Message, Opening, Setup, State};
 
 struct Network {
-    nodes: Vec<State>,
-    queue: Vec<(usize, usize, Message)>,
-    silent: Vec<usize>,
-    seed: u64,
-    outputs: Vec<Option<Opening>>,
-    shared: Vec<bool>,
-    releases: usize,
-    deliveries: usize,
+    pub nodes: Vec<State>,
+    pub queue: Vec<(usize, usize, Message)>,
+    pub silent: Vec<usize>,
+    pub seed: u64,
+    pub outputs: Vec<Option<Opening>>,
+    pub shared: Vec<bool>,
+    pub releases: usize,
+    pub deliveries: usize,
 }
 impl Network {
     fn new(weights: &[&str], threshold: &str, silent: Vec<usize>, seed: u64) -> Self {

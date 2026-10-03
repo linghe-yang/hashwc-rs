@@ -22,9 +22,9 @@ pub type Result<T> = std::result::Result<T, Error>;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Policy {
-    weights: Vec<BigUint>,
-    threshold: BigUint,
-    total: BigUint,
+    pub weights: Vec<BigUint>,
+    pub threshold: BigUint,
+    pub total: BigUint,
 }
 impl Policy {
     pub fn new(weights: Vec<BigUint>, threshold: BigUint) -> Result<Self> {
