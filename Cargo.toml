@@ -1,0 +1,33 @@
+[workspace]
+resolver = "3"
+members = ["types", "crypto", "config", "consensus/wcss", "consensus/wiawvss", "node"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.99"
+license = "Apache-2.0"
+
+[workspace.dependencies]
+hashwc-types = { path = "types" }
+hashwc-crypto = { path = "crypto" }
+hashwc-config = { path = "config" }
+wcss = { path = "consensus/wcss" }
+wiawvss = { path = "consensus/wiawvss" }
+num-bigint = "0.4"
+num-traits = "0.2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha3 = "0.10"
+getrandom = "0.4"
+subtle = "2.6"
+zeroize = { version = "1.8", features = ["derive"] }
+thiserror = "2"
+anyhow = "1"
+log = "0.4"
+env_logger = "0.11"
+clap = { version = "4.5", features = ["derive"] }
+# Pin the shared primitive implementation; do not copy its protocol logic here.
+sdc-types = { package = "types", git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e" }
+wrbc = { git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e" }
+wra = { git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e" }

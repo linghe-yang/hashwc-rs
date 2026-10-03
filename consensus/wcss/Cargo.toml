@@ -1,0 +1,11 @@
+[package]
+name = "wcss"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+[dependencies]
+hashwc-types.workspace = true
+hashwc-crypto.workspace = true
+num-bigint.workspace = true
+zeroize.workspace = true

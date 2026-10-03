@@ -1,0 +1,6 @@
+{
+  "protocol": "wiawvss",
+  "weights": ["1", "1", "1", "1", "1", "1", "1"],
+  "threshold": "2",
+  "dealer": 0
+}

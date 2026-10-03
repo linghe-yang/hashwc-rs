@@ -1,0 +1,16 @@
+[package]
+name = "wiawvss"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+[dependencies]
+hashwc-types.workspace = true
+hashwc-crypto.workspace = true
+wcss.workspace = true
+zeroize.workspace = true
+log.workspace = true
+anyhow.workspace = true
+sdc-types.workspace = true
+wrbc.workspace = true
+wra.workspace = true
