@@ -11,9 +11,10 @@
 | consensus/commoncoin | context.rs 异步入口、共享完成、Gather、整向量 BinAA、恢复和聚合 |
 | recovery | 每方本地独立采样、配额计算、一次性 RBC 名单接纳 |
 | network | 私有份额及恢复消息的加密通信封装 |
+| vendor/sdc-util | 上游公共 TCP 传输层的小范围 Cargo 补丁 |
 | config | 直接重导出外部 Node，读取节点文件，检查子协议端口 |
 | types / crypto | 公开策略、实例标识、哈希及承诺 |
-| node | main.rs，配置检查和单次随机币运行 |
+| node | main.rs，配置检查、独立 synchronizer 与单次随机币运行 |
 
 consensus 各 crate 的具体算法和状态机统一放在 src/protocol/。src/lib.rs 负责模块声明与公开接口重导出；异步入口、消息定义及动作分发分别放在 context.rs、msg.rs、process.rs（按需提供）。WCSS 是同步原语，不额外设置异步入口。
 
@@ -21,9 +22,12 @@ consensus 各 crate 的具体算法和状态机统一放在 src/protocol/。src/
 
 WRBC、WRA、WGather、WBinAA 直接使用 [Secure-Distributed-Computing-Protocols](https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols/tree/79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)，固定提交为 79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e。本项目未重新实现这些原语。运行时调用它们的 Context，通过 tokio channels 交互，各自拥有独立网络服务。
 
+根 Cargo.toml 通过 [patch] 将上游 util 统一替换为 vendor/sdc-util：接收和发送连接（包括重连）开启 TCP_NODELAY，长度前缀与正文合并为一个缓冲帧写入，以消除小包分开写入引发的 TCP 等待。认证、ACK、重发、去重、消息格式和六类独立协议端口保持兼容；无需 LD_PRELOAD 或额外启动选项。补丁来源、范围与检查方式见 [UPSTREAM.txt](vendor/sdc-util/UPSTREAM.txt)。
+
 ## 验证与入口
 
 ~~~sh
+cargo test -p util --locked
 cargo test --workspace --locked
 cargo clippy --workspace --all-targets --locked -- -D warnings
 cargo fmt --all -- --check
@@ -41,9 +45,12 @@ config/examples/local.json 是节点 0 的格式示例，含演示密钥，只�
   "epoch": 0,
   "coverage_bits": 40,
   "rounding_bits": 64,
+  "output_bits": 1,
   "port_stride": null
 }
 ~~~
+
+output_bits 指定随机数位数，省略时默认 1；设置为 128 可输出 128 位随机数。Rust 事件 Event::Coin 的 value 是 Coin（定长 U256），可通过 value.bit(0)? 取得二元 coin。受当前 AX 消息容量约束，output_bits + rounding_bits + 1 <= 254，默认 rounding_bits=64 时最多输出 189 位。
 
 参数的含义及接口见 [完整随机币说明](docs/commoncoin.md)。准备好各方 Node 配置后，每方入口是：
 
@@ -51,7 +58,7 @@ config/examples/local.json 是节点 0 的格式示例，含演示密钥，只�
 cargo run --release --locked -p node -- run --config path/to/node0.json --parameters config/examples/coin.json
 ~~~
 
-run 输出一次随机币后继续服务迟到的参与方，直到显式中断。这里只提供 Rust 运行入口；未创建或修改 Python benchmark，也未执行多进程性能实验。
+独立 run 输出后继续服务迟到方，直到显式中断。benchmark 使用 run --synchronize，由独立 synchronizer 发送 PREPARE/START/STOP；PREPAREOK 权重 > W−T 时开始计时，同一结果的 FINISH 权重 > T 时停止计时并终止参与方。延迟直接来自同步器日志，带宽由各方日志求平均，详见 [benchmark 使用说明](benchmark/README.md)。
 
 ## 独立端口
 
@@ -76,7 +83,7 @@ run 输出一次随机币后继续服务迟到的参与方，直到显式中断�
 
 当前继续使用阶段一的**完整公开记录 WRBC**。这实现了随机币的恢复和终止语义，但不是附件最终的 compact-header / systematic-striped-storage 优化。上游 WRBC 内部虽使用 WAVID，也不能据此声称已实现论文该优化的通信复杂度。
 
-Rust 测试包括确定性消息调度、静默故障、恶意 dealer、伪造拒绝、迟到名单和冻结屏障；另有单进程 tokio + loopback TCP 测试，实际启动每方六个独立服务。它们不是多进程 benchmark，没有输出带宽或延迟实验数据。
+Rust 测试包括确定性消息调度、静默故障、恶意 dealer、伪造拒绝、迟到名单和冻结屏障；另有单进程 tokio + loopback TCP 测试，实际启动每方六个独立服务。另提供基于 Fabric 的本地多进程 benchmark，输出延迟及按子协议统计的 TCP 数据字节数。
 
 日志沿用 log + env_logger，毫秒时间戳；共享完成、Gather、冻结、终止和 coin 输出均记录公开事件，不记录私有 token、AX 随机数或尚未公开的贡献。
 

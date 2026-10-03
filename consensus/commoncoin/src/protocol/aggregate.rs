@@ -1,24 +1,26 @@
-//! Exact dyadic aggregation: floor((ceil(sum alpha_d v_d) mod 2Delta) / Delta).
+//! Exact dyadic aggregation: floor((ceil(sum alpha_d v_d) mod (2^lambda * Delta)) / Delta).
 use anyhow::{Result, ensure};
 use num_bigint::BigUint;
-use num_traits::{One, ToPrimitive, Zero};
+use num_traits::{One, Zero};
 use sdc_types::Dyadic;
+use types::Coin;
 pub fn aggregate(
     coefficients: &[Dyadic],
     values: &[Option<BigUint>],
     rounding_bits: u32,
-) -> Result<Option<u8>> {
+    output_bits: u32,
+) -> Result<Option<Coin>> {
     ensure!(
         !coefficients.is_empty() && coefficients.len() == values.len(),
         "vector dimensions"
     );
-    ensure!((1..=252).contains(&rounding_bits), "rounding bits");
+    crate::Parameters::validate_widths(rounding_bits, output_bits)?;
     let exponent = coefficients.iter().map(|a| a.exponent).max().unwrap();
     ensure!(
         exponent <= wbinaa::protocol::MAX_ROUNDS,
         "dyadic exponent limit"
     );
-    let range = BigUint::one() << (rounding_bits + 2) as usize;
+    let range = BigUint::one() << (rounding_bits + output_bits + 1) as usize;
     let mut sum = BigUint::zero();
     for (a, value) in coefficients.iter().zip(values) {
         let numerator = BigUint::from_bytes_be(&a.numerator.0.to_bytes_be());
@@ -35,7 +37,8 @@ pub fn aggregate(
     }
     let denominator = BigUint::one() << exponent as usize;
     let residue = ((sum + &denominator - BigUint::one()) / denominator) % range;
-    Ok(Some(
-        (residue >> ((rounding_bits + 1) as usize)).to_u8().unwrap(),
-    ))
+    let word = (residue >> ((rounding_bits + 1) as usize)).to_bytes_be();
+    let mut bytes = [0u8; 32];
+    bytes[32 - word.len()..].copy_from_slice(&word);
+    Ok(Some(Coin::from_be_bytes(output_bits, bytes)?))
 }

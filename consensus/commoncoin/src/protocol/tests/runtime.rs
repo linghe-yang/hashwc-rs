@@ -16,6 +16,13 @@ fn free_base(n: usize) -> u16 {
 }
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
 async fn actual_node_channels_and_six_tcp_services_complete_with_a_silent_peer() {
+    complete_with_silent_peer(1).await;
+}
+#[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+async fn multibit_channels_complete_with_a_silent_peer() {
+    complete_with_silent_peer(128).await;
+}
+async fn complete_with_silent_peer(output_bits: u32) {
     let configs = super::nodes(&[1; 7], 2, free_base(7));
     let mut handles = vec![];
     let mut inputs = vec![];
@@ -30,6 +37,7 @@ async fn actual_node_channels_and_six_tcp_services_complete_with_a_silent_peer()
                 Parameters {
                     coverage_bits: 8,
                     rounding_bits: 24,
+                    output_bits,
                     ..Parameters::default()
                 },
                 rx,
@@ -53,9 +61,11 @@ async fn actual_node_channels_and_six_tcp_services_complete_with_a_silent_peer()
                         assert!(!frozen);
                         frozen = true;
                     }
-                    Event::Coin { bit, .. } => {
+                    Event::Coin { value, .. } => {
                         assert!(frozen);
-                        bits.push(bit);
+                        assert_eq!(value.bits, output_bits);
+                        value.validate().unwrap();
+                        bits.push(value);
                         break;
                     }
                     Event::Failed { reason } => panic!("{reason}"),
@@ -162,5 +172,37 @@ async fn slow_event_consumer_does_not_block_protocol_or_shutdown() {
             .await
             .expect("blocked behind application events")
             .unwrap();
+    }
+}
+
+#[test]
+fn multibit_parameters_bind_context_precision_and_full_sampling_range() {
+    use num_bigint::BigUint;
+    let node = super::nodes(&[1; 4], 1, 20000).remove(0);
+    let base = Parameters::default();
+    let setup = base.setup(&node).unwrap();
+    for (nu, bits) in [(64, 128), (64, 189), (1, 252)] {
+        let p = Parameters {
+            rounding_bits: nu,
+            output_bits: bits,
+            ..base.clone()
+        };
+        p.validate(&node).unwrap();
+        assert_ne!(base.context_id(&node, &setup), p.context_id(&node, &setup));
+        assert_eq!(
+            BigUint::from_bytes_be(&p.precision(4).denominator.0.to_bytes_be()),
+            p.range() * 4u8
+        );
+        let mut high_seen = false;
+        for _ in 0..64 {
+            let m = BigUint::from_bytes_be(&p.sample_message().unwrap());
+            assert!(m < p.range());
+            high_seen |= m.bits() == (nu + bits + 1) as u64;
+        }
+        // Probability of a false failure is 2^-64; catches accidentally retaining binary sampling.
+        assert!(high_seen);
+    }
+    for (nu, bits) in [(64, 190), (1, 253), (0, 128), (64, 0), (u32::MAX, 1)] {
+        assert!(Parameters::validate_widths(nu, bits).is_err());
     }
 }

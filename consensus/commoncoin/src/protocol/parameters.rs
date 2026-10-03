@@ -10,6 +10,7 @@ pub struct Parameters {
     pub epoch: u64,
     pub coverage_bits: u32,
     pub rounding_bits: u32,
+    pub output_bits: u32,
     pub port_stride: Option<u16>,
 }
 impl Default for Parameters {
@@ -18,6 +19,7 @@ impl Default for Parameters {
             epoch: 0,
             coverage_bits: 40,
             rounding_bits: 64,
+            output_bits: 1,
             port_stride: None,
         }
     }
@@ -33,9 +35,17 @@ impl Parameters {
             (1..=256).contains(&self.coverage_bits),
             "coverage bits must be in 1..=256"
         );
+        Self::validate_widths(self.rounding_bits, self.output_bits)?;
+        Ok(())
+    }
+    pub fn validate_widths(rounding_bits: u32, output_bits: u32) -> Result<()> {
         ensure!(
-            (1..=252).contains(&self.rounding_bits),
-            "rounding bits must be in 1..=252 (canonical p25519 contributions)"
+            (1..=252).contains(&rounding_bits) && (1..=252).contains(&output_bits),
+            "rounding_bits/output_bits must be in 1..=252"
+        );
+        ensure!(
+            rounding_bits + output_bits < 254,
+            "AX p25519 capacity: rounding_bits + output_bits + 1 must be <= 254"
         );
         Ok(())
     }
@@ -44,7 +54,7 @@ impl Parameters {
         Ok(Setup::new(config::policy(node)?, Limits::default())?)
     }
     pub fn range(&self) -> BigUint {
-        BigUint::from(1u8) << (self.rounding_bits + 2) as usize
+        BigUint::from(1u8) << (self.rounding_bits + self.output_bits + 1) as usize
     }
     pub fn precision(&self, n: usize) -> wbinaa::Precision {
         wbinaa::Precision {
@@ -57,13 +67,14 @@ impl Parameters {
     }
     pub fn context_id(&self, node: &Node, setup: &Setup) -> Block {
         hash(
-            b"commoncoin/context/v1",
+            b"commoncoin/context/v2",
             &[
                 &node.session_id,
                 &setup.id(),
                 &self.epoch.to_le_bytes(),
                 &self.coverage_bits.to_le_bytes(),
                 &self.rounding_bits.to_le_bytes(),
+                &self.output_bits.to_le_bytes(),
             ],
         )
     }
@@ -73,8 +84,9 @@ impl Parameters {
         node
     }
     pub fn sample_message(&self) -> Result<Block> {
+        Self::validate_widths(self.rounding_bits, self.output_bits)?;
         let mut b = crypto::random().map_err(|e| anyhow::anyhow!("randomness: {e}"))?;
-        let bits = (self.rounding_bits + 2) as usize;
+        let bits = (self.rounding_bits + self.output_bits + 1) as usize;
         let whole = bits / 8;
         let extra = bits % 8;
         b[..32 - whole - usize::from(extra > 0)].fill(0);

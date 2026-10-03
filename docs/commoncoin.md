@@ -12,11 +12,13 @@ src 根目录保留 lib.rs、context.rs、msg.rs 和 process.rs：context.rs 负
 let (requests, input) = tokio::sync::mpsc::channel(8);
 let (events, mut output) = tokio::sync::mpsc::channel(1024);
 let handle = commoncoin::Context::spawn(
-    node, commoncoin::Parameters::default(), input, events,
+    node, commoncoin::Parameters { output_bits: 128, ..Default::default() }, input, events,
 )?;
 requests.send(commoncoin::Request::Start).await?;
 
 // 持续接收 Shared / Gathered / Frozen / Terminal / Coin / Failed。
+// Event::Coin { epoch, value } 中 value 是 commoncoin::Coin。
+// value.bit(0)? 得到二元 coin，value.truncate(64)? 提取低 64 位。
 // 收到 Coin 后保留 handle，使迟到方仍能取得服务。
 // 全局实验结束后再显式调用 handle.shutdown().await。
 ~~~
@@ -60,13 +62,21 @@ n * (n-d)^(n-t) * 2^coverage_bits <= n^(n-t),
 
 ## 精确聚合
 
-设 nu = rounding_bits，Delta = 2^(nu+1)，D = 2Delta。消息 M 均匀分布于 [0,D)，WBinAA 精度为 eta = 1/(nD)。当前使用规范 p25519 编码，要求 1 <= nu <= 252；coverage_bits 范围为 1..=256。
+设 nu = rounding_bits，lambda = output_bits，Delta = 2^(nu+1)，D = 2^lambda * Delta。消息 M 均匀分布于 [0,D)，WBinAA 精度为 eta = 1/(nD)。output_bits 默认 1，保持二元 coin；例如 128 产生范围 [0,2^128) 的完整随机数。增加输出位数时同时扩大贡献采样范围并收紧 WBinAA 精度，不从一个随机比特扩展出多个比特。
 
-系数使用外部原语的 Dyadic（整数 numerator / 2^exponent）。聚合全过程使用 BigUint：
+当前 AX 使用 32 字节规范 p25519 消息，完整的二次幂采样范围必须装入该编码，要求 nu >= 1、lambda >= 1 且 nu + lambda + 1 <= 254。默认 nu=64 时最大 lambda=189；nu=1 时最大 lambda=252，但降低 nu 会增大舍入分歧概率，不能仅为容纳更多输出位而忽略这一代价。要在同一误差参数下支持 256 位输出，需要扩展 AX 消息表示和对应证明。coverage_bits 范围仍为 1..=256。
+
+系数使用外部原语的 Dyadic（整数 numerator / 2^exponent）。聚合中间计算使用 BigUint，避免乘积及分母超过固定宽度时溢出：
 
 Y = sum(alpha_d * v_d)
 Z = ceil(Y) mod D
-coin = floor(Z / Delta)
+coin = floor(Z / Delta) in [0, 2^lambda)
+
+在论文所需的统一 opening-time 视图及诚实均匀参考贡献等假设下，放大 D 并取 eta=1/(nD) 仍使各方 Y 的差小于 1。模 D 后有 2^lambda 个桶，每桶宽 Delta；每个边界两侧的危险区总比例至多 2*2^lambda/D = 2/Delta，沿用原来的舍入误差界。该推导依赖原论文的视图与隐藏性假设，测试本身不能替代其证明；多比特输出同样保留统计失败事件。更严格的 WBinAA 精度通常增加轮数与通信，比较 benchmark 时应固定 output_bits。
+
+最终结果类型为 types::Coin，由 commoncoin 重导出，公开字段是 bits: u32 和 value: crypto_bigint::U256。U256 使用固定大小存储；提供 bit、truncate、add_mod、sub_mod、mul_mod 和固定 32 字节大端转换。三个算术接口在同宽的 Z/(2^lambda) 环中运算，不是素数域或 GF(2^lambda) 算术。协议中的有序有理数聚合不能替换成有限域加法。类型本身可表示 1..=256 位，但当前协议参数受上述 AX 容量限制。
+
+Coin 的序列化形式为 {"bits":128,"hex":"0x..."}，十六进制小写且补齐 ceil(lambda/4) 位；反序列化拒绝不规范编码、越界值或额外字段。同步器 FINISH 传输完整 Coin，按完整值而非某一位累计权重，并校验配置位数。benchmark 日志和 result 中，lambda=1 保留整数 0/1；lambda>1 使用固定宽度十六进制字符串，避免 JSON 消费端丢失大整数精度。
 
 不能用 f64 替代：小于浮点分辨率的正数也可能改变 ceil 的结果。测试覆盖这一边界、模 D 回绕、零系数和等待中的正系数。
 
@@ -90,20 +100,20 @@ coin = floor(Z / Delta)
 
 每方的基础地址来自 Node.net_map。步长 s 默认 n，也可以在参数文件明确指定 port_stride。六个独立端口范围的偏移依次为 0、s、2s、3s、4s、5s，分别用于 WRBC、WRA、WGather、WBinAA、私有回执、恢复。
 
-端口通过上游 Node::with_protocol_port_offset 派生，启动前检查全部已知节点与服务的地址冲突、端口零值和溢出。远程主机 IP 不同，同一个子协议使用相同端口是允许的。上游 TCP 实现绑定 IPv4 wildcard，所以不接受 IPv6 或 unspecified peer 地址；本机回环别名视为相同主机。Node 中的额外同步器地址保持原样，本实现不启动同步器或 client_port 服务。
+端口通过上游 Node::with_protocol_port_offset 派生，启动前检查全部已知节点与服务的地址冲突、端口零值和溢出。远程主机 IP 不同，同一个子协议使用相同端口是允许的。上游 TCP 实现绑定 IPv4 wildcard，所以不接受 IPv6 或 unspecified peer 地址；本机回环别名视为相同主机。Node 中的额外同步器地址保持原样，commoncoin Context 不启动同步器或 client_port 服务；node 的独立 synchronizer 子命令负责 benchmark 控制。
 
 同一 WRBC 服务用 slot=0 表示 Public、slot=1 表示采样名单，每个 dealer 各两个实例。这是同一个子协议的多实例，不是用一个总端口路由所有协议。WGather 和 WBinAA 各有一个全局向量实例。
 
-session_id、epoch、setup_id、coverage_bits 和 rounding_bits 一起绑定所有组件的调用上下文。Node 的成员、密钥和端口字段仍直接交给外部组件。应用不得为一次新实验复用旧会话配置。
+session_id、epoch、setup_id、coverage_bits、rounding_bits 和 output_bits 一起绑定所有组件的调用上下文。Node 的成员、密钥和端口字段仍直接交给外部组件。应用不得为一次新实验复用旧会话配置。
 
-上游 transport 提供 MAC 认证与可靠 TCP，但不加密。因此 network 模块在两个 token 相关服务上增加 AES-256-GCM，利用现有 Node.sk_map 的成对密钥进行组件、方向与会话域分离，并使用 OS 随机 nonce；不引入公钥基础设施。
+上游 transport 提供 MAC 认证与可靠 TCP，但不加密。项目通过 vendor/sdc-util 的 Cargo 补丁，为六个服务统一启用 TCP_NODELAY 并将帧长度与正文合并写入；协议消息、认证 ACK、序号及重传语义均不变。这里保留每个 peer 独立队列，不添加等待凑批的计时器。因此 network 模块在两个 token 相关服务上增加 AES-256-GCM，利用现有 Node.sk_map 的成对密钥进行组件、方向与会话域分离，并使用 OS 随机 nonce；不引入公钥基础设施。
 
 ## 资源、退出与验证范围
 
 上游每服务限制 1024 个实例，本实现每方两个 WRBC 实例，因此单次调用最多 512 方。其他上游存储尺寸约束、WCSS 电路预算和可用端口范围仍适用，超限返回错误。需要扩容时应显式调整上游能力，而不是默默丢实例。
 
-coin 输出不会触发自动垃圾回收。调用方在实验结束后显式停止；若要连续安全运行多个异步调用，需要另外设计完成/回收规则。
+coin 输出不会触发协议内部的自动垃圾回收。调用方在实验结束后显式停止；benchmark 的独立 synchronizer 在匹配 FINISH 权重 > T 后发送 STOP，各 party 立即退出进程，可能截断尚未输出节点的工作。这是实验终止口径，不是协议内的全体完成检测。若要连续安全运行多个异步调用，需要另外设计完成/回收规则。
 
-Rust 测试使用两种方式：直接组合原语状态机进行可控调度，以及单进程中启动真正的 tokio Context、channel 和 loopback TCP。后者包含六个活动节点和一个静默节点。测试中的超时仅用于检测测试失败，不参与协议决策。
+Rust 测试使用两种方式：直接组合原语状态机进行可控调度，以及单进程中启动真正的 tokio Context、channel 和 loopback TCP。后者覆盖 1 位和 128 位输出，包含六个活动节点和一个静默节点。另有固定宽度算术、规范编码、完整值计票、采样容量与精确聚合边界测试。测试中的超时仅用于检测测试失败，不参与协议决策。
 
-当前未进行 Python 调度、多进程 benchmark、带宽/延迟测量或论文图表生成。完整公开记录广播的基线通信成本不能冒充附件 systematic-striped-storage 优化的复杂度。
+Python 本地多进程 benchmark 已实现，包含 policy 配置、延迟与 TCP 数据字节测量、结构化 result；用法与指标口径见 [benchmark 说明](../benchmark/README.md)。目前未实现 remote 或论文图表生成。完整公开记录广播的基线通信成本不能冒充附件 systematic-striped-storage 优化的复杂度。

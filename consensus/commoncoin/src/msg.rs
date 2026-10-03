@@ -10,7 +10,7 @@ pub enum Event {
     Gathered { dealers: Vec<usize> },
     Frozen { coefficients: Vec<Dyadic> },
     Terminal { dealer: usize, rejected: bool },
-    Coin { epoch: u64, bit: u8 },
+    Coin { epoch: u64, value: types::Coin },
     Failed { reason: String },
 }
 #[derive(Debug)]

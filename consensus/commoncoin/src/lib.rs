@@ -6,3 +6,4 @@ pub mod protocol;
 pub use context::{Context, Handle};
 pub use msg::{Event, Request};
 pub use protocol::*;
+pub use types::Coin;

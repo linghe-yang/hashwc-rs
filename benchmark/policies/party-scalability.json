@@ -1,0 +1,44 @@
+{
+  "bench_params": {
+    "protocol": "commoncoin",
+    "faults": 0,
+    "duration": 120,
+    "runs": 3,
+    "base_port": 20000,
+    "sync_port": null
+  },
+  "node_params": {
+    "coverage_bits": 40,
+    "rounding_bits": 64,
+    "output_bits": 1
+  },
+  "cases": [
+    {
+      "name": "uniform-4",
+      "nodes": 4,
+      "weights": {
+        "distribution": "uniform",
+        "weight": 1
+      },
+      "threshold": "auto"
+    },
+    {
+      "name": "uniform-7",
+      "nodes": 7,
+      "weights": {
+        "distribution": "uniform",
+        "weight": 1
+      },
+      "threshold": "auto"
+    },
+    {
+      "name": "uniform-10",
+      "nodes": 10,
+      "weights": {
+        "distribution": "uniform",
+        "weight": 1
+      },
+      "threshold": "auto"
+    }
+  ]
+}

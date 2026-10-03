@@ -30,7 +30,7 @@ struct Sim {
     pub queue: Vec<(usize, usize, Message)>,
     pub silent: Option<usize>,
     pub seed: u64,
-    pub outputs: Vec<Option<u8>>,
+    pub outputs: Vec<Option<types::Coin>>,
     pub frozen: Vec<bool>,
     pub token_sends: usize,
     pub terminal_sends: usize,
@@ -240,10 +240,10 @@ impl Sim {
                             assert!(!self.frozen[id]);
                             self.frozen[id] = true;
                         }
-                        Event::Coin { bit, .. } => {
+                        Event::Coin { value, .. } => {
                             assert!(self.outputs[id].is_none());
                             assert!(self.frozen[id]);
-                            self.outputs[id] = Some(bit);
+                            self.outputs[id] = Some(value);
                         }
                         Event::Terminal {
                             dealer,

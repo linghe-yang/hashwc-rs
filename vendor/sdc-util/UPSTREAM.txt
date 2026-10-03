@@ -1,0 +1,34 @@
+Source: https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git
+Commit: 79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e
+Original directory: util/
+
+This is a narrow local Cargo patch of the shared utility crate. It does not copy
+or replace WRBC, WRA, WGather, WBinAA or any other protocol implementation.
+The root Cargo.toml [patch] applies it to every upstream primitive and to the
+local encrypted transport wrappers. Upstream Node/config/types/crypto retain
+their original git source and exact revision.
+
+Changes:
+- Enable TCP_NODELAY on accepted streams and on every outgoing connection,
+  including reconnects.
+- Encode the existing 4-byte little-endian length and authenticated frame into
+  one buffer, then write_all once. No artificial batching delay is introduced.
+- Preserve authentication, ACK MAC, per-peer sequence/deduplication, retries,
+  independent peer queues, frame limits, and byte-for-byte wire format.
+- Add framing, fragmented/coalesced reads, replay suppression, invalid and
+  truncated ACK/reconnect, and silent-peer isolation regression tests.
+- Replace relative sibling crate paths with pinned upstream git dependencies;
+  use the workspace's Rust 1.99 / edition 2024 for this local patch.
+
+io.rs and codec.rs are retained for upstream API compatibility.
+No Cargo cache files or external repositories were modified.
+
+Validation from repository root:
+  cargo test -p util --locked
+  cargo test --workspace --locked
+  cargo clippy --workspace --all-targets --locked -- -D warnings
+  cargo fmt --all -- --check
+
+A protocol requires dependent rounds; this patch removes avoidable TCP waiting
+but does not reduce those rounds or the encoded protocol byte count. The root
+benchmark continues to count actual TCP payload including application ACKs.

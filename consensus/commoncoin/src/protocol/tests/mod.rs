@@ -30,7 +30,13 @@ pub(super) fn nodes(weights: &[u64], threshold: u64, base: u16) -> Vec<Node> {
 }
 #[test]
 fn aggregation_is_exact_at_ceiling_wrap_and_zero_coefficient_boundaries() {
-    use crate::aggregate::aggregate;
+    use crate::aggregate::aggregate as word_aggregate;
+    let aggregate = |coefficients: &[sdc_types::Dyadic],
+                     values: &[Option<num_bigint::BigUint>],
+                     rounding_bits| {
+        word_aggregate(coefficients, values, rounding_bits, 1)
+            .map(|coin| coin.map(|c| c.bit(0).unwrap()))
+    };
     use num_bigint::BigUint;
     use sdc_types::Dyadic;
     let a = |n: u64, e| Dyadic {
@@ -56,4 +62,44 @@ fn aggregation_is_exact_at_ceiling_wrap_and_zero_coefficient_boundaries() {
         aggregate(&[a(1, 0), a(1, 200)], &[value(7), value(1)], 2).unwrap(),
         Some(1)
     );
+}
+
+#[test]
+fn multibit_aggregation_has_equal_buckets_exact_boundaries_and_wide_outputs() {
+    use crate::aggregate::aggregate;
+    use num_bigint::BigUint;
+    use sdc_types::Dyadic;
+    let a = |n, e| Dyadic {
+        numerator: Weight::from(n),
+        exponent: e,
+    };
+    let value = |n: u64| Some(BigUint::from(n));
+    // nu=2, lambda=3: D=64, Delta=8; exhaustive uniform reference contribution.
+    let mut buckets = [0; 8];
+    for m in 0..64 {
+        let word = aggregate(&[a(1u64, 0)], &[value(m)], 2, 3)
+            .unwrap()
+            .unwrap();
+        buckets[word.to_be_bytes()[31] as usize] += 1;
+    }
+    assert_eq!(buckets, [8; 8]);
+    let result = |v| {
+        aggregate(&[a(1u64, 0), a(1, 200)], &[value(v), value(1)], 2, 3)
+            .unwrap()
+            .unwrap()
+            .to_be_bytes()[31]
+    };
+    assert_eq!(result(7), 1);
+    assert_eq!(result(55), 7);
+    assert_eq!(result(63), 0);
+    assert!(aggregate(&[a(1u64, 0)], &[value(64)], 2, 3).is_err());
+    for (nu, bits) in [(64, 128), (64, 189), (1, 252)] {
+        let expected = (BigUint::from(1u8) << bits as usize) - BigUint::from(1u8);
+        let m = &expected << (nu + 1) as usize;
+        let word = aggregate(&[a(1u64, 0)], &[Some(m)], nu, bits)
+            .unwrap()
+            .unwrap();
+        assert_eq!(word.bits, bits);
+        assert_eq!(BigUint::from_bytes_be(&word.to_be_bytes()), expected);
+    }
 }

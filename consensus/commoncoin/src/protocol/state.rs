@@ -40,7 +40,7 @@ pub struct State {
     pub coefficients: Option<Vec<Dyadic>>,
     pub gather: Option<Vec<usize>>,
     pub started: bool,
-    pub coin: Option<u8>,
+    pub coin: Option<types::Coin>,
     pub actions: Vec<Action>,
     pub events: Vec<Event>,
 }
@@ -98,7 +98,7 @@ impl State {
     pub fn setup(&self) -> &Setup {
         &self.setup
     }
-    pub fn coin(&self) -> Option<u8> {
+    pub fn coin(&self) -> Option<types::Coin> {
         self.coin
     }
     pub fn is_frozen(&self) -> bool {
@@ -247,11 +247,16 @@ impl State {
                 .iter()
                 .map(|d| d.value.clone())
                 .collect::<Vec<_>>();
-            if let Some(bit) = aggregate(coefficients, &values, self.params.rounding_bits)? {
-                self.coin = Some(bit);
+            if let Some(value) = aggregate(
+                coefficients,
+                &values,
+                self.params.rounding_bits,
+                self.params.output_bits,
+            )? {
+                self.coin = Some(value);
                 self.events.push(Event::Coin {
                     epoch: self.params.epoch,
-                    bit,
+                    value,
                 });
             }
         }

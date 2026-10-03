@@ -1,4 +1,6 @@
 //! Public policy and instance identifiers. Weights never expand into virtual parties.
+pub mod coin;
+pub use coin::Coin;
 use num_bigint::BigUint;
 use num_traits::Zero;
 use serde::{Deserialize, Serialize};
