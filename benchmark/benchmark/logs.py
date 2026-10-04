@@ -1,11 +1,14 @@
 # Copyright(C) Facebook, Inc. and its affiliates.
 # Single-coin latency and bandwidth results; deliberately no throughput fields.
 import json
+import copy
 import statistics
 import re
+import math
 from pathlib import Path
 
 from benchmark.config import write_json
+from benchmark.metadata import policy_metadata, fault_metadata
 
 
 class ParseError(ValueError):
@@ -20,7 +23,10 @@ def records(path):
                 value = json.loads(line)
             except ValueError as e:
                 raise ParseError('Invalid structured log in {}: {}'.format(path, e))
-            if isinstance(value, dict) and value.get('protocol') == 'commoncoin':
+            if isinstance(value, dict) and value.get('protocol') in ('whcc', 'commoncoin'):
+                if value['protocol'] != 'whcc':
+                    value['source_protocol'] = value['protocol']
+                    value['protocol'] = 'whcc'
                 result.append(value)
     return result
 
@@ -33,22 +39,52 @@ def valid_coin(value, bits):
 
 
 def stats(values):
-    return dict(mean=statistics.mean(values), min=min(values), max=max(values),
-                stdev=statistics.stdev(values) if len(values) > 1 else 0)
+    if not values or any(type(v) not in (int, float) or not math.isfinite(v) or v < 0 for v in values):
+        raise ParseError('Statistics require nonempty finite nonnegative measurements')
+    mean, low, high = statistics.mean(values), min(values), max(values)
+    deviation = statistics.stdev(values) if len(values) > 1 else None
+    return dict(count=len(values), mean=mean, median=statistics.median(values), min=low, max=high,
+                stdev=deviation, standard_error=deviation / math.sqrt(len(values)) if deviation is not None else None,
+                error_bar=dict(method='min_max', lower=low, upper=high,
+                               minus=mean-low, plus=high-mean),
+                variability_estimated=len(values) > 1)
 
 
 class LogParser:
     def __init__(self, config, runs, directory):
+        source_protocol = config['bench_params'].get('protocol', 'commoncoin')
+        if source_protocol not in ('whcc', 'commoncoin'):
+            raise ParseError('Unsupported protocol: {}'.format(source_protocol))
+        config = copy.deepcopy(config)
+        config['bench_params']['protocol'] = 'whcc'
         self.configs = config
         self.runs = runs
         self.directory = str(Path(directory).resolve())
         self.faults = config['bench_params']['faults']
         self.committee_size = config['bench_params']['nodes']
-        self.data = dict(schema_version=3, protocol='commoncoin', status='ok',
+        if not runs or len(runs) != config['bench_params']['runs']:
+            raise ParseError('Incomplete runs: refusing a successful aggregate')
+        for key in ['build', 'environment', 'circuit']:
+            if any(r.get(key) != runs[0].get(key) for r in runs):
+                raise ParseError('Cannot aggregate runs with different {}'.format(key))
+        metadata = policy_metadata(config['bench_params'], config['node_params'])
+        for key in ['experiment_id', 'experiment_axis', 'weight_profile', 'weight_scale', 'generation']:
+            metadata.setdefault(key, None)
+        metadata.update(build=runs[0]['build'], environment=runs[0].get('environment'),
+                        circuit=runs[0].get('circuit'),
+                        provenance_status='recorded' if runs[0].get('environment') is not None else 'legacy-partial')
+        work_summary = None
+        if all(r.get('work') is not None for r in runs):
+            work_summary = {key: stats([r['work'][key] for r in runs]) for key in runs[0]['work']}
+        self.data = dict(schema_version=5, metadata=metadata, fault_model=metadata['fault_model'], protocol='whcc', source_protocol=source_protocol, status='ok',
                          output_bits=config['node_params'].get('output_bits', 1), config=config, runs=runs, summary=dict(
-                             count=len(runs), latency_ms=stats([r['latency_ms'] for r in runs]),
+                             count=len(runs), requested_runs=config['bench_params']['runs'], sample_unit='run',
+                             error_bar_method='min_max', work=work_summary, latency_ms=stats([r['latency_ms'] for r in runs]),
                              total_sent_bytes=stats([r['total_sent_bytes'] for r in runs]),
-                             avg_sent_bytes_per_active_party=stats([r['avg_sent_bytes'] for r in runs])),
+                             avg_sent_bytes_per_active_party=stats([r['avg_sent_bytes'] for r in runs]),
+                             avg_sent_bytes_per_honest_party=stats([r['avg_honest_sent_bytes'] for r in runs]),
+                             honest_sent_bytes=stats([r['honest_sent_bytes'] for r in runs]),
+                             byzantine_sent_bytes=stats([r['byzantine_sent_bytes'] for r in runs])),
                          measurement=dict(latency='synchronizer monotonic START to same-coin FINISH weight > T',
                                           prepare='distinct PREPAREOK weight > W-T',
                                           bandwidth='mean of per-party log counters for every active party, including parties aborted before output',
@@ -70,8 +106,13 @@ class LogParser:
         try:
             config = json.loads((directory/'resolved-policy.json').read_text(encoding='utf8'))
             bench = config['bench_params']
+            if type(bench['runs']) is not int or bench['runs'] < 1:
+                raise ParseError('runs must be a positive integer')
             if faults is not None and faults != bench['faults']:
                 raise ParseError('Fault count does not match saved policy')
+            faults_info = fault_metadata(bench)
+            byzantine = faults_info['byzantine_nodes']
+            honest = faults_info['honest_nodes']
             active = sorted(set(range(bench['nodes'])) - set(bench['faulty_nodes']))
             weights, threshold = bench['weights'], bench['threshold']
             output_bits = config['node_params'].get('output_bits', 1)
@@ -87,6 +128,22 @@ class LogParser:
                 if session in sessions or manifest['epoch'] != epoch or manifest['active_parties'] != active:
                     raise ParseError('Duplicate session or mismatched run manifest')
                 sessions.add(session)
+                if byzantine and manifest.get('schema_version') != 2:
+                    raise ParseError('Byzantine benchmark requires role-aware run manifest')
+                if manifest.get('schema_version') == 2 and (manifest.get('byzantine_nodes') != byzantine
+                        or manifest.get('byzantine_behavior') != bench.get('byzantine_behavior', 'recovery-stress')):
+                    raise ParseError('Byzantine role manifest mismatch')
+                if manifest.get('schema_version') in (1, 2):
+                    expected_id = policy_metadata(bench, config['node_params'])['configuration_id']
+                    if manifest.get('configuration_id') != expected_id:
+                        raise ParseError('Run configuration differs from saved policy')
+                    circuit = manifest.get('circuit', {})
+                    if (set(circuit) != {'gates', 'public_bytes'} or
+                            any(type(v) is not int or v < 0 for v in circuit.values()) or
+                            not isinstance(manifest.get('environment'), dict)):
+                        raise ParseError('Missing or invalid run metadata')
+                elif manifest.get('schema_version') is not None:
+                    raise ParseError('Unsupported run manifest schema')
                 sync = records(run_path/'logs'/'synchronizer.log')
                 if any(e.get('session') != session or e.get('epoch') != epoch or e.get('output_bits', 1) != output_bits for e in sync):
                     raise ParseError('Synchronizer session/epoch mismatch')
@@ -123,6 +180,20 @@ class LogParser:
                     local_start = cls._one(events, 'start', optional=True)
                     coin = cls._one(events, 'coin', optional=True)
                     counter = cls._one(events, 'bandwidth')
+                    behavior = cls._one(events, 'behavior', optional=True)
+                    work = cls._one(events, 'work', optional=True)
+                    expected_behavior = faults_info['byzantine_behavior'] if party in byzantine else 'honest'
+                    if manifest.get('schema_version') == 2:
+                        if behavior is None or behavior.get('behavior') != expected_behavior or work is None:
+                            raise ParseError('Missing or incorrect node behavior/work log')
+                        counters = ['terminal_checks', 'decoded_terminal_checks', 'rejected_terminals', 'forged_terminal_sends']
+                        if (any(type(work.get(k)) is not int or work[k] < 0 for k in counters)
+                                or work['rejected_terminals'] > work['terminal_checks']
+                                or work['decoded_terminal_checks'] > work['terminal_checks']
+                                or work.get('corrupted_public') != (party in byzantine and local_start is not None)):
+                            raise ParseError('Invalid adversarial work counters')
+                        if party in byzantine and (coin is not None or party in finishes):
+                            raise ParseError('recovery-stress must withhold output/FINISH')
                     if party in prepared and ready is None:
                         raise ParseError('PREPAREOK without ready party log')
                     if stopped.get('started') != bool(local_start) or stopped.get('coin') != (coin['coin'] if coin else None):
@@ -140,7 +211,8 @@ class LogParser:
                         raise ParseError('Invalid party bandwidth log')
                     for service, value in values.items():
                         sums[service] += value
-                    parties.append(dict(party=party, coin=coin['coin'] if coin else None,
+                    parties.append(dict(party=party, role='byzantine' if party in byzantine else 'honest',
+                                        behavior=expected_behavior, work=work, coin=coin['coin'] if coin else None,
                                         reported_finish=party in finishes, stopped=True,
                                         total_sent_bytes=counter['total_sent_bytes'], per_service_sent_bytes=values))
                 bandwidth = json.loads((run_path/'bandwidth.json').read_text(encoding='utf8'))
@@ -149,11 +221,26 @@ class LogParser:
                         or bandwidth['total_sent_bytes'] != sum(sums.values())
                         or bandwidth['per_party_sent_bytes'] != {str(p['party']): p['per_service_sent_bytes'] for p in parties}):
                     raise ParseError('Missing, inconsistent or lossy bandwidth measurement')
-                runs.append(dict(run=index, epoch=epoch, session=session, output_bits=output_bits, coin=result['coin'],
+                honest_bytes = sum(p['total_sent_bytes'] for p in parties if p['party'] in honest)
+                byzantine_bytes = sum(p['total_sent_bytes'] for p in parties if p['party'] in byzantine)
+                work_totals = None
+                if all(p['work'] is not None for p in parties):
+                    work_totals = dict(
+                        honest_terminal_checks=sum(p['work']['terminal_checks'] for p in parties if p['party'] in honest),
+                        honest_decoded_terminal_checks=sum(p['work']['decoded_terminal_checks'] for p in parties if p['party'] in honest),
+                        honest_rejected_terminals=sum(p['work']['rejected_terminals'] for p in parties if p['party'] in honest),
+                        honest_rejected_dealer_observations=sum(len(p['work']['rejected_dealers']) for p in parties if p['party'] in honest),
+                        byzantine_forged_terminal_sends=sum(p['work']['forged_terminal_sends'] for p in parties if p['party'] in byzantine))
+                runs.append(dict(run=index, work=work_totals, epoch=epoch, session=session, output_bits=output_bits, coin=result['coin'],
                                  quorum_reached=True, count=1, parties=parties,
+                                 environment=manifest.get('environment'), circuit=manifest.get('circuit'),
+                                 configuration_id=manifest.get('configuration_id'),
                                  latency_ms=result['latency_us']/1000, synchronizer=result,
                                  prepared=prepared, prepared_weight=prepared_weight, finish_weight=finish_weight,
-                                 total_sent_bytes=sum(sums.values()),
+                                 matching_finish_count=sum(v == result['coin'] for v in finishes.values()),
+                                 finish_weight_ratio=finish_weight / sum(weights),
+                                 total_sent_bytes=sum(sums.values()), honest_sent_bytes=honest_bytes,
+                                 byzantine_sent_bytes=byzantine_bytes, avg_honest_sent_bytes=honest_bytes/len(honest),
                                  avg_sent_bytes=statistics.mean(p['total_sent_bytes'] for p in parties),
                                  bandwidth=bandwidth, build=manifest['build']))
             return cls(config, runs, directory)
@@ -166,20 +253,37 @@ class LogParser:
         b = self.configs['bench_params']
         lines = ['', '-----------------------------------------', ' SUMMARY:',
                  '-----------------------------------------', ' + CONFIG:',
-                 ' Protocol: commoncoin', ' Output bits: {}'.format(self.data['output_bits']), ' Policy: {}'.format(b['name']),
+                 ' Protocol: whcc', ' Output bits: {}'.format(self.data['output_bits']), ' Policy: {}'.format(b['name']),
                  ' Committee size: {} node(s)'.format(self.committee_size),
                  ' Weights: {}'.format(b['weights']), ' Threshold: {}'.format(b['threshold']),
                  ' Faults: {} silent node(s) {}'.format(self.faults, b['faulty_nodes']),
-                 ' Runs: {}'.format(len(self.runs)), '', ' + COIN RESULTS:']
+                 ' Byzantine nodes: {} ({})'.format(self.data['fault_model']['byzantine_nodes'], self.data['fault_model']['byzantine_behavior']),
+                 ' Weight budget: W={}, T={}, F={}, actual B={} (silent={}, Byzantine={})'.format(
+                     *[self.data['fault_model'][k] for k in ['total_weight', 'protocol_threshold', 'fault_weight_threshold',
+                                                           'corrupted_weight', 'silent_weight', 'byzantine_weight']]),
+                 ' Runs: {}'.format(len(self.runs)),
+                 ' Experiment: {}'.format(self.data['metadata']['experiment_id']),
+                 ' Weight profile: {}'.format(self.data['metadata']['weight_profile']), '', ' + COIN RESULTS:']
         for run in self.runs:
             lines.append(' Run {}: coin={}, synchronizer latency={:.3f} ms, FINISH weight={} > T={}, avg sent={:,.2f} B/party'.format(
                 run['run'], run['coin'], run['latency_ms'], run['finish_weight'], b['threshold'], run['avg_sent_bytes']))
             for party in run['parties']:
                 lines.append('  Primary {}: coin={}, {:,} B sent, stopped=True'.format(party['party'], party['coin'], party['total_sent_bytes']))
         s = self.data['summary']
-        lines += [' Synchronizer latency (mean across runs): {:.3f} ms'.format(s['latency_ms']['mean']),
-                  ' Mean sent bytes per active party: {:,.2f} B'.format(s['avg_sent_bytes_per_active_party']['mean']),
-                  ' Total sent bytes per coin (mean across runs): {:,.0f} B'.format(s['total_sent_bytes']['mean']),
+        for label, key, unit in [('Synchronizer latency', 'latency_ms', 'ms'),
+                                 ('Mean sent bytes per active party', 'avg_sent_bytes_per_active_party', 'B'),
+                                 ('Mean sent bytes per honest party', 'avg_sent_bytes_per_honest_party', 'B'),
+                                 ('Byzantine sent bytes per coin', 'byzantine_sent_bytes', 'B'),
+                                 ('Total sent bytes per coin', 'total_sent_bytes', 'B')]:
+            metric = s[key]
+            deviation = '{:,.3f}'.format(metric['stdev']) if metric['stdev'] is not None else 'N/A (one run)'
+            lines.append(' {}: mean={:,.3f} {}, range=[{:,.3f}, {:,.3f}] {}, sample stdev={}'.format(
+                label, metric['mean'], unit, metric['min'], metric['max'], unit, deviation))
+        if s['work'] is not None:
+            lines.append(' Observed work (mean/run): honest rejected terminals={:.2f}, rejected dealer observations={:.2f}, Byzantine forged sends={:.2f}'.format(
+                s['work']['honest_rejected_terminals']['mean'], s['work']['honest_rejected_dealer_observations']['mean'],
+                s['work']['byzantine_forged_terminal_sends']['mean']))
+        lines += [' Error bars: observed min/max across runs, not a confidence interval.',
                   ' Completion: matching FINISH weight > T; STOP aborts remaining work.',
                   ' Bandwidth: TCP payload until STOP/exit, excluding synchronizer traffic.',
                   ' Implementation: full public-record WRBC baseline',

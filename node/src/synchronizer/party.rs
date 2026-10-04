@@ -5,14 +5,14 @@ use super::{
     transport::{self, Channel},
 };
 use anyhow::{Result, anyhow, ensure};
-use commoncoin::{Context, Event, Parameters, Request};
 use config::Node;
 use serde_json::json;
 use std::time::{Duration, Instant};
 use tokio::{net::TcpStream, sync::mpsc};
+use whcc::{Context, Event, Parameters, Request};
 
 /// Returns only on STOP. main exits the process without waiting for CPU-bound preparation.
-pub async fn run(node: Node, parameters: Parameters) -> Result<()> {
+pub async fn run(node: Node, parameters: Parameters, behavior: whcc::Behavior) -> Result<()> {
     Parameters::validate_widths(parameters.rounding_bits, parameters.output_bits)?;
     let output_bits = parameters.output_bits;
     let addr = address(&node, parameters.port_stride)?;
@@ -48,12 +48,25 @@ pub async fn run(node: Node, parameters: Parameters) -> Result<()> {
     let mut started = None::<Instant>;
     let mut started_us = 0;
     let mut coin = None;
+    let mut terminal_checks = 0u64;
+    let mut decoded_terminal_checks = 0u64;
+    let mut rejected_terminals = 0u64;
+    let mut forged_terminal_sends = 0usize;
+    let mut rejected_dealers = std::collections::BTreeSet::new();
+    emit(
+        &node,
+        epoch,
+        output_bits,
+        "behavior",
+        json!({"party":party,"behavior":behavior.name()}),
+    );
     loop {
         tokio::select! {
             biased;
             control=channel.recv()=>match control? {
                 Message::Stop=>{
                     // No synchronous shutdown/join here: main terminates every worker immediately.
+                    emit(&node, epoch, output_bits, "work", json!({"party":party,"terminal_checks":terminal_checks,"decoded_terminal_checks":decoded_terminal_checks,"rejected_terminals":rejected_terminals,"forged_terminal_sends":forged_terminal_sends,"rejected_dealers":rejected_dealers,"corrupted_public":behavior == whcc::Behavior::RecoveryStress && started.is_some()}));
                     emit(&node, epoch, output_bits, "stopped", json!({"party":party,"coin":coin.map(super::coin_json),"started":started.is_some()}));
                     return Ok(());
                 },
@@ -61,7 +74,7 @@ pub async fn run(node: Node, parameters: Parameters) -> Result<()> {
                     if let Some((input, events))=prepare_input.take() {
                         let config = node.clone(); let params = parameters.clone();
                         emit(&node, epoch, output_bits, "prepare", json!({"party":party}));
-                        preparation=Some(tokio::task::spawn_blocking(move || Context::spawn(config, params, input, events)));
+                        preparation=Some(tokio::task::spawn_blocking(move || Context::spawn_with_behavior(config, params, behavior, input, events)));
                     }
                 },
                 Message::Start=>start_requested=true,
@@ -81,6 +94,13 @@ pub async fn run(node: Node, parameters: Parameters) -> Result<()> {
                     channel.send(Message::Finish { coin: value })?;
                     emit(&node, epoch, output_bits, "coin", json!({"party":party,"coin":super::coin_json(value),"started_us":started_us,"completed_us":timestamp_us()?,"latency_us":latency_us}));
                 },
+                Some(Event::AdversarialTerminal { recipients, .. })=>forged_terminal_sends += recipients,
+                Some(Event::TerminalChecked { decoded, accepted, .. })=>{
+                    terminal_checks += 1;
+                    decoded_terminal_checks += u64::from(decoded);
+                    rejected_terminals += u64::from(!accepted);
+                },
+                Some(Event::Terminal { dealer, rejected: true })=>{ rejected_dealers.insert(dealer); },
                 Some(Event::Failed { reason })=>return Err(anyhow!(reason)),
                 Some(_)=>{},
                 None=>return Err(anyhow!("coin service stopped before STOP")),

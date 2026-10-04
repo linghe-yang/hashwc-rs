@@ -29,6 +29,7 @@ pub struct Dealer {
     pub value: Option<BigUint>,
 }
 pub struct State {
+    pub behavior: crate::Behavior,
     pub id: usize,
     pub n: usize,
     pub setup: Arc<Setup>,
@@ -79,6 +80,7 @@ impl State {
             })
             .collect::<Result<_>>()?;
         Ok(Self {
+            behavior: crate::Behavior::Honest,
             id: node.id,
             n: node.num_nodes,
             setup,
@@ -147,7 +149,9 @@ impl State {
             message: self.params.sample_message()?,
             randomness: crypto::random().map_err(|e| anyhow::anyhow!("randomness: {e}"))?,
         };
-        let (public, shares) = ax::generate(&self.setup, &self.dealers[self.id].context, &opening)?;
+        let (mut public, shares) =
+            ax::generate(&self.setup, &self.dealers[self.id].context, &opening)?;
+        self.behavior.corrupt_public(&mut public);
         self.start_material(list, public, shares)
     }
     pub(super) fn start_material(

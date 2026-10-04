@@ -1,6 +1,6 @@
 {
   "bench_params": {
-    "protocol": "commoncoin",
+    "protocol": "whcc",
     "faults": 0,
     "duration": 120,
     "runs": 3,
@@ -40,5 +40,9 @@
       },
       "threshold": "auto"
     }
-  ]
+  ],
+  "metadata": {
+    "experiment_id": "party-scalability-v1",
+    "experiment_axis": "nodes"
+  }
 }

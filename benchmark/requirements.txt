@@ -1,1 +1,2 @@
 fabric>=2.6,<4
+matplotlib>=3.7,<4

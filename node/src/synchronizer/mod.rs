@@ -31,7 +31,7 @@ pub fn session(node: &Node) -> String {
 }
 pub fn emit(node: &Node, epoch: u64, output_bits: u32, kind: &str, mut value: serde_json::Value) {
     value["output_bits"] = json!(output_bits);
-    value["protocol"] = json!("commoncoin");
+    value["protocol"] = json!("whcc");
     value["kind"] = json!(kind);
     value["session"] = json!(session(node));
     value["epoch"] = json!(epoch);
@@ -117,7 +117,7 @@ async fn connection(
     let _ = events.send(Event::Disconnected { party, connection });
     Ok(())
 }
-pub async fn run(node: Node, parameters: commoncoin::Parameters) -> Result<()> {
+pub async fn run(node: Node, parameters: whcc::Parameters) -> Result<()> {
     parameters.validate(&node)?;
     let output_bits = parameters.output_bits;
     let addr = address(&node, parameters.port_stride)?;
@@ -207,7 +207,7 @@ pub async fn run(node: Node, parameters: commoncoin::Parameters) -> Result<()> {
 }
 
 /// Keep binary logs numeric; wider words use fixed-width hex to avoid JSON number truncation.
-pub fn coin_json(coin: commoncoin::Coin) -> serde_json::Value {
+pub fn coin_json(coin: whcc::Coin) -> serde_json::Value {
     if coin.bits == 1 {
         json!(coin.bit(0).expect("validated coin"))
     } else {

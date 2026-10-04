@@ -17,7 +17,7 @@ impl Context {
         for event in self.state.drain_events() {
             // Event Debug contains public metadata and dyadic coefficients only.
             log::info!(
-                "commoncoin party={} epoch={} event={event:?}",
+                "whcc party={} epoch={} event={event:?}",
                 self.state.id,
                 self.state.params.epoch
             );

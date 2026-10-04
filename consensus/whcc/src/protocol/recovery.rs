@@ -62,6 +62,10 @@ impl State {
         self.advance()
     }
     pub(super) fn recovery(&mut self) -> Result<()> {
+        if self.behavior == crate::Behavior::RecoveryStress {
+            self.adversarial_recovery();
+            return Ok(());
+        }
         // One barrier for the WHOLE vector. No token-dependent terminal is processed earlier.
         if self.coefficients.is_none() {
             return Ok(());
@@ -98,9 +102,18 @@ impl State {
                     continue;
                 }
                 let public = dealer.public.as_ref().expect("completion pins public");
-                if let Ok(terminal) = Terminal::decode(public, &raw)
-                    && terminal::verify(&self.setup, &dealer.context, public, &terminal)
-                {
+                let decoded = Terminal::decode(public, &raw);
+                let valid = decoded.as_ref().is_ok_and(|terminal| {
+                    terminal::verify(&self.setup, &dealer.context, public, terminal)
+                });
+                self.events.push(Event::TerminalChecked {
+                    dealer: d,
+                    sender,
+                    decoded: decoded.is_ok(),
+                    accepted: valid,
+                });
+                if valid {
+                    let terminal = decoded.unwrap();
                     let value = match &terminal {
                         Terminal::Success(o) => BigUint::from_bytes_be(&o.message),
                         _ => BigUint::from(0u8),

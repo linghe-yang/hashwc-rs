@@ -1,9 +1,9 @@
 mod synchronizer;
 use clap::{Parser, Subcommand, ValueEnum};
-use commoncoin::{Context, Event, Parameters, Request};
 use config::Ports;
 use std::time::{Instant, SystemTime, UNIX_EPOCH};
 use tokio::sync::mpsc;
+use whcc::{Context, Event, Parameters, Request};
 #[derive(Parser)]
 #[command(name = "node", version, about = "Weighted hash-based common coin")]
 struct Args {
@@ -14,8 +14,22 @@ struct Args {
 }
 #[derive(Clone, Copy, ValueEnum)]
 enum Protocol {
-    Commoncoin,
+    #[value(alias = "commoncoin")]
+    Whcc,
     Wiawvss,
+}
+#[derive(Clone, Copy, ValueEnum)]
+enum BehaviorArg {
+    Honest,
+    RecoveryStress,
+}
+impl From<BehaviorArg> for whcc::Behavior {
+    fn from(value: BehaviorArg) -> Self {
+        match value {
+            BehaviorArg::Honest => Self::Honest,
+            BehaviorArg::RecoveryStress => Self::RecoveryStress,
+        }
+    }
 }
 #[derive(Subcommand)]
 enum Command {
@@ -25,7 +39,7 @@ enum Command {
         config: std::path::PathBuf,
         #[arg(long)]
         parameters: Option<std::path::PathBuf>,
-        #[arg(long, default_value = "commoncoin")]
+        #[arg(long, default_value = "whcc")]
         protocol: Protocol,
     },
     /// Run one invocation; keep serving slow peers after output until interrupted.
@@ -33,6 +47,9 @@ enum Command {
         /// Follow PREPARE/START/STOP from the independent benchmark synchronizer.
         #[arg(long)]
         synchronize: bool,
+        /// Bounded adversarial workload for research benchmarks.
+        #[arg(long, value_enum, default_value = "honest")]
+        behavior: BehaviorArg,
         #[arg(long)]
         config: std::path::PathBuf,
         #[arg(long)]
@@ -81,7 +98,7 @@ async fn main() -> anyhow::Result<()> {
             let setup = p.setup(&node)?;
             let ports = Ports::new(&node, p.port_stride)?;
             let protocol = match protocol {
-                Protocol::Commoncoin => "commoncoin",
+                Protocol::Whcc => "whcc",
                 Protocol::Wiawvss => "wiawvss",
             };
             println!(
@@ -91,12 +108,13 @@ async fn main() -> anyhow::Result<()> {
         }
         Command::Run {
             synchronize,
+            behavior,
             config,
             parameters: path,
         } => {
             let node = config::load(config)?;
             if synchronize {
-                synchronizer::party::run(node, parameters(path)?).await?;
+                synchronizer::party::run(node, parameters(path)?, behavior.into()).await?;
                 // STOP is an experiment-wide abort, including any spawn_blocking preparation.
                 std::process::exit(0);
             }
@@ -111,13 +129,13 @@ async fn main() -> anyhow::Result<()> {
             let output_bits = p.output_bits;
             let (input, rx) = mpsc::channel(1);
             let (tx, mut output) = mpsc::channel(1024);
-            let service = Context::spawn(node, p, rx, tx)?;
+            let service = Context::spawn_with_behavior(node, p, behavior.into(), rx, tx)?;
             let started_us = SystemTime::now().duration_since(UNIX_EPOCH)?.as_micros();
             let started = Instant::now();
-            log::info!("Common coin request for epoch {epoch} sent at {started_us}");
+            log::info!("WHCC request for epoch {epoch} sent at {started_us}");
             println!(
                 "{}",
-                serde_json::json!({"kind":"start","protocol":"commoncoin","output_bits":output_bits,"party":party,"epoch":epoch,"session":session,"started_us":started_us})
+                serde_json::json!({"kind":"start","protocol":"whcc","output_bits":output_bits,"party":party,"epoch":epoch,"session":session,"started_us":started_us})
             );
             input.send(Request::Start).await?;
             loop {
@@ -127,8 +145,8 @@ async fn main() -> anyhow::Result<()> {
                         Some(Event::Coin{epoch,value})=>{
                             let latency_us = started.elapsed().as_micros();
                             let completed_us = SystemTime::now().duration_since(UNIX_EPOCH)?.as_micros();
-                            log::info!("Common coin result for epoch {epoch} is {value} received at {completed_us}; latency_us={latency_us}");
-                            println!("{}",serde_json::json!({"kind":"coin","protocol":"commoncoin","output_bits":output_bits,"party":party,"epoch":epoch,"session":session,"coin":synchronizer::coin_json(value),"started_us":started_us,"completed_us":completed_us,"latency_us":latency_us}));
+                            log::info!("WHCC result for epoch {epoch} is {value} received at {completed_us}; latency_us={latency_us}");
+                            println!("{}",serde_json::json!({"kind":"coin","protocol":"whcc","output_bits":output_bits,"party":party,"epoch":epoch,"session":session,"coin":synchronizer::coin_json(value),"started_us":started_us,"completed_us":completed_us,"latency_us":latency_us}));
                         },
                         Some(Event::Failed{reason})=>anyhow::bail!(reason),Some(_)=>{},None=>anyhow::bail!("common coin service stopped"),
                     }

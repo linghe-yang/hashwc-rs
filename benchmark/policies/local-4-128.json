@@ -1,6 +1,6 @@
 {
   "bench_params": {
-    "protocol": "commoncoin",
+    "protocol": "whcc",
     "faults": 0,
     "duration": 60,
     "runs": 1,
@@ -25,5 +25,9 @@
       },
       "threshold": 1
     }
-  ]
+  ],
+  "metadata": {
+    "experiment_id": "local-4-128-v1",
+    "experiment_axis": "smoke"
+  }
 }

@@ -1,7 +1,7 @@
 [workspace]
 resolver = "3"
 exclude = ["vendor/sdc-util"]
-members = ["types", "crypto", "config", "consensus/wcss", "consensus/wiawvss", "consensus/commoncoin", "recovery", "network", "node"]
+members = ["types", "crypto", "config", "consensus/wcss", "consensus/wiawvss", "consensus/whcc", "recovery", "network", "node"]
 
 [workspace.package]
 version = "0.1.0"
@@ -33,7 +33,7 @@ sdc-types = { package = "types", git = "https://github.com/linghe-yang/Secure-Di
 wrbc = { git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e" }
 wra = { git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e" }
 
-commoncoin = { path = "consensus/commoncoin" }
+whcc = { path = "consensus/whcc" }
 recovery = { path = "recovery" }
 network = { path = "network" }
 tokio = { version = "1", features = ["full"] }

@@ -60,7 +60,7 @@
   "client_port": 0,
   "client_addr": "127.0.0.1:21000",
   "payload": 0,
-  "prot_payload": "commoncoin",
+  "prot_payload": "whcc",
   "crypto_alg": "NOPKI",
   "pk_map": {},
   "secret_key_bytes": [],

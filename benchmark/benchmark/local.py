@@ -3,6 +3,7 @@
 import copy
 import datetime
 import json
+import hashlib
 import os
 import secrets
 import signal
@@ -15,6 +16,7 @@ from benchmark.bandwidth import BandwidthMeter
 from benchmark.commands import CommandMaker
 from benchmark.config import BenchParameters, NodeParameters, ConfigError, write_json
 from benchmark.logs import LogParser, ParseError
+from benchmark.metadata import environment_metadata, policy_metadata, fingerprint
 from benchmark.utils import Print, BenchError, PathMaker
 
 
@@ -98,7 +100,7 @@ class LocalBench:
                 for line in parts:
                     if line.startswith(b'{'):
                         event = json.loads(line)
-                        if event.get('protocol') == 'commoncoin':
+                        if event.get('protocol') == 'whcc':
                             child['events'].append(event)
                 matches = [e for e in child['events'] if e.get('kind') == kind]
                 if len(matches) > 1:
@@ -138,14 +140,26 @@ class LocalBench:
                        check=True, cwd=PathMaker.BENCHMARK)
         config = json.loads((directory/PathMaker.key_file(0)).read_text(encoding='utf8'))
         active = [i for i in range(self.nodes[0]) if i not in self.faulty_nodes]
+        checks = []
         for i in range(self.nodes[0]):
-            subprocess.run(CommandMaker.check_config(directory/PathMaker.key_file(i), directory/PathMaker.parameters_file()),
-                           check=True, stdout=subprocess.DEVNULL)
-        write_json(directory/'run.json', dict(session=bytes(config['session_id']).hex(), epoch=params['epoch'],
+            check = json.loads(subprocess.check_output(
+                CommandMaker.check_config(directory/PathMaker.key_file(i), directory/PathMaker.parameters_file()),
+                text=True))
+            if check['status'] != 'valid' or check['party'] != i or check['parties'] != self.nodes[0]:
+                raise BenchError('Invalid node configuration diagnostic')
+            checks.append(check)
+        circuit = dict(gates=checks[0]['gates'], public_bytes=checks[0]['public_bytes'])
+        if any(c['gates'] != circuit['gates'] or c['public_bytes'] != circuit['public_bytes'] for c in checks):
+            raise BenchError('Parties disagree on circuit dimensions')
+        write_json(directory/'run.json', dict(schema_version=2, session=bytes(config['session_id']).hex(), epoch=params['epoch'],
+                                            configuration_id=policy_metadata(self.bench_parameters.json, params)['configuration_id'],
+                                            circuit=circuit, environment=self.environment,
+                                            byzantine_nodes=self.byzantine_nodes,
+                                            byzantine_behavior=self.byzantine_behavior,
                                             active_parties=active, build=build,
                                             tokio_worker_threads=os.environ.get('TOKIO_WORKER_THREADS', '2')))
         self._check_ports()
-        meter = BandwidthMeter(self.bench_parameters.ports(self.node_parameters), active)
+        meter = BandwidthMeter(self.bench_parameters.ports(self.node_parameters), active, directory)
         meter.start()
         try:
             sync = self._background_run(CommandMaker.run_synchronizer(directory/'.synchronizer.json',
@@ -154,7 +168,8 @@ class LocalBench:
             parties = []
             for i in active:
                 parties.append(self._background_run(CommandMaker.run_primary(directory/PathMaker.key_file(i),
-                               directory/PathMaker.parameters_file(), self.debug), directory/PathMaker.primary_log_file(i)))
+                               directory/PathMaker.parameters_file(), self.debug,
+                               self.byzantine_behavior if i in self.byzantine_nodes else 'honest'), directory/PathMaker.primary_log_file(i)))
             self._wait_for('sync_start', self.startup_timeout, [sync])
             self._wait_for('sync_result', self.duration, [sync])
             # STOP, not local coin output, terminates each party. Slow PREPARE is abortable.
@@ -171,7 +186,7 @@ class LocalBench:
             # collector records, not estimates or protocol-generated counters.
             for i in active:
                 totals = bandwidth['per_party_sent_bytes'][i]
-                event = dict(protocol='commoncoin', output_bits=params['output_bits'], kind='bandwidth', source='linux-af-packet-collector',
+                event = dict(protocol='whcc', output_bits=params['output_bits'], kind='bandwidth', source='linux-af-packet-collector',
                              session=bytes(config['session_id']).hex(), epoch=params['epoch'], party=i,
                              total_sent_bytes=sum(totals.values()), per_service_sent_bytes=totals)
                 with (directory/PathMaker.primary_log_file(i)).open('a', encoding='utf8') as logfile:
@@ -191,6 +206,7 @@ class LocalBench:
         if type(debug) is not bool:
             raise BenchError('debug must be a boolean')
         self.debug = debug
+        self.environment = environment_metadata(debug)
         if self.settle_time:
             Print.warn('settle_time is ignored: STOP now terminates parties immediately')
         Print.heading('Starting local benchmark: {}'.format(self.name))
@@ -213,11 +229,26 @@ class LocalBench:
                 subprocess.run(CommandMaker.compile(self.protocol), check=True,
                                cwd=PathMaker.node_crate_path(), stdout=output, stderr=subprocess.STDOUT)
             build = dict(profile='release', rustc=subprocess.check_output(['rustc', '--version'], text=True).strip())
-            import hashlib
             build['binary_sha256'] = hashlib.sha256((PathMaker.binary_path()/'node').read_bytes()).hexdigest()
             build['cargo_lock_sha256'] = hashlib.sha256((PathMaker.ROOT/'Cargo.lock').read_bytes()).hexdigest()
+            build['implementation'] = 'full-public-record-wrbc-v1'
+            build['transport'] = 'sdc-util-tcp-nodelay-coalesced-v1'
+            build['transport_source_sha256'] = fingerprint({
+                str(p.relative_to(PathMaker.ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
+                for folder in ['vendor/sdc-util/src', 'network/src']
+                for p in sorted((PathMaker.ROOT/folder).rglob('*.rs'))})
+            build['benchmark_source_sha256'] = fingerprint({
+                str(p.relative_to(PathMaker.BENCHMARK)): hashlib.sha256(p.read_bytes()).hexdigest()
+                for p in sorted((PathMaker.BENCHMARK/'benchmark').glob('*.py'))})
+            try:
+                build['git_revision'] = subprocess.check_output(
+                    ['git', 'rev-parse', 'HEAD'], cwd=PathMaker.ROOT, text=True, stderr=subprocess.DEVNULL).strip()
+                build['git_dirty'] = bool(subprocess.check_output(
+                    ['git', 'status', '--porcelain'], cwd=PathMaker.ROOT, text=True, stderr=subprocess.DEVNULL).strip())
+            except (OSError, subprocess.SubprocessError):
+                build.update(git_revision=None, git_dirty=None)
             for index in range(1, self.runs+1):
-                Print.info('Running {}/{}: {} active parties, {} silent...'.format(index, self.runs, self.nodes[0]-self.faults, self.faults))
+                Print.info('Running {}/{}: {} active parties, {} silent, {} Byzantine...'.format(index, self.runs, self.nodes[0]-self.faults, self.faults, len(self.byzantine_nodes)))
                 self._run_once(directory/'run-{:03}'.format(index), index, build)
             Print.info('Parsing logs...')
             logger = LogParser.process(directory, faults=self.faults)

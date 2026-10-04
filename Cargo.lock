@@ -259,34 +259,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1d07550c9036bf2ae0c684c4297d503f838287c83c53686d05370d0e139ae570"
 
 [[package]]
-name = "commoncoin"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "config 0.1.0",
- "config 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
- "crypto 0.1.0",
- "log",
- "network",
- "num-bigint 0.4.8",
- "num-traits",
- "recovery",
- "serde",
- "serde_json",
- "tokio",
- "types 0.1.0",
- "types 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
- "util",
- "wbinaa",
- "wcss",
- "wgather",
- "wiawvss",
- "wra",
- "wrbc",
- "zeroize",
-]
-
-[[package]]
 name = "config"
 version = "0.1.0"
 dependencies = [
@@ -787,7 +759,6 @@ version = "0.1.0"
 dependencies = [
  "anyhow",
  "clap",
- "commoncoin",
  "config 0.1.0",
  "crypto 0.1.0",
  "env_logger",
@@ -797,6 +768,7 @@ dependencies = [
  "serde_json",
  "tokio",
  "wcss",
+ "whcc",
  "wiawvss",
 ]
 
@@ -1620,6 +1592,34 @@ dependencies = [
  "tokio",
  "types 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
  "util",
+]
+
+[[package]]
+name = "whcc"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "config 0.1.0",
+ "config 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
+ "crypto 0.1.0",
+ "log",
+ "network",
+ "num-bigint 0.4.8",
+ "num-traits",
+ "recovery",
+ "serde",
+ "serde_json",
+ "tokio",
+ "types 0.1.0",
+ "types 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
+ "util",
+ "wbinaa",
+ "wcss",
+ "wgather",
+ "wiawvss",
+ "wra",
+ "wrbc",
+ "zeroize",
 ]
 
 [[package]]

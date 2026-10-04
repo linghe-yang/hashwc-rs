@@ -8,7 +8,7 @@ pub enum Message {
     Prepare,
     PrepareOk,
     Start,
-    Finish { coin: commoncoin::Coin },
+    Finish { coin: whcc::Coin },
     Stop,
 }
 #[derive(Clone, Debug, Serialize, Deserialize)]

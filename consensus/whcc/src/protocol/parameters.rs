@@ -66,6 +66,7 @@ impl Parameters {
         }
     }
     pub fn context_id(&self, node: &Node, setup: &Setup) -> Block {
+        // Preserve the cryptographic domain across the public protocol rename.
         hash(
             b"commoncoin/context/v2",
             &[

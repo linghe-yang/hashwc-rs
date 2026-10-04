@@ -9,6 +9,7 @@ import secrets
 from pathlib import Path
 
 from benchmark.utils import PathMaker
+from benchmark.metadata import normalize_metadata
 
 
 class ConfigError(ValueError):
@@ -64,12 +65,15 @@ class NodeParameters:
 
 class BenchParameters:
     def __init__(self, data):
-        defaults = dict(protocol='commoncoin', faults=0, duration=60, runs=1,
-                        base_port=20000, startup_timeout=30, settle_time=0, sync_port=None)
-        keys(data, set(defaults) | {'name', 'nodes', 'weights', 'threshold', 'faulty_nodes'}, 'bench_params/case')
+        defaults = dict(protocol='whcc', faults=0, duration=60, runs=1,
+                        base_port=20000, startup_timeout=30, settle_time=0, sync_port=None,
+                        byzantine_nodes=[], byzantine_behavior='recovery-stress', fault_weight_threshold=None)
+        keys(data, set(defaults) | {'name', 'nodes', 'weights', 'threshold', 'faulty_nodes', 'metadata', 'threshold_mode'}, 'bench_params/case')
         self.json = dict(defaults, **copy.deepcopy(data))
-        if self.json['protocol'] != 'commoncoin':
-            raise ConfigError('Only commoncoin is currently supported')
+        if self.json['protocol'] == 'commoncoin':
+            self.json['protocol'] = 'whcc'
+        if self.json['protocol'] != 'whcc':
+            raise ConfigError('Only whcc is currently supported')
         self.protocol = self.json['protocol']
         n = integer(data.get('nodes'), 'nodes', 2, 512)
         self.nodes = [n]  # Keep the legacy list-shaped attribute.
@@ -97,11 +101,15 @@ class BenchParameters:
             raise ConfigError('weights must be a list or a distribution object')
         if len(weights) != n:
             raise ConfigError('weights length must equal nodes')
+        self.metadata = normalize_metadata(data.get('metadata', {}), spec)
         self.weights = weights
         self.total_weight = sum(weights)
         if self.total_weight.bit_length() > 4096:
             raise ConfigError('Weight bit length exceeds WCSS limit')
         threshold = data.get('threshold', 'auto')
+        threshold_mode = data.get('threshold_mode', 'auto' if threshold == 'auto' else 'explicit')
+        if threshold_mode not in ('auto', 'explicit'):
+            raise ConfigError('Invalid threshold_mode')
         self.threshold = integer(self.total_weight // 3 if threshold == 'auto' else threshold, 'threshold', 1)
         if self.threshold * 3 > self.total_weight:
             raise ConfigError('Require T <= total weight / 3')
@@ -112,8 +120,20 @@ class BenchParameters:
         self.faulty_nodes = [integer(i, 'faulty node', 0, n-1) for i in faulty]
         if len(set(self.faulty_nodes)) != len(self.faulty_nodes) or len(self.faulty_nodes) != self.faults:
             raise ConfigError('faulty_nodes must contain exactly faults distinct parties')
-        if sum(weights[i] for i in self.faulty_nodes) >= self.threshold:
-            raise ConfigError('Silent fault weight must satisfy B < T')
+        byzantine = self.json['byzantine_nodes']
+        if not isinstance(byzantine, list):
+            raise ConfigError('byzantine_nodes must be a list')
+        self.byzantine_nodes = [integer(i, 'Byzantine node', 0, n-1) for i in byzantine]
+        if len(set(self.byzantine_nodes)) != len(self.byzantine_nodes) or set(self.byzantine_nodes) & set(self.faulty_nodes):
+            raise ConfigError('Byzantine identities must be unique and disjoint from silent faulty_nodes')
+        self.byzantine_behavior = self.json['byzantine_behavior']
+        if self.byzantine_behavior != 'recovery-stress':
+            raise ConfigError('Supported Byzantine behavior: recovery-stress')
+        limit = self.json['fault_weight_threshold']
+        self.fault_weight_threshold = integer(self.threshold-1 if limit is None else limit, 'fault_weight_threshold', 0, self.threshold-1)
+        self.corrupted_weight = sum(weights[i] for i in self.faulty_nodes + self.byzantine_nodes)
+        if self.corrupted_weight > self.fault_weight_threshold:
+            raise ConfigError('Require corrupted weight B <= fault_weight_threshold F < protocol threshold T')
         self.duration = number(self.json['duration'], 'duration', strict=True)
         self.startup_timeout = number(self.json['startup_timeout'], 'startup_timeout', strict=True)
         self.settle_time = number(self.json['settle_time'], 'settle_time')
@@ -121,6 +141,8 @@ class BenchParameters:
         self.base_port = integer(self.json['base_port'], 'base_port', 1024, 65535)
         self.sync_port = None if self.json['sync_port'] is None else integer(self.json['sync_port'], 'sync_port', 1024, 65535)
         self.json.update(name=name, nodes=n, weights=weights, threshold=self.threshold,
+                         metadata=self.metadata, threshold_mode=threshold_mode,
+                         byzantine_nodes=self.byzantine_nodes, fault_weight_threshold=self.fault_weight_threshold,
                          faults=self.faults, faulty_nodes=self.faulty_nodes, runs=self.runs, base_port=self.base_port)
 
     def ports(self, node_params):
@@ -143,24 +165,32 @@ class BenchParameters:
 
 
 class Policy:
-    def __init__(self, filename):
+    def __init__(self, filename, runs=None):
         self.filename = Path(filename).resolve()
         try:
             self.source = self.filename.read_text(encoding='utf8')
             self.json = json.loads(self.source)
         except (OSError, ValueError) as e:
             raise ConfigError('Cannot read policy: {}'.format(e))
-        keys(self.json, ['bench_params', 'node_params', 'cases'], 'policy')
+        keys(self.json, ['bench_params', 'node_params', 'cases', 'metadata'], 'policy')
         self.node_parameters = NodeParameters(self.json.get('node_params', {}))
         base = self.json.get('bench_params', {})
-        keys(base, ['protocol', 'faults', 'duration', 'runs', 'base_port', 'startup_timeout', 'settle_time', 'sync_port'], 'bench_params')
+        keys(base, ['protocol', 'faults', 'duration', 'runs', 'base_port', 'startup_timeout', 'settle_time', 'sync_port', 'byzantine_nodes', 'byzantine_behavior', 'fault_weight_threshold'], 'bench_params')
         cases = self.json.get('cases')
         if not isinstance(cases, list) or not cases:
             raise ConfigError('Policy needs at least one case')
         self.cases = []
         for case in cases:
-            keys(case, ['name', 'nodes', 'weights', 'threshold', 'faults', 'faulty_nodes'], 'case')
-            bench = BenchParameters(dict(base, **case))
+            keys(case, ['name', 'nodes', 'weights', 'threshold', 'faults', 'faulty_nodes', 'runs', 'metadata', 'byzantine_nodes', 'byzantine_behavior', 'fault_weight_threshold'], 'case')
+            metadata = self.json.get('metadata', {})
+            keys(metadata, ['experiment_id', 'experiment_axis', 'weight_profile', 'weight_scale', 'generation', 'fault_selection'], 'metadata')
+            case_metadata = case.get('metadata', {})
+            keys(case_metadata, ['experiment_id', 'experiment_axis', 'weight_profile', 'weight_scale', 'generation', 'fault_selection'], 'case.metadata')
+            combined = dict(base, **case)
+            combined['metadata'] = dict(metadata, **case_metadata)
+            if runs is not None:
+                combined['runs'] = integer(runs, 'runs', 1)
+            bench = BenchParameters(combined)
             bench.ports(self.node_parameters)
             self.cases.append(bench)
         if len({c.name for c in self.cases}) != len(self.cases):
@@ -187,9 +217,9 @@ class LocalCommittee:
         net_map[str(n)] = sync_addr
         for i in range(n):
             node = dict(weights=[hex(w) for w in self.bench.weights], weight_threshold=hex(self.bench.threshold),
-                        session_id=self.session_id, net_map=net_map, id=i, num_nodes=n, num_faults=self.bench.faults,
+                        session_id=self.session_id, net_map=net_map, id=i, num_nodes=n, num_faults=self.bench.faults+len(self.bench.byzantine_nodes),
                         delta=50, block_size=0, client_port=0, client_addr=sync_addr, payload=0,
-                        prot_payload='commoncoin', crypto_alg='NOPKI', pk_map={}, secret_key_bytes=[],
+                        prot_payload='whcc', crypto_alg='NOPKI', pk_map={}, secret_key_bytes=[],
                         sk_map={str(j): pair_keys[min(i,j), max(i,j)] for j in range(n)},
                         my_cert=[], my_cert_key=[], root_cert=[])
             node['sk_map'][str(n)] = control_keys[str(i)]

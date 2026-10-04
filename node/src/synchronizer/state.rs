@@ -1,7 +1,7 @@
 use anyhow::{Result, ensure};
-use commoncoin::Coin;
 use num_bigint::BigUint;
 use std::collections::{BTreeMap, BTreeSet};
+use whcc::Coin;
 
 /// Benchmark control state only. Thresholds always count distinct identities by weight.
 pub struct State {

@@ -1,6 +1,6 @@
 # hashwc-rs
 
-基于 AX、WCSS 和 hash commitment 的加权 common coin。Rust stable / 2024 edition，已在 Rust 1.99.0 上验证。程序从 main.rs 启动，运行方式由命令行和参数文件决定，不使用协议 feature 分支。
+WHCC（Weighted Hash Common Coin）是基于 AX、WCSS 和 hash commitment 的加权随机币协议。Rust stable / 2024 edition，已在 Rust 1.99.0 上验证。程序从 main.rs 启动，运行方式由命令行和参数文件决定，不使用协议 feature 分支。
 
 ## 组成
 
@@ -8,7 +8,7 @@
 | --- | --- |
 | consensus/wcss | 不展开虚拟参与方的加权电路秘密共享 |
 | consensus/wiawvss | AX、完整份额恢复、共享状态机、可验证终止证据 |
-| consensus/commoncoin | context.rs 异步入口、共享完成、Gather、整向量 BinAA、恢复和聚合 |
+| consensus/whcc | context.rs 异步入口、共享完成、Gather、整向量 BinAA、恢复和聚合 |
 | recovery | 每方本地独立采样、配额计算、一次性 RBC 名单接纳 |
 | network | 私有份额及恢复消息的加密通信封装 |
 | vendor/sdc-util | 上游公共 TCP 传输层的小范围 Cargo 补丁 |
@@ -17,6 +17,8 @@
 | node | main.rs，配置检查、独立 synchronizer 与单次随机币运行 |
 
 consensus 各 crate 的具体算法和状态机统一放在 src/protocol/。src/lib.rs 负责模块声明与公开接口重导出；异步入口、消息定义及动作分发分别放在 context.rs、msg.rs、process.rs（按需提供）。WCSS 是同步原语，不额外设置异步入口。
+
+协议的 crate、命令行默认标识、结构化日志和新 result 文件统一使用 whcc。旧 commoncoin policy 名称仍可作为输入别名，历史日志可按 WHCC 读取并保留 source_protocol；历史结果文件不会被自动改写。
 
 为方便科研测试，本项目自有结构体的字段统一使用 pub，便于直接构造、查看和修改状态；外部依赖保持原样。
 
@@ -52,7 +54,7 @@ config/examples/local.json 是节点 0 的格式示例，含演示密钥，只�
 
 output_bits 指定随机数位数，省略时默认 1；设置为 128 可输出 128 位随机数。Rust 事件 Event::Coin 的 value 是 Coin（定长 U256），可通过 value.bit(0)? 取得二元 coin。受当前 AX 消息容量约束，output_bits + rounding_bits + 1 <= 254，默认 rounding_bits=64 时最多输出 189 位。
 
-参数的含义及接口见 [完整随机币说明](docs/commoncoin.md)。准备好各方 Node 配置后，每方入口是：
+参数的含义及接口见 [完整随机币说明](docs/whcc.md)。准备好各方 Node 配置后，每方入口是：
 
 ~~~sh
 cargo run --release --locked -p node -- run --config path/to/node0.json --parameters config/examples/coin.json

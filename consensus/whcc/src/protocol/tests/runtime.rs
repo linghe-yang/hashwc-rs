@@ -206,3 +206,60 @@ fn multibit_parameters_bind_context_precision_and_full_sampling_range() {
         assert!(Parameters::validate_widths(nu, bits).is_err());
     }
 }
+
+#[tokio::test(flavor = "multi_thread", worker_threads = 4)]
+async fn three_honest_parties_finish_despite_active_recovery_stress_peer() {
+    let mut handles = vec![];
+    let mut inputs = vec![];
+    let mut outputs = vec![];
+    for node in super::nodes(&[3; 4], 4, free_base(4)) {
+        let behavior = if node.id == 3 {
+            crate::Behavior::RecoveryStress
+        } else {
+            crate::Behavior::Honest
+        };
+        let (input, rx) = mpsc::channel(1);
+        let (tx, output) = mpsc::channel(128);
+        handles.push(
+            Context::spawn_with_behavior(
+                node,
+                Parameters {
+                    output_bits: 128,
+                    ..Parameters::default()
+                },
+                behavior,
+                rx,
+                tx,
+            )
+            .unwrap(),
+        );
+        inputs.push(input);
+        outputs.push(output);
+    }
+    for input in &inputs {
+        input.send(Request::Start).await.unwrap();
+    }
+    let coins = tokio::time::timeout(Duration::from_secs(45), async {
+        let mut coins = vec![];
+        for out in outputs.iter_mut().take(3) {
+            loop {
+                match out.recv().await.unwrap() {
+                    Event::Coin { value, .. } => {
+                        coins.push(value);
+                        break;
+                    }
+                    Event::Failed { reason } => panic!("{reason}"),
+                    _ => {}
+                }
+            }
+        }
+        coins
+    })
+    .await
+    .expect("honest nodes blocked by Byzantine recovery omission");
+    assert_eq!(coins.len(), 3);
+    assert!(coins.windows(2).all(|x| x[0] == x[1]));
+    for handle in handles {
+        handle.shutdown().await.unwrap();
+    }
+}

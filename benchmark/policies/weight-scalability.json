@@ -1,6 +1,6 @@
 {
   "bench_params": {
-    "protocol": "commoncoin",
+    "protocol": "whcc",
     "faults": 0,
     "duration": 120,
     "runs": 3,
@@ -22,7 +22,16 @@
         1,
         1
       ],
-      "threshold": 1
+      "threshold": 1,
+      "metadata": {
+        "weight_profile": {
+          "id": "uniform",
+          "parameters": {
+            "weight": 1
+          }
+        },
+        "weight_scale": 1
+      }
     },
     {
       "name": "linear-4",
@@ -44,7 +53,11 @@
         "step": 1,
         "scale": 100
       },
-      "threshold": "auto"
+      "threshold": 300
     }
-  ]
+  ],
+  "metadata": {
+    "experiment_id": "weight-scalability-v1",
+    "experiment_axis": "weight_scale"
+  }
 }

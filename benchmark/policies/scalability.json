@@ -1,0 +1,2302 @@
+{
+  "bench_params": {
+    "duration": 180,
+    "faults": 0,
+    "protocol": "whcc",
+    "runs": 3,
+    "startup_timeout": 60
+  },
+  "cases": [
+    {
+      "byzantine_nodes": [],
+      "fault_weight_threshold": 7,
+      "metadata": {
+        "fault_selection": {
+          "budget": "7",
+          "method": "none",
+          "selected_count": 0,
+          "selected_weight": "0",
+          "ties": "lexicographically-smallest"
+        },
+        "generation": {
+          "input": {
+            "base_weights": [
+              6,
+              6,
+              6,
+              6
+            ],
+            "scale": 1
+          },
+          "method": "fixed-profile",
+          "version": 1
+        },
+        "weight_profile": {
+          "id": "uniform",
+          "parameters": {
+            "base_mean": 6,
+            "proportions": [
+              1
+            ],
+            "relative_weights": [
+              1
+            ]
+          }
+        },
+        "weight_scale": 1
+      },
+      "name": "uniform-n4-s1-honest",
+      "nodes": 4,
+      "threshold": 8,
+      "weights": [
+        6,
+        6,
+        6,
+        6
+      ]
+    },
+    {
+      "byzantine_nodes": [
+        0
+      ],
+      "fault_weight_threshold": 7,
+      "metadata": {
+        "fault_selection": {
+          "budget": "7",
+          "method": "max-weight-then-count-v1",
+          "selected_count": 1,
+          "selected_weight": "6",
+          "ties": "lexicographically-smallest"
+        },
+        "generation": {
+          "input": {
+            "base_weights": [
+              6,
+              6,
+              6,
+              6
+            ],
+            "scale": 1
+          },
+          "method": "fixed-profile",
+          "version": 1
+        },
+        "weight_profile": {
+          "id": "uniform",
+          "parameters": {
+            "base_mean": 6,
+            "proportions": [
+              1
+            ],
+            "relative_weights": [
+              1
+            ]
+          }
+        },
+        "weight_scale": 1
+      },
+      "name": "uniform-n4-s1-stress",
+      "nodes": 4,
+      "threshold": 8,
+      "weights": [
+        6,
+        6,
+        6,
+        6
+      ]
+    },
+    {
+      "byzantine_nodes": [],
+      "fault_weight_threshold": 70,
+      "metadata": {
+        "fault_selection": {
+          "budget": "70",
+          "method": "none",
+          "selected_count": 0,
+          "selected_weight": "0",
+          "ties": "lexicographically-smallest"
+        },
+        "generation": {
+          "input": {
+            "base_weights": [
+              6,
+              6,
+              6,
+              6
+            ],
+            "scale": 10
+          },
+          "method": "fixed-profile",
+          "version": 1
+        },
+        "weight_profile": {
+          "id": "uniform",
+          "parameters": {
+            "base_mean": 6,
+            "proportions": [
+              1
+            ],
+            "relative_weights": [
+              1
+            ]
+          }
+        },
+        "weight_scale": 10
+      },
+      "name": "uniform-n4-s10-honest",
+      "nodes": 4,
+      "threshold": 80,
+      "weights": [
+        60,
+        60,
+        60,
+        60
+      ]
+    },
+    {
+      "byzantine_nodes": [
+        0
+      ],
+      "fault_weight_threshold": 70,
+      "metadata": {
+        "fault_selection": {
+          "budget": "70",
+          "method": "max-weight-then-count-v1",
+          "selected_count": 1,
+          "selected_weight": "60",
+          "ties": "lexicographically-smallest"
+        },
+        "generation": {
+          "input": {
+            "base_weights": [
+              6,
+              6,
+              6,
+              6
+            ],
+            "scale": 10
+          },
+          "method": "fixed-profile",
+          "version": 1
+        },
+        "weight_profile": {
+          "id": "uniform",
+          "parameters": {
+            "base_mean": 6,
+            "proportions": [
+              1
+            ],
+            "relative_weights": [
+              1
+            ]
+          }
+        },
+        "weight_scale": 10
+      },
+      "name": "uniform-n4-s10-stress",
+      "nodes": 4,
+      "threshold": 80,
+      "weights": [
+        60,
+        60,
+        60,
+        60
+      ]
+    },
+    {
+      "byzantine_nodes": [],
+      "fault_weight_threshold": 700,
+      "metadata": {
+        "fault_selection": {
+          "budget": "700",
+          "method": "none",
+          "selected_count": 0,
+          "selected_weight": "0",
+          "ties": "lexicographically-smallest"
+        },
+        "generation": {
+          "input": {
+            "base_weights": [
+              6,
+              6,
+              6,
+              6
+            ],
+            "scale": 100
+          },
+          "method": "fixed-profile",
+          "version": 1
+        },
+        "weight_profile": {
+          "id": "uniform",
+          "parameters": {
+            "base_mean": 6,
+            "proportions": [
+              1
+            ],
+            "relative_weights": [
+              1
+            ]
+          }
+        },
+        "weight_scale": 100
+      },
+      "name": "uniform-n4-s100-honest",
+      "nodes": 4,
+      "threshold": 800,
+      "weights": [
+        600,
+        600,
+        600,
+        600
+      ]
+    },
+    {
+      "byzantine_nodes": [
+        0
+      ],
+      "fault_weight_threshold": 700,
+      "metadata": {
+        "fault_selection": {
+          "budget": "700",
+          "method": "max-weight-then-count-v1",
+          "selected_count": 1,
+          "selected_weight": "600",
+          "ties": "lexicographically-smallest"
+        },
+        "generation": {
+          "input": {
+            "base_weights": [
+              6,
+              6,
+              6,
+              6
+            ],
+            "scale": 100
+          },
+          "method": "fixed-profile",
+          "version": 1
+        },
+        "weight_profile": {
+          "id": "uniform",
+          "parameters": {
+            "base_mean": 6,
+            "proportions": [
+              1
+            ],
+            "relative_weights": [
+              1
+            ]
+          }
+        },
+        "weight_scale": 100
+      },
+      "name": "uniform-n4-s100-stress",
+      "nodes": 4,
+      "threshold": 800,
+      "weights": [
+        600,
+        600,
+        600,
+        600
+      ]
+    },
+    {
+      "byzantine_nodes": [],
+      "fault_weight_threshold": 7,
+      "metadata": {
+        "fault_selection": {
+          "budget": "7",
+          "method": "none",
+          "selected_count": 0,
+          "selected_weight": "0",
+          "ties": "lexicographically-smallest"
+        },
+        "generation": {
+          "input": {
+            "base_weights": [
+              3,
+              3,
+              9,
+              9
+            ],
+            "scale": 1
+          },
+          "method": "fixed-profile",
+          "version": 1
+        },
+        "weight_profile": {
+          "id": "bimodal",
+          "parameters": {
+            "base_mean": 6,
+            "proportions": [
+              0.5,
+              0.5
+            ],
+            "relative_weights": [
+              0.5,
+              1.5
+            ]
+          }
+        },
+        "weight_scale": 1
+      },
+      "name": "bimodal-n4-s1-honest",
+      "nodes": 4,
+      "threshold": 8,
+      "weights": [
+        3,
+        3,
+        9,
+        9
+      ]
+    },
+    {
+      "byzantine_nodes": [
+        0,
+        1
+      ],
+      "fault_weight_threshold": 7,
+      "metadata": {
+        "fault_selection": {
+          "budget": "7",
+          "method": "max-weight-then-count-v1",
+          "selected_count": 2,
+          "selected_weight": "6",
+          "ties": "lexicographically-smallest"
+        },
+        "generation": {
+          "input": {
+            "base_weights": [
+              3,
+              3,
+              9,
+              9
+            ],
+            "scale": 1
+          },
+          "method": "fixed-profile",
+          "version": 1
+        },
+        "weight_profile": {
+          "id": "bimodal",
+          "parameters": {
+            "base_mean": 6,
+            "proportions": [
+              0.5,
+              0.5
+            ],
+            "relative_weights": [
+              0.5,
+              1.5
+            ]
+          }
+        },
+        "weight_scale": 1
+      },
+      "name": "bimodal-n4-s1-stress",
+      "nodes": 4,
+      "threshold": 8,
+      "weights": [
+        3,
+        3,
+        9,
+        9
+      ]
+    },
+    {
+      "byzantine_nodes": [],
+      "fault_weight_threshold": 70,
+      "metadata": {
+        "fault_selection": {
+          "budget": "70",
+          "method": "none",
+          "selected_count": 0,
+          "selected_weight": "0",
+          "ties": "lexicographically-smallest"
+        },
+        "generation": {
+          "input": {
+            "base_weights": [
+              3,
+              3,
+              9,
+              9
+            ],
+            "scale": 10
+          },
+          "method": "fixed-profile",
+          "version": 1
+        },
+        "weight_profile": {
+          "id": "bimodal",
+          "parameters": {
+            "base_mean": 6,
+            "proportions": [
+              0.5,
+              0.5
+            ],
+            "relative_weights": [
+              0.5,
+              1.5
+            ]
+          }
+        },
+        "weight_scale": 10
+      },
+      "name": "bimodal-n4-s10-honest",
+      "nodes": 4,
+      "threshold": 80,
+      "weights": [
+        30,
+        30,
+        90,
+        90
+      ]
+    },
+    {
+      "byzantine_nodes": [
+        0,
+        1
+      ],
+      "fault_weight_threshold": 70,
+      "metadata": {
+        "fault_selection": {
+          "budget": "70",
+          "method": "max-weight-then-count-v1",
+          "selected_count": 2,
+          "selected_weight": "60",
+          "ties": "lexicographically-smallest"
+        },
+        "generation": {
+          "input": {
+            "base_weights": [
+              3,
+              3,
+              9,
+              9
+            ],
+            "scale": 10
+          },
+          "method": "fixed-profile",
+          "version": 1
+        },
+        "weight_profile": {
+          "id": "bimodal",
+          "parameters": {
+            "base_mean": 6,
+            "proportions": [
+              0.5,
+              0.5
+            ],
+            "relative_weights": [
+              0.5,
+              1.5
+            ]
+          }
+        },
+        "weight_scale": 10
+      },
+      "name": "bimodal-n4-s10-stress",
+      "nodes": 4,
+      "threshold": 80,
+      "weights": [
+        30,
+        30,
+        90,
+        90
+      ]
+    },
+    {
+      "byzantine_nodes": [],
+      "fault_weight_threshold": 700,
+      "metadata": {
+        "fault_selection": {
+          "budget": "700",
+          "method": "none",
+          "selected_count": 0,
+          "selected_weight": "0",
+          "ties": "lexicographically-smallest"
+        },
+        "generation": {
+          "input": {
+            "base_weights": [
+              3,
+              3,
+              9,
+              9
+            ],
+            "scale": 100
+          },
+          "method": "fixed-profile",
+          "version": 1
+        },
+        "weight_profile": {
+          "id": "bimodal",
+          "parameters": {
+            "base_mean": 6,
+            "proportions": [
+              0.5,
+              0.5
+            ],
+            "relative_weights": [
+              0.5,
+              1.5
+            ]
+          }
+        },
+        "weight_scale": 100
+      },
+      "name": "bimodal-n4-s100-honest",
+      "nodes": 4,
+      "threshold": 800,
+      "weights": [
+        300,
+        300,
+        900,
+        900
+      ]
+    },
+    {
+      "byzantine_nodes": [
+        0,
+        1
+      ],
+      "fault_weight_threshold": 700,
+      "metadata": {
+        "fault_selection": {
+          "budget": "700",
+          "method": "max-weight-then-count-v1",
+          "selected_count": 2,
+          "selected_weight": "600",
+          "ties": "lexicographically-smallest"
+        },
+        "generation": {
+          "input": {
+            "base_weights": [
+              3,
+              3,
+              9,
+              9
+            ],
+            "scale": 100
+          },
+          "method": "fixed-profile",
+          "version": 1
+        },
+        "weight_profile": {
+          "id": "bimodal",
+          "parameters": {
+            "base_mean": 6,
+            "proportions": [
+              0.5,
+              0.5
+            ],
+            "relative_weights": [
+              0.5,
+              1.5
+            ]
+          }
+        },
+        "weight_scale": 100
+      },
+      "name": "bimodal-n4-s100-stress",
+      "nodes": 4,
+      "threshold": 800,
+      "weights": [
+        300,
+        300,
+        900,
+        900
+      ]
+    },
+    {
+      "byzantine_nodes": [],
+      "fault_weight_threshold": 19,
+      "metadata": {
+        "fault_selection": {
+          "budget": "19",
+          "method": "none",
+          "selected_count": 0,
+          "selected_weight": "0",
+          "ties": "lexicographically-smallest"
+        },
+        "generation": {
+          "input": {
+            "base_weights": [
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "scale": 1
+          },
+          "method": "fixed-profile",
+          "version": 1
+        },
+        "weight_profile": {
+          "id": "uniform",
+          "parameters": {
+            "base_mean": 6,
+            "proportions": [
+              1
+            ],
+            "relative_weights": [
+              1
+            ]
+          }
+        },
+        "weight_scale": 1
+      },
+      "name": "uniform-n10-s1-honest",
+      "nodes": 10,
+      "threshold": 20,
+      "weights": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ]
+    },
+    {
+      "byzantine_nodes": [
+        0,
+        1,
+        2
+      ],
+      "fault_weight_threshold": 19,
+      "metadata": {
+        "fault_selection": {
+          "budget": "19",
+          "method": "max-weight-then-count-v1",
+          "selected_count": 3,
+          "selected_weight": "18",
+          "ties": "lexicographically-smallest"
+        },
+        "generation": {
+          "input": {
+            "base_weights": [
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "scale": 1
+          },
+          "method": "fixed-profile",
+          "version": 1
+        },
+        "weight_profile": {
+          "id": "uniform",
+          "parameters": {
+            "base_mean": 6,
+            "proportions": [
+              1
+            ],
+            "relative_weights": [
+              1
+            ]
+          }
+        },
+        "weight_scale": 1
+      },
+      "name": "uniform-n10-s1-stress",
+      "nodes": 10,
+      "threshold": 20,
+      "weights": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ]
+    },
+    {
+      "byzantine_nodes": [],
+      "fault_weight_threshold": 190,
+      "metadata": {
+        "fault_selection": {
+          "budget": "190",
+          "method": "none",
+          "selected_count": 0,
+          "selected_weight": "0",
+          "ties": "lexicographically-smallest"
+        },
+        "generation": {
+          "input": {
+            "base_weights": [
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "scale": 10
+          },
+          "method": "fixed-profile",
+          "version": 1
+        },
+        "weight_profile": {
+          "id": "uniform",
+          "parameters": {
+            "base_mean": 6,
+            "proportions": [
+              1
+            ],
+            "relative_weights": [
+              1
+            ]
+          }
+        },
+        "weight_scale": 10
+      },
+      "name": "uniform-n10-s10-honest",
+      "nodes": 10,
+      "threshold": 200,
+      "weights": [
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60
+      ]
+    },
+    {
+      "byzantine_nodes": [
+        0,
+        1,
+        2
+      ],
+      "fault_weight_threshold": 190,
+      "metadata": {
+        "fault_selection": {
+          "budget": "190",
+          "method": "max-weight-then-count-v1",
+          "selected_count": 3,
+          "selected_weight": "180",
+          "ties": "lexicographically-smallest"
+        },
+        "generation": {
+          "input": {
+            "base_weights": [
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "scale": 10
+          },
+          "method": "fixed-profile",
+          "version": 1
+        },
+        "weight_profile": {
+          "id": "uniform",
+          "parameters": {
+            "base_mean": 6,
+            "proportions": [
+              1
+            ],
+            "relative_weights": [
+              1
+            ]
+          }
+        },
+        "weight_scale": 10
+      },
+      "name": "uniform-n10-s10-stress",
+      "nodes": 10,
+      "threshold": 200,
+      "weights": [
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60
+      ]
+    },
+    {
+      "byzantine_nodes": [],
+      "fault_weight_threshold": 1900,
+      "metadata": {
+        "fault_selection": {
+          "budget": "1900",
+          "method": "none",
+          "selected_count": 0,
+          "selected_weight": "0",
+          "ties": "lexicographically-smallest"
+        },
+        "generation": {
+          "input": {
+            "base_weights": [
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "scale": 100
+          },
+          "method": "fixed-profile",
+          "version": 1
+        },
+        "weight_profile": {
+          "id": "uniform",
+          "parameters": {
+            "base_mean": 6,
+            "proportions": [
+              1
+            ],
+            "relative_weights": [
+              1
+            ]
+          }
+        },
+        "weight_scale": 100
+      },
+      "name": "uniform-n10-s100-honest",
+      "nodes": 10,
+      "threshold": 2000,
+      "weights": [
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600
+      ]
+    },
+    {
+      "byzantine_nodes": [
+        0,
+        1,
+        2
+      ],
+      "fault_weight_threshold": 1900,
+      "metadata": {
+        "fault_selection": {
+          "budget": "1900",
+          "method": "max-weight-then-count-v1",
+          "selected_count": 3,
+          "selected_weight": "1800",
+          "ties": "lexicographically-smallest"
+        },
+        "generation": {
+          "input": {
+            "base_weights": [
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "scale": 100
+          },
+          "method": "fixed-profile",
+          "version": 1
+        },
+        "weight_profile": {
+          "id": "uniform",
+          "parameters": {
+            "base_mean": 6,
+            "proportions": [
+              1
+            ],
+            "relative_weights": [
+              1
+            ]
+          }
+        },
+        "weight_scale": 100
+      },
+      "name": "uniform-n10-s100-stress",
+      "nodes": 10,
+      "threshold": 2000,
+      "weights": [
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600
+      ]
+    },
+    {
+      "byzantine_nodes": [],
+      "fault_weight_threshold": 19,
+      "metadata": {
+        "fault_selection": {
+          "budget": "19",
+          "method": "none",
+          "selected_count": 0,
+          "selected_weight": "0",
+          "ties": "lexicographically-smallest"
+        },
+        "generation": {
+          "input": {
+            "base_weights": [
+              3,
+              3,
+              3,
+              3,
+              3,
+              9,
+              9,
+              9,
+              9,
+              9
+            ],
+            "scale": 1
+          },
+          "method": "fixed-profile",
+          "version": 1
+        },
+        "weight_profile": {
+          "id": "bimodal",
+          "parameters": {
+            "base_mean": 6,
+            "proportions": [
+              0.5,
+              0.5
+            ],
+            "relative_weights": [
+              0.5,
+              1.5
+            ]
+          }
+        },
+        "weight_scale": 1
+      },
+      "name": "bimodal-n10-s1-honest",
+      "nodes": 10,
+      "threshold": 20,
+      "weights": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        9,
+        9,
+        9,
+        9,
+        9
+      ]
+    },
+    {
+      "byzantine_nodes": [
+        0,
+        1,
+        2,
+        5
+      ],
+      "fault_weight_threshold": 19,
+      "metadata": {
+        "fault_selection": {
+          "budget": "19",
+          "method": "max-weight-then-count-v1",
+          "selected_count": 4,
+          "selected_weight": "18",
+          "ties": "lexicographically-smallest"
+        },
+        "generation": {
+          "input": {
+            "base_weights": [
+              3,
+              3,
+              3,
+              3,
+              3,
+              9,
+              9,
+              9,
+              9,
+              9
+            ],
+            "scale": 1
+          },
+          "method": "fixed-profile",
+          "version": 1
+        },
+        "weight_profile": {
+          "id": "bimodal",
+          "parameters": {
+            "base_mean": 6,
+            "proportions": [
+              0.5,
+              0.5
+            ],
+            "relative_weights": [
+              0.5,
+              1.5
+            ]
+          }
+        },
+        "weight_scale": 1
+      },
+      "name": "bimodal-n10-s1-stress",
+      "nodes": 10,
+      "threshold": 20,
+      "weights": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        9,
+        9,
+        9,
+        9,
+        9
+      ]
+    },
+    {
+      "byzantine_nodes": [],
+      "fault_weight_threshold": 190,
+      "metadata": {
+        "fault_selection": {
+          "budget": "190",
+          "method": "none",
+          "selected_count": 0,
+          "selected_weight": "0",
+          "ties": "lexicographically-smallest"
+        },
+        "generation": {
+          "input": {
+            "base_weights": [
+              3,
+              3,
+              3,
+              3,
+              3,
+              9,
+              9,
+              9,
+              9,
+              9
+            ],
+            "scale": 10
+          },
+          "method": "fixed-profile",
+          "version": 1
+        },
+        "weight_profile": {
+          "id": "bimodal",
+          "parameters": {
+            "base_mean": 6,
+            "proportions": [
+              0.5,
+              0.5
+            ],
+            "relative_weights": [
+              0.5,
+              1.5
+            ]
+          }
+        },
+        "weight_scale": 10
+      },
+      "name": "bimodal-n10-s10-honest",
+      "nodes": 10,
+      "threshold": 200,
+      "weights": [
+        30,
+        30,
+        30,
+        30,
+        30,
+        90,
+        90,
+        90,
+        90,
+        90
+      ]
+    },
+    {
+      "byzantine_nodes": [
+        0,
+        1,
+        2,
+        5
+      ],
+      "fault_weight_threshold": 190,
+      "metadata": {
+        "fault_selection": {
+          "budget": "190",
+          "method": "max-weight-then-count-v1",
+          "selected_count": 4,
+          "selected_weight": "180",
+          "ties": "lexicographically-smallest"
+        },
+        "generation": {
+          "input": {
+            "base_weights": [
+              3,
+              3,
+              3,
+              3,
+              3,
+              9,
+              9,
+              9,
+              9,
+              9
+            ],
+            "scale": 10
+          },
+          "method": "fixed-profile",
+          "version": 1
+        },
+        "weight_profile": {
+          "id": "bimodal",
+          "parameters": {
+            "base_mean": 6,
+            "proportions": [
+              0.5,
+              0.5
+            ],
+            "relative_weights": [
+              0.5,
+              1.5
+            ]
+          }
+        },
+        "weight_scale": 10
+      },
+      "name": "bimodal-n10-s10-stress",
+      "nodes": 10,
+      "threshold": 200,
+      "weights": [
+        30,
+        30,
+        30,
+        30,
+        30,
+        90,
+        90,
+        90,
+        90,
+        90
+      ]
+    },
+    {
+      "byzantine_nodes": [],
+      "fault_weight_threshold": 1900,
+      "metadata": {
+        "fault_selection": {
+          "budget": "1900",
+          "method": "none",
+          "selected_count": 0,
+          "selected_weight": "0",
+          "ties": "lexicographically-smallest"
+        },
+        "generation": {
+          "input": {
+            "base_weights": [
+              3,
+              3,
+              3,
+              3,
+              3,
+              9,
+              9,
+              9,
+              9,
+              9
+            ],
+            "scale": 100
+          },
+          "method": "fixed-profile",
+          "version": 1
+        },
+        "weight_profile": {
+          "id": "bimodal",
+          "parameters": {
+            "base_mean": 6,
+            "proportions": [
+              0.5,
+              0.5
+            ],
+            "relative_weights": [
+              0.5,
+              1.5
+            ]
+          }
+        },
+        "weight_scale": 100
+      },
+      "name": "bimodal-n10-s100-honest",
+      "nodes": 10,
+      "threshold": 2000,
+      "weights": [
+        300,
+        300,
+        300,
+        300,
+        300,
+        900,
+        900,
+        900,
+        900,
+        900
+      ]
+    },
+    {
+      "byzantine_nodes": [
+        0,
+        1,
+        2,
+        5
+      ],
+      "fault_weight_threshold": 1900,
+      "metadata": {
+        "fault_selection": {
+          "budget": "1900",
+          "method": "max-weight-then-count-v1",
+          "selected_count": 4,
+          "selected_weight": "1800",
+          "ties": "lexicographically-smallest"
+        },
+        "generation": {
+          "input": {
+            "base_weights": [
+              3,
+              3,
+              3,
+              3,
+              3,
+              9,
+              9,
+              9,
+              9,
+              9
+            ],
+            "scale": 100
+          },
+          "method": "fixed-profile",
+          "version": 1
+        },
+        "weight_profile": {
+          "id": "bimodal",
+          "parameters": {
+            "base_mean": 6,
+            "proportions": [
+              0.5,
+              0.5
+            ],
+            "relative_weights": [
+              0.5,
+              1.5
+            ]
+          }
+        },
+        "weight_scale": 100
+      },
+      "name": "bimodal-n10-s100-stress",
+      "nodes": 10,
+      "threshold": 2000,
+      "weights": [
+        300,
+        300,
+        300,
+        300,
+        300,
+        900,
+        900,
+        900,
+        900,
+        900
+      ]
+    },
+    {
+      "byzantine_nodes": [],
+      "fault_weight_threshold": 31,
+      "metadata": {
+        "fault_selection": {
+          "budget": "31",
+          "method": "none",
+          "selected_count": 0,
+          "selected_weight": "0",
+          "ties": "lexicographically-smallest"
+        },
+        "generation": {
+          "input": {
+            "base_weights": [
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "scale": 1
+          },
+          "method": "fixed-profile",
+          "version": 1
+        },
+        "weight_profile": {
+          "id": "uniform",
+          "parameters": {
+            "base_mean": 6,
+            "proportions": [
+              1
+            ],
+            "relative_weights": [
+              1
+            ]
+          }
+        },
+        "weight_scale": 1
+      },
+      "name": "uniform-n16-s1-honest",
+      "nodes": 16,
+      "threshold": 32,
+      "weights": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ]
+    },
+    {
+      "byzantine_nodes": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "fault_weight_threshold": 31,
+      "metadata": {
+        "fault_selection": {
+          "budget": "31",
+          "method": "max-weight-then-count-v1",
+          "selected_count": 5,
+          "selected_weight": "30",
+          "ties": "lexicographically-smallest"
+        },
+        "generation": {
+          "input": {
+            "base_weights": [
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "scale": 1
+          },
+          "method": "fixed-profile",
+          "version": 1
+        },
+        "weight_profile": {
+          "id": "uniform",
+          "parameters": {
+            "base_mean": 6,
+            "proportions": [
+              1
+            ],
+            "relative_weights": [
+              1
+            ]
+          }
+        },
+        "weight_scale": 1
+      },
+      "name": "uniform-n16-s1-stress",
+      "nodes": 16,
+      "threshold": 32,
+      "weights": [
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6,
+        6
+      ]
+    },
+    {
+      "byzantine_nodes": [],
+      "fault_weight_threshold": 310,
+      "metadata": {
+        "fault_selection": {
+          "budget": "310",
+          "method": "none",
+          "selected_count": 0,
+          "selected_weight": "0",
+          "ties": "lexicographically-smallest"
+        },
+        "generation": {
+          "input": {
+            "base_weights": [
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "scale": 10
+          },
+          "method": "fixed-profile",
+          "version": 1
+        },
+        "weight_profile": {
+          "id": "uniform",
+          "parameters": {
+            "base_mean": 6,
+            "proportions": [
+              1
+            ],
+            "relative_weights": [
+              1
+            ]
+          }
+        },
+        "weight_scale": 10
+      },
+      "name": "uniform-n16-s10-honest",
+      "nodes": 16,
+      "threshold": 320,
+      "weights": [
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60
+      ]
+    },
+    {
+      "byzantine_nodes": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "fault_weight_threshold": 310,
+      "metadata": {
+        "fault_selection": {
+          "budget": "310",
+          "method": "max-weight-then-count-v1",
+          "selected_count": 5,
+          "selected_weight": "300",
+          "ties": "lexicographically-smallest"
+        },
+        "generation": {
+          "input": {
+            "base_weights": [
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "scale": 10
+          },
+          "method": "fixed-profile",
+          "version": 1
+        },
+        "weight_profile": {
+          "id": "uniform",
+          "parameters": {
+            "base_mean": 6,
+            "proportions": [
+              1
+            ],
+            "relative_weights": [
+              1
+            ]
+          }
+        },
+        "weight_scale": 10
+      },
+      "name": "uniform-n16-s10-stress",
+      "nodes": 16,
+      "threshold": 320,
+      "weights": [
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60,
+        60
+      ]
+    },
+    {
+      "byzantine_nodes": [],
+      "fault_weight_threshold": 3100,
+      "metadata": {
+        "fault_selection": {
+          "budget": "3100",
+          "method": "none",
+          "selected_count": 0,
+          "selected_weight": "0",
+          "ties": "lexicographically-smallest"
+        },
+        "generation": {
+          "input": {
+            "base_weights": [
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "scale": 100
+          },
+          "method": "fixed-profile",
+          "version": 1
+        },
+        "weight_profile": {
+          "id": "uniform",
+          "parameters": {
+            "base_mean": 6,
+            "proportions": [
+              1
+            ],
+            "relative_weights": [
+              1
+            ]
+          }
+        },
+        "weight_scale": 100
+      },
+      "name": "uniform-n16-s100-honest",
+      "nodes": 16,
+      "threshold": 3200,
+      "weights": [
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600
+      ]
+    },
+    {
+      "byzantine_nodes": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "fault_weight_threshold": 3100,
+      "metadata": {
+        "fault_selection": {
+          "budget": "3100",
+          "method": "max-weight-then-count-v1",
+          "selected_count": 5,
+          "selected_weight": "3000",
+          "ties": "lexicographically-smallest"
+        },
+        "generation": {
+          "input": {
+            "base_weights": [
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6,
+              6
+            ],
+            "scale": 100
+          },
+          "method": "fixed-profile",
+          "version": 1
+        },
+        "weight_profile": {
+          "id": "uniform",
+          "parameters": {
+            "base_mean": 6,
+            "proportions": [
+              1
+            ],
+            "relative_weights": [
+              1
+            ]
+          }
+        },
+        "weight_scale": 100
+      },
+      "name": "uniform-n16-s100-stress",
+      "nodes": 16,
+      "threshold": 3200,
+      "weights": [
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600,
+        600
+      ]
+    },
+    {
+      "byzantine_nodes": [],
+      "fault_weight_threshold": 31,
+      "metadata": {
+        "fault_selection": {
+          "budget": "31",
+          "method": "none",
+          "selected_count": 0,
+          "selected_weight": "0",
+          "ties": "lexicographically-smallest"
+        },
+        "generation": {
+          "input": {
+            "base_weights": [
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              9,
+              9,
+              9,
+              9,
+              9,
+              9,
+              9,
+              9
+            ],
+            "scale": 1
+          },
+          "method": "fixed-profile",
+          "version": 1
+        },
+        "weight_profile": {
+          "id": "bimodal",
+          "parameters": {
+            "base_mean": 6,
+            "proportions": [
+              0.5,
+              0.5
+            ],
+            "relative_weights": [
+              0.5,
+              1.5
+            ]
+          }
+        },
+        "weight_scale": 1
+      },
+      "name": "bimodal-n16-s1-honest",
+      "nodes": 16,
+      "threshold": 32,
+      "weights": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        9,
+        9,
+        9,
+        9,
+        9,
+        9,
+        9,
+        9
+      ]
+    },
+    {
+      "byzantine_nodes": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        8
+      ],
+      "fault_weight_threshold": 31,
+      "metadata": {
+        "fault_selection": {
+          "budget": "31",
+          "method": "max-weight-then-count-v1",
+          "selected_count": 8,
+          "selected_weight": "30",
+          "ties": "lexicographically-smallest"
+        },
+        "generation": {
+          "input": {
+            "base_weights": [
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              9,
+              9,
+              9,
+              9,
+              9,
+              9,
+              9,
+              9
+            ],
+            "scale": 1
+          },
+          "method": "fixed-profile",
+          "version": 1
+        },
+        "weight_profile": {
+          "id": "bimodal",
+          "parameters": {
+            "base_mean": 6,
+            "proportions": [
+              0.5,
+              0.5
+            ],
+            "relative_weights": [
+              0.5,
+              1.5
+            ]
+          }
+        },
+        "weight_scale": 1
+      },
+      "name": "bimodal-n16-s1-stress",
+      "nodes": 16,
+      "threshold": 32,
+      "weights": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        9,
+        9,
+        9,
+        9,
+        9,
+        9,
+        9,
+        9
+      ]
+    },
+    {
+      "byzantine_nodes": [],
+      "fault_weight_threshold": 310,
+      "metadata": {
+        "fault_selection": {
+          "budget": "310",
+          "method": "none",
+          "selected_count": 0,
+          "selected_weight": "0",
+          "ties": "lexicographically-smallest"
+        },
+        "generation": {
+          "input": {
+            "base_weights": [
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              9,
+              9,
+              9,
+              9,
+              9,
+              9,
+              9,
+              9
+            ],
+            "scale": 10
+          },
+          "method": "fixed-profile",
+          "version": 1
+        },
+        "weight_profile": {
+          "id": "bimodal",
+          "parameters": {
+            "base_mean": 6,
+            "proportions": [
+              0.5,
+              0.5
+            ],
+            "relative_weights": [
+              0.5,
+              1.5
+            ]
+          }
+        },
+        "weight_scale": 10
+      },
+      "name": "bimodal-n16-s10-honest",
+      "nodes": 16,
+      "threshold": 320,
+      "weights": [
+        30,
+        30,
+        30,
+        30,
+        30,
+        30,
+        30,
+        30,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90
+      ]
+    },
+    {
+      "byzantine_nodes": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        8
+      ],
+      "fault_weight_threshold": 310,
+      "metadata": {
+        "fault_selection": {
+          "budget": "310",
+          "method": "max-weight-then-count-v1",
+          "selected_count": 8,
+          "selected_weight": "300",
+          "ties": "lexicographically-smallest"
+        },
+        "generation": {
+          "input": {
+            "base_weights": [
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              9,
+              9,
+              9,
+              9,
+              9,
+              9,
+              9,
+              9
+            ],
+            "scale": 10
+          },
+          "method": "fixed-profile",
+          "version": 1
+        },
+        "weight_profile": {
+          "id": "bimodal",
+          "parameters": {
+            "base_mean": 6,
+            "proportions": [
+              0.5,
+              0.5
+            ],
+            "relative_weights": [
+              0.5,
+              1.5
+            ]
+          }
+        },
+        "weight_scale": 10
+      },
+      "name": "bimodal-n16-s10-stress",
+      "nodes": 16,
+      "threshold": 320,
+      "weights": [
+        30,
+        30,
+        30,
+        30,
+        30,
+        30,
+        30,
+        30,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90,
+        90
+      ]
+    },
+    {
+      "byzantine_nodes": [],
+      "fault_weight_threshold": 3100,
+      "metadata": {
+        "fault_selection": {
+          "budget": "3100",
+          "method": "none",
+          "selected_count": 0,
+          "selected_weight": "0",
+          "ties": "lexicographically-smallest"
+        },
+        "generation": {
+          "input": {
+            "base_weights": [
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              9,
+              9,
+              9,
+              9,
+              9,
+              9,
+              9,
+              9
+            ],
+            "scale": 100
+          },
+          "method": "fixed-profile",
+          "version": 1
+        },
+        "weight_profile": {
+          "id": "bimodal",
+          "parameters": {
+            "base_mean": 6,
+            "proportions": [
+              0.5,
+              0.5
+            ],
+            "relative_weights": [
+              0.5,
+              1.5
+            ]
+          }
+        },
+        "weight_scale": 100
+      },
+      "name": "bimodal-n16-s100-honest",
+      "nodes": 16,
+      "threshold": 3200,
+      "weights": [
+        300,
+        300,
+        300,
+        300,
+        300,
+        300,
+        300,
+        300,
+        900,
+        900,
+        900,
+        900,
+        900,
+        900,
+        900,
+        900
+      ]
+    },
+    {
+      "byzantine_nodes": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        8
+      ],
+      "fault_weight_threshold": 3100,
+      "metadata": {
+        "fault_selection": {
+          "budget": "3100",
+          "method": "max-weight-then-count-v1",
+          "selected_count": 8,
+          "selected_weight": "3000",
+          "ties": "lexicographically-smallest"
+        },
+        "generation": {
+          "input": {
+            "base_weights": [
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              3,
+              9,
+              9,
+              9,
+              9,
+              9,
+              9,
+              9,
+              9
+            ],
+            "scale": 100
+          },
+          "method": "fixed-profile",
+          "version": 1
+        },
+        "weight_profile": {
+          "id": "bimodal",
+          "parameters": {
+            "base_mean": 6,
+            "proportions": [
+              0.5,
+              0.5
+            ],
+            "relative_weights": [
+              0.5,
+              1.5
+            ]
+          }
+        },
+        "weight_scale": 100
+      },
+      "name": "bimodal-n16-s100-stress",
+      "nodes": 16,
+      "threshold": 3200,
+      "weights": [
+        300,
+        300,
+        300,
+        300,
+        300,
+        300,
+        300,
+        300,
+        900,
+        900,
+        900,
+        900,
+        900,
+        900,
+        900,
+        900
+      ]
+    }
+  ],
+  "metadata": {
+    "experiment_id": "scalability-20261004-v1"
+  },
+  "node_params": {
+    "coverage_bits": 40,
+    "output_bits": 128,
+    "rounding_bits": 64
+  }
+}

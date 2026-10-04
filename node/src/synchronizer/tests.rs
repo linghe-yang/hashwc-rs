@@ -52,7 +52,7 @@ fn invalid_early_messages_and_arbitrary_precision_weights() {
         s.prepare(i).unwrap();
     }
     assert!(
-        s.finish(0, commoncoin::Coin::from_hex(2, "0x2").unwrap())
+        s.finish(0, whcc::Coin::from_hex(2, "0x2").unwrap())
             .is_err()
     );
     let huge = BigUint::from(1u8) << 512usize;
@@ -193,7 +193,7 @@ async fn late_party_accepts_stop_before_prepare() {
     });
     tokio::time::timeout(
         std::time::Duration::from_secs(2),
-        party::run(node, commoncoin::Parameters::default()),
+        party::run(node, whcc::Parameters::default(), whcc::Behavior::Honest),
     )
     .await
     .unwrap()
@@ -201,8 +201,8 @@ async fn late_party_accepts_stop_before_prepare() {
     server.await.unwrap();
 }
 
-fn bit(bit: u8) -> commoncoin::Coin {
-    commoncoin::Coin::from_hex(1, &format!("0x{bit:x}")).unwrap()
+fn bit(bit: u8) -> whcc::Coin {
+    whcc::Coin::from_hex(1, &format!("0x{bit:x}")).unwrap()
 }
 
 #[test]
@@ -211,8 +211,8 @@ fn multibit_finish_votes_compare_entire_word_and_enforce_width() {
     for i in 0..4 {
         s.prepare(i).unwrap();
     }
-    let a = commoncoin::Coin::from_hex(128, "0x80000000000000000000000000000001").unwrap();
-    let b = commoncoin::Coin::from_hex(128, "0x90000000000000000000000000000001").unwrap();
+    let a = whcc::Coin::from_hex(128, "0x80000000000000000000000000000001").unwrap();
+    let b = whcc::Coin::from_hex(128, "0x90000000000000000000000000000001").unwrap();
     assert_eq!(a.bit(0).unwrap(), b.bit(0).unwrap());
     assert!(s.finish(0, bit(1)).is_err());
     assert!(!s.finish(0, a).unwrap());

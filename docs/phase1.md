@@ -75,4 +75,4 @@ PrivateShare 为 setup_id (32)、context_id (32)、party (u64 little-endian)、t
 - 调用真实外部 WRBC/WRA 状态机，模拟随机异步调度、重复消息、合法腐化预算内的静默故障、极大偏斜权重、迟到 receipt 和迟到释放屏障。
 - 恶意 dealer 分发不一致公开记录时的共同 Bottom；没有有效 receipt 时不得完成；重复调用不得重复输出。
 
-模拟队列测试没有跨进程或 socket，不测带宽和延迟，也不替代协议的安全证明。阶段一时 main.rs 仅验证运行时配置；现已增加完整随机币入口与 Rust 网络模块测试，见 [完整 common coin 说明](commoncoin.md)。
+模拟队列测试没有跨进程或 socket，不测带宽和延迟，也不替代协议的安全证明。阶段一时 main.rs 仅验证运行时配置；现已增加完整随机币入口与 Rust 网络模块测试，见 [完整 common coin 说明](whcc.md)。

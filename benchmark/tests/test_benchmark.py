@@ -13,6 +13,10 @@ from benchmark.logs import LogParser, ParseError
 
 
 class PolicyTests(unittest.TestCase):
+    def test_protocol_name_and_legacy_policy_alias(self):
+        self.assertEqual(BenchParameters(dict(nodes=4)).protocol, 'whcc')
+        self.assertEqual(BenchParameters(dict(nodes=4, protocol='commoncoin')).json['protocol'], 'whcc')
+
     def test_distribution_and_weight_bound(self):
         policy = BenchParameters(dict(nodes=4, weights=dict(distribution='linear', scale=100), threshold='auto'))
         self.assertEqual(policy.weights, [100, 200, 300, 400])
@@ -136,6 +140,35 @@ class BandwidthTests(unittest.TestCase):
                 meter.stop()
             listener.close()
 
+    def test_kernel_snapshot_preserves_large_payload_and_fragmented_sender_header(self):
+        listener = socket.socket()
+        listener.bind(('127.0.0.1', 0))
+        listener.listen(1)
+        meter = BandwidthMeter({listener.getsockname()[1]: dict(service='test', party=0)}, [0, 1])
+        payload = (131120).to_bytes(4, 'little') + bytes(32) + (1).to_bytes(8, 'little') + bytes(8) + b'z'*131072
+        meter.start()
+        try:
+            with socket.create_connection(listener.getsockname()) as client:
+                peer, _ = listener.accept()
+                with peer:
+                    for part in [payload[:9], payload[9:19], payload[19:]]:
+                        client.sendall(part)
+                    remaining = len(payload)
+                    while remaining:
+                        remaining -= len(peer.recv(remaining))
+                    peer.sendall(b'a'*32)
+                    self.assertEqual(client.recv(32), b'a'*32)
+            result = meter.stop()
+            self.assertEqual(result['total_sent_bytes'], len(payload)+32)
+            self.assertEqual(result['per_party_sent_bytes'][1]['test'], len(payload))
+            self.assertEqual(result['per_party_sent_bytes'][0]['test'], 32)
+            self.assertEqual(result['snapshot_bytes'], 256)
+            self.assertEqual(result['dropped_packets'], 0)
+        finally:
+            if meter.thread is not None:
+                meter.stop()
+            listener.close()
+
 
 class LogTests(unittest.TestCase):
     def fixture(self, directory, output_bits=1):
@@ -150,7 +183,7 @@ class LogTests(unittest.TestCase):
                                              per_service_sent_bytes=totals, total_sent_bytes=600,
                                              per_party_sent_bytes=per_party))
         (run/'logs').mkdir()
-        common = dict(protocol='commoncoin', epoch=0, session='ab'*32, output_bits=output_bits)
+        common = dict(protocol='whcc', epoch=0, session='ab'*32, output_bits=output_bits)
         coin_value = 1 if output_bits == 1 else '0x80000000000000000000000000000001'
         sync = [dict(common, kind='sync_start', started_us=1000000, prepared=list(range(4)), prepared_weight='4'),
                 dict(common, kind='sync_result', coin=coin_value, started_us=1000000, completed_us=1005000,
@@ -165,6 +198,27 @@ class LogTests(unittest.TestCase):
                            per_service_sent_bytes=per_party[str(i)])]
             (run/'logs'/'primary-{}.log'.format(i)).write_text(''.join(json.dumps(e)+'\n' for e in events))
         return run
+
+    def test_legacy_logs_are_read_as_whcc_without_rewriting_sources(self):
+        with tempfile.TemporaryDirectory() as directory:
+            run = self.fixture(directory)
+            policy_path = Path(directory)/'resolved-policy.json'
+            data = json.loads(policy_path.read_text())
+            data['bench_params']['protocol'] = 'commoncoin'
+            write_json(policy_path, data)
+            paths = list((run/'logs').glob('*.log'))
+            for path in paths:
+                events = [json.loads(line) for line in path.read_text().splitlines()]
+                for event in events:
+                    event['protocol'] = 'commoncoin'
+                path.write_text(''.join(json.dumps(e)+'\n' for e in events))
+            before = {path: path.read_bytes() for path in paths + [policy_path]}
+            parsed = LogParser.process(directory).data
+            self.assertEqual(parsed['protocol'], 'whcc')
+            self.assertEqual(parsed['source_protocol'], 'commoncoin')
+            self.assertEqual(parsed['config']['bench_params']['protocol'], 'whcc')
+            self.assertEqual(parsed['runs'][0]['synchronizer']['protocol'], 'whcc')
+            self.assertEqual(before, {path: path.read_bytes() for path in before})
 
     def test_summary_and_result_files_have_no_throughput(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -182,7 +236,7 @@ class LogTests(unittest.TestCase):
             self.fixture(directory, 128)
             parser = LogParser.process(directory)
             self.assertEqual(parser.data['output_bits'], 128)
-            self.assertEqual(parser.data['schema_version'], 3)
+            self.assertEqual(parser.data['schema_version'], 5)
             expected = '0x80000000000000000000000000000001'
             self.assertEqual(parser.data['runs'][0]['coin'], expected)
             parser.print(Path(directory)/'summary.txt')

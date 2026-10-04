@@ -6,8 +6,8 @@ from benchmark.utils import PathMaker
 
 class CommandMaker:
     @staticmethod
-    def compile(protocol='commoncoin'):
-        if protocol != 'commoncoin':
+    def compile(protocol='whcc'):
+        if protocol not in ('whcc', 'commoncoin'):
             raise ValueError('Unsupported protocol')
         return ['cargo', 'build', '--release', '--locked', '-p', 'node']
 
@@ -16,9 +16,11 @@ class CommandMaker:
         return [sys.executable, '-m', 'benchmark.config', '--policy', str(policy), '--target', str(target)]
 
     @staticmethod
-    def run_primary(keys, parameters, debug=False):
+    def run_primary(keys, parameters, debug=False, behavior='honest'):
+        if behavior not in ('honest', 'recovery-stress'):
+            raise ValueError('Unsupported node behavior')
         return [str(PathMaker.binary_path() / 'node')] + (['-v'] if debug else []) + [
-            'run', '--config', str(keys), '--parameters', str(parameters), '--synchronize']
+            'run', '--config', str(keys), '--parameters', str(parameters), '--synchronize', '--behavior', behavior]
 
     @staticmethod
     def check_config(keys, parameters):

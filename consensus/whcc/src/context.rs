@@ -64,9 +64,19 @@ impl Context {
         input: mpsc::Receiver<Request>,
         output: mpsc::Sender<Event>,
     ) -> Result<Handle> {
+        Self::spawn_with_behavior(node, parameters, crate::Behavior::Honest, input, output)
+    }
+    pub fn spawn_with_behavior(
+        node: Node,
+        parameters: Parameters,
+        behavior: crate::Behavior,
+        input: mpsc::Receiver<Request>,
+        output: mpsc::Sender<Event>,
+    ) -> Result<Handle> {
         // Validate ALL addresses before binding the first socket.
         let ports = Ports::new(&node, parameters.port_stride)?;
-        let state = State::new(&node, parameters.clone())?;
+        let mut state = State::new(&node, parameters.clone())?;
+        state.behavior = behavior;
         let bound = parameters.bound_node(&node, state.setup());
         let mut services = vec![];
         let (rbc_tx, rbc_in) = mpsc::channel(1024);
@@ -119,11 +129,9 @@ impl Context {
             .context("start WBinAA")?,
         );
         let private =
-            PrivateEndpoint::bind(&ports.node(&bound, Service::Private)?, "commoncoin/private")?;
-        let recovery = PrivateEndpoint::bind(
-            &ports.node(&bound, Service::Recovery)?,
-            "commoncoin/recovery",
-        )?;
+            PrivateEndpoint::bind(&ports.node(&bound, Service::Private)?, "whcc/private")?;
+        let recovery =
+            PrivateEndpoint::bind(&ports.node(&bound, Service::Recovery)?, "whcc/recovery")?;
         let (stop, exit) = oneshot::channel();
         let failure_out = output.clone();
         let mut context = Self {
@@ -147,7 +155,7 @@ impl Context {
         let task = tokio::spawn(async move {
             let result = context.run().await;
             if let Err(e) = &result {
-                log::error!("commoncoin failed: {e:#}");
+                log::error!("whcc failed: {e:#}");
                 let _ = failure_out.try_send(Event::Failed {
                     reason: format!("{e:#}"),
                 });
