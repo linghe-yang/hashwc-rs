@@ -132,6 +132,35 @@ class PlotTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             max_corruption([1]*21,6)
 
+    def test_n_pow_n_is_an_explicit_checked_joint_scalability_rule(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            for n in [4, 10]:
+                path, data = self.result(base, n)
+                bench = data['config']['bench_params']
+                bench['weights'] = [n**(n-1)]*n
+                bench['threshold'] = n**n//3
+                write_json(path, data)
+            params = Ploter.validate(self.config())
+            rows, _, _ = Ploter.discover(params['results'], base)
+            with self.assertRaises(PlotError):
+                Ploter.aggregate(rows, params, params['charts'][0])
+            params['charts'][0]['weight_control'] = 'n_pow_n'
+            result = Ploter.plot(params, base)
+            self.assertEqual(result['figures'], 2)
+            for violation in ['weights', 'threshold']:
+                changed = copy.deepcopy(rows)
+                bench = changed[0]['data']['config']['bench_params']
+                if violation == 'weights':
+                    bench['weights'][0] += 1
+                else:
+                    bench['threshold'] -= 1
+                with self.assertRaises(PlotError):
+                    Ploter.aggregate(changed, params, params['charts'][0])
+            params['charts'][0]['x'] = 'weight_scale'
+            with self.assertRaises(PlotError):
+                Ploter.validate(params)
+
     def test_invalid_configuration_and_escape_are_rejected(self):
         for change in [dict(error_bar='ci95'),dict(min_runs=0),dict(series=['typo']),dict(formats=['exe'])]:
             params=self.config()

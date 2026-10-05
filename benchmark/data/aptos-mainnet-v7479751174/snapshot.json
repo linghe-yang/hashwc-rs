@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "network": "mainnet",
+  "chain_id": 1,
+  "epoch": "17519",
+  "ledger_version": "7479751174",
+  "ledger_timestamp_us": "1791119516596669",
+  "timestamp": "2026-10-04T13:11:56.596Z",
+  "retrieved_at": "2026-10-04T13:13:46.116Z",
+  "source": "https://fullnode.mainnet.aptoslabs.com/v1/accounts/0x1/resource/0x1::stake::ValidatorSet?ledger_version=7479751174",
+  "sha256": "5c4ac58a336824d953d0aa215401f9a88ca1ef5cd62010e1ff7f305a45e67b41",
+  "resource_type": "0x1::stake::ValidatorSet",
+  "included": [
+    "active_validators",
+    "pending_inactive"
+  ],
+  "excluded": [
+    "pending_active"
+  ],
+  "validator_count": 85,
+  "total_voting_power": "75479730360415546",
+  "unit": "octa",
+  "response_headers": {
+    "access-control-allow-credentials": "true",
+    "alt-svc": "h3=\":443\"; ma=2592000",
+    "content-encoding": "br",
+    "content-type": "application/json; charset=utf-8",
+    "date": "Sun, 04 Oct 2026 13:12:30 GMT",
+    "transfer-encoding": "chunked",
+    "vary": "origin, access-control-request-method, access-control-request-headers",
+    "via": "1.1 google",
+    "x-aptos-block-height": "1090078439",
+    "x-aptos-chain-id": "1",
+    "x-aptos-epoch": "17519",
+    "x-aptos-ledger-oldest-version": "7329955712",
+    "x-aptos-ledger-timestampusec": "1791119550991659",
+    "x-aptos-ledger-version": "7479755696",
+    "x-aptos-oldest-block-height": "1065340194"
+  },
+  "note": "The resource is requested at ledger_version; x-aptos-ledger-* response headers describe the serving node latest state, not the requested historical state."
+}

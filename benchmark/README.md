@@ -288,6 +288,12 @@ fab plot --config=plot-configs/scalability.json
 
 默认配置生成 8 张图：节点数的延迟/通信量两张，以及固定 n=4、10、16 时权重大小的延迟/通信量各两张。每张包含两个分布的诚实/拜占庭曲线，实线/虚线区分；均输出 PDF、SVG、PNG。
 
+## Aptos 真实分布与超大权重
+
+新增 n=4/16/31/46/64 的真实分布与 W=n^n 测试策略，见 [WEIGHT_POLICIES.md](WEIGHT_POLICIES.md)。原始主网快照、可复现生成方法、三套 policy、三套 plot config 和离线电路检查报告均已保存；这些策略的分布式实验尚未执行。
+
+chart 可指定 weight_control="n_pow_n"，只用于 nodes 横轴，严格验证 W=n^n、T=floor(W/3)、weight_scale=1，并将图标题标注为节点数与权重共同增长的压力测试。默认 fixed_mean 仍要求节点曲线的平均权重与门限比例固定。新策略的拜占庭选择侧重最大身份数与预算内单次替换局部最优，不冒充旧策略的全局最大腐化权重。
+
 ## 大规模流量采集
 
 系统存在 tcpdump 时，优先使用原生 libpcap/mmap 抓包，将指定协议端口的 SYN 与带数据报文截取到 256 字节，保存为每轮 .traffic.pcap；协议停止后，Python 再进行发送者归属和字节汇总。完整 TCP 数据字节数从原始 IP/TCP 长度计算，不把截取后的长度当作通信量。capture.log 保存原生采集统计，丢包非零、记录不完整或身份归属不完整都会使实验失败。
@@ -303,3 +309,11 @@ python3 -m unittest discover -s tests -v
 ~~~
 
 Rust 测试覆盖严格加权门限、去重、分歧结果分别计权、大整数、控制消息绑定、分段读取、独立端口及迟到 STOP。Python 测试覆盖配置、原始 TCP 计数与发送方归属、静默节点零负载控制包、同步器门限校验、停止前未输出节点以及日志与流量异常。
+
+## 按电路门数搜索的压力策略
+
+已为 n=4/16/31/46/64 固定 W=n^n 搜索较大电路实例，提供合并 policy 与各规模独立 policy。方法、门数、复现入口及保证范围见 [GATE_SEARCH.md](GATE_SEARCH.md)。搜索和配置检查均为离线操作，不代表已完成分布式性能测试。
+
+## 命令行生成 policy
+
+使用 `fab policy --nodes=16 --total-weight=16000 --distribution=2 --output=policies/custom.json` 生成配置，随后交给原有 `fab local` 运行。分布枚举为 1 等权、2 近似等权且 gcd=1、3 少数重节点且各自不超过 F、4 固定 W=n^n 的门数搜索；也可使用与枚举互斥的 `--pool` 读取 Aptos 或自定义 JSON 权重池。默认 runs=1，仅生成 honest case。完整命令、故障参数与输出记录见 [POLICY_GENERATOR.md](POLICY_GENERATOR.md)。

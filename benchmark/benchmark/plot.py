@@ -113,7 +113,7 @@ class Ploter:
             raise PlotError('At least one chart is required')
         names = set()
         for chart in p['charts']:
-            object_keys(chart, ['name', 'x', 'values', 'filters', 'xscale', 'yscale'], 'chart')
+            object_keys(chart, ['name', 'x', 'values', 'filters', 'xscale', 'yscale', 'weight_control'], 'chart')
             name = chart.get('name')
             if not isinstance(name, str) or not re.fullmatch(r'[A-Za-z0-9_-]+', name) or name in names:
                 raise PlotError('Chart names must be unique safe filenames')
@@ -123,6 +123,9 @@ class Ploter:
             values = chart.get('values')
             if not isinstance(values, list) or not values or any(type(v) is not int or v < 1 for v in values) or len(set(values)) != len(values):
                 raise PlotError('Chart values must list distinct positive expected x values')
+            chart.setdefault('weight_control', 'fixed_mean')
+            if chart['weight_control'] not in ('fixed_mean', 'n_pow_n') or (chart['weight_control'] == 'n_pow_n' and chart['x'] != 'nodes'):
+                raise PlotError('n_pow_n weight control requires a nodes axis')
             chart.setdefault('filters', {})
             validate_filters(chart['filters'])
             chart.setdefault('xscale', 'linear')
@@ -213,13 +216,17 @@ class Ploter:
             if any(v is None for v in series):
                 raise PlotError('Missing series metadata in {}'.format(row['file']))
             generation = meta.get('generation') or {}
-            invariant = dict(profile=meta['weight_profile'], threshold_ratio=str(Fraction(threshold, sum(weights))),
+            npow = chart.get('weight_control', 'fixed_mean') == 'n_pow_n'
+            if npow and (sum(weights) != dims['nodes']**dims['nodes'] or threshold != sum(weights)//3
+                         or dims['weight_scale'] != 1):
+                raise PlotError('n_pow_n requires W=n^n, T=floor(W/3), and weight_scale=1')
+            invariant = dict(profile=meta['weight_profile'], threshold_ratio='floor(W/3)' if npow else str(Fraction(threshold, sum(weights))),
                              generation={k: generation.get(k) for k in ['method', 'version', 'seed', 'snapshot']},
                              protocol=dims['protocol'], fault_case=dims['fault_case'],
                              fault_selection=(meta.get('fault_selection') or {}).get('method'),
                              fixed=dims['weight_scale'] if chart['x']=='nodes' else dims['nodes'])
             if chart['x'] == 'nodes':
-                invariant['mean_weight'] = str(Fraction(sum(weights), len(weights)))
+                invariant['mean_weight'] = 'W=n^n' if npow else str(Fraction(sum(weights), len(weights)))
             else:
                 scale = dims['weight_scale']
                 invariant['base_weights'] = [str(Fraction(w, scale)) for w in weights]
@@ -326,6 +333,8 @@ class Ploter:
                 ax.set_xlabel('Number of parties' if chart['x']=='nodes' else 'Weight scale (weights and threshold scaled together)')
                 ax.set_ylabel(METRICS[metric][1])
                 title = 'Party scalability' if chart['x']=='nodes' else 'Weight scalability | {} parties'.format(report['points'][0]['nodes'])
+                if chart.get('weight_control') == 'n_pow_n':
+                    title = 'Joint party / weight stress | W = n^n'
                 ax.set_title(title, loc='left', fontweight='bold', pad=12)
                 ax.grid(True, alpha=0.22)
                 if chart['yscale']=='linear':

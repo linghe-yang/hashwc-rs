@@ -1,0 +1,1 @@
+{"type":"0x1::reconfiguration::Configuration","data":{"epoch":"17519","events":{"counter":"17519","guid":{"id":{"addr":"0x1","creation_num":"2"}}},"last_reconfiguration_time":"1791118590771903"}}
