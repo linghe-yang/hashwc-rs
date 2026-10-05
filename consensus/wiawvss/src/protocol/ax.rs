@@ -80,7 +80,7 @@ impl PrivateShare {
         })
     }
 }
-#[derive(Clone, PartialEq, Eq, Zeroize, ZeroizeOnDrop)]
+#[derive(Clone, PartialEq, Eq, Zeroize, ZeroizeOnDrop, serde::Serialize, serde::Deserialize)]
 pub struct Opening {
     pub message: Block,
     pub randomness: Block,

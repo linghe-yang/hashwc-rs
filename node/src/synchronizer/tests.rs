@@ -155,8 +155,8 @@ fn synchronizer_port_is_separate_including_loopback_aliases() {
         .insert(node.num_nodes, "127.0.0.2:20000".into());
     assert!(super::address(&node, None).is_err());
     node.net_map
-        .insert(node.num_nodes, "127.0.0.1:20042".into());
-    assert_eq!(super::address(&node, None).unwrap().port(), 20042);
+        .insert(node.num_nodes, "127.0.0.1:20049".into());
+    assert_eq!(super::address(&node, None).unwrap().port(), 20049);
 }
 #[tokio::test]
 async fn late_party_accepts_stop_before_prepare() {

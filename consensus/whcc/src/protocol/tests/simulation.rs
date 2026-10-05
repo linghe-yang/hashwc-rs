@@ -10,6 +10,7 @@ use wiawvss::{Opening, ax};
 #[derive(Clone, Debug)]
 enum Message {
     Rbc(wrbc::ProtMsg),
+    Avid(wavid::ProtMsg),
     Ra(wra::ProtMsg),
     Gather(wgather::ProtMsg),
     BinAa(wbinaa::ProtMsg),
@@ -19,6 +20,7 @@ enum Message {
 struct Party {
     pub app: State,
     pub rbc: BTreeMap<InstanceId, wrbc::State>,
+    pub avid: BTreeMap<InstanceId, wavid::State>,
     pub ra: BTreeMap<InstanceId, wra::State>,
     pub pending_ra: BTreeMap<(InstanceId, usize, u8), wra::ProtMsg>,
     pub gather: wgather::State,
@@ -75,6 +77,27 @@ impl Sim {
                         _ => unreachable!(),
                     })
                     .collect();
+                let avid = app
+                    .avid_manifest()
+                    .into_iter()
+                    .map(|r| match r {
+                        wavid::Request::Register {
+                            instance,
+                            descriptor,
+                        } => (
+                            instance,
+                            wavid::State::new(
+                                m.clone(),
+                                node.id,
+                                instance,
+                                bound.weighted_public_id("wavid"),
+                                descriptor,
+                            )
+                            .unwrap(),
+                        ),
+                        _ => unreachable!(),
+                    })
+                    .collect();
                 let gather = wgather::State::new(m.clone(), node.id, app.global()).unwrap();
                 let binaa =
                     wbinaa::State::new(m, node.id, app.global(), params.precision(node.num_nodes))
@@ -82,6 +105,7 @@ impl Sim {
                 Party {
                     app,
                     rbc,
+                    avid,
                     ra: BTreeMap::new(),
                     pending_ra: BTreeMap::new(),
                     gather,
@@ -139,6 +163,24 @@ impl Sim {
                     match action {
                         Action::Rbc(wrbc::Request::Broadcast { instance, data }) => {
                             p.rbc.get_mut(&instance).unwrap().broadcast(&data).unwrap()
+                        }
+                        Action::Avid(request) => {
+                            let instance = request.instance();
+                            let st = p.avid.get_mut(&instance).unwrap();
+                            match request {
+                                wavid::Request::Disperse { data, .. } => {
+                                    st.disperse(&data).unwrap()
+                                }
+                                wavid::Request::Pin { root, .. } => st.pin_root(root).unwrap(),
+                                wavid::Request::Authorize { retrievers, .. } => {
+                                    st.authorize(retrievers).unwrap()
+                                }
+                                wavid::Request::Retrieve { .. } => st.retrieve().unwrap(),
+                                wavid::Request::Complete { root, .. } => {
+                                    st.accept_completion(root).unwrap()
+                                }
+                                _ => unreachable!(),
+                            }
                         }
                         Action::Ra(wra::Request::Register {
                             instance,
@@ -205,6 +247,15 @@ impl Sim {
                         }
                     }
                 }
+                for state in p.avid.values_mut() {
+                    for a in std::mem::take(&mut state.outgoing) {
+                        self.queue.push((id, a.recipient, Message::Avid(a.message)));
+                    }
+                    for e in std::mem::take(&mut state.events) {
+                        progress = true;
+                        p.app.avid_event(e).unwrap();
+                    }
+                }
                 for state in p.ra.values_mut() {
                     for a in std::mem::take(&mut state.outgoing) {
                         self.queue.push((id, a.recipient, Message::Ra(a.message)));
@@ -262,6 +313,7 @@ impl Sim {
     fn receive(&mut self, sender: usize, to: usize, message: Message) {
         let p = &mut self.parties[to];
         match message {
+            Message::Avid(msg) => p.avid.get_mut(&msg.instance).unwrap().receive(sender, msg),
             Message::Rbc(msg) => p.rbc.get_mut(&msg.instance).unwrap().receive(sender, msg),
             Message::Ra(msg) => {
                 if let Some(ra) = p.ra.get_mut(&msg.instance) {
@@ -442,17 +494,10 @@ fn valid_ax_opening_outside_coin_range_is_certified_as_zero() {
         },
     )
     .unwrap();
-    for action in &mut p.app.actions {
-        match action {
-            Action::Rbc(wrbc::Request::Broadcast { instance, data }) if instance.slot == 0 => {
-                *data = public.encode()
-            }
-            Action::Private { recipient, packet } => {
-                packet.payload = shares[*recipient].encode().to_vec()
-            }
-            _ => {}
-        }
-    }
+    let list = (0..p.app.sampling.quotas[0]).collect();
+    p.app.actions.clear();
+    p.app.started = false;
+    p.app.start_material(list, public, shares).unwrap();
     s.settle();
     s.assert_complete();
     for p in &s.parties {
@@ -478,8 +523,16 @@ fn even_an_authorized_recoverer_cannot_forge_a_rejection() {
             _ => None,
         })
         .unwrap();
-    let public = wiawvss::Public::decode(&p.app.setup, &p.app.dealers[0].context, raw).unwrap();
-    let raw = wiawvss::terminal::Terminal::RootFault { token: [0; 32] }.encode(&public);
+    let header =
+        wiawvss::certified::Header::decode(&p.app.setup, &p.app.dealers[0].context, raw).unwrap();
+    let raw = wiawvss::certified::Certificate {
+        header_id: header.id(),
+        evidence: wiawvss::certified::Evidence::Semantic {
+            fault: wiawvss::terminal::Terminal::RootFault { token: [0; 32] },
+            fields: vec![],
+        },
+    }
+    .encode();
     for to in 0..7 {
         s.parties[to]
             .app
@@ -498,4 +551,146 @@ fn even_an_authorized_recoverer_cannot_forge_a_rejection() {
     s.assert_complete();
     assert!(s.parties.iter().all(|p| p.app.assignments.authorized(6, 0)));
     assert!(s.rejected.iter().all(Vec::is_empty));
+}
+
+#[test]
+fn sharing_needs_both_storage_and_authenticated_private_receipts() {
+    for drop_storage in [false, true] {
+        let mut s = Sim::new(&[1; 7], 2, None, 127);
+        s.start(None);
+        s.pump();
+        s.queue.retain(|(_, _, msg)| match msg {
+            Message::Private(p) if !drop_storage && p.dealer == 0 => false,
+            Message::Avid(m)
+                if drop_storage
+                    && m.instance.dealer == Some(0)
+                    && matches!(m.kind, wavid::Kind::Init { .. }) =>
+            {
+                false
+            }
+            _ => true,
+        });
+        s.settle();
+        for p in &s.parties {
+            assert!(p.app.dealers[0].header.is_some());
+            assert!(!p.app.dealers[0].echoed);
+            assert!(!p.app.dealers[0].complete);
+            assert!(p.app.dealers[0].value.is_none());
+        }
+    }
+}
+#[test]
+fn global_completion_does_not_require_local_receipt_and_late_receipt_still_serves() {
+    let mut s = Sim::new(&[1; 7], 2, None, 131);
+    s.start(None);
+    s.pump();
+    let k = s
+        .queue
+        .iter()
+        .position(|(_, to, m)| *to == 6 && matches!(m,Message::Private(p) if p.dealer==0))
+        .unwrap();
+    let late = s.queue.swap_remove(k);
+    s.settle();
+    s.assert_complete();
+    assert!(s.parties[6].app.dealers[0].complete);
+    assert!(!s.parties[6].app.dealers[0].echoed);
+    let before = s.token_sends;
+    s.receive(late.0, late.1, late.2);
+    s.settle();
+    assert!(s.parties[6].app.dealers[0].echoed);
+    assert!(s.token_sends > before);
+    s.assert_complete();
+}
+#[test]
+fn nonrecoverers_verify_outputs_without_downloading_public_bulk() {
+    let mut s = Sim::new(&[1; 7], 2, None, 137);
+    s.start(None);
+    s.settle();
+    s.assert_complete();
+    let mut nonmembers = 0;
+    for p in &s.parties {
+        for d in 0..7 {
+            if !p.app.assignments.authorized(p.app.id, d) {
+                nonmembers += 1;
+                assert!(!p.app.dealers[d].retrieving);
+                assert!(p.app.dealers[d].public.is_none());
+                assert!(p.app.dealers[d].value.is_some());
+            }
+        }
+    }
+    assert!(nonmembers > 0);
+}
+#[test]
+fn committed_bad_codeword_completes_storage_but_yields_public_coding_rejection() {
+    use wiawvss::certified::{Header, Receipt};
+    let mut s = Sim::new(&[1; 7], 2, None, 139);
+    s.start(None);
+    let p = &mut s.parties[0];
+    let public = p
+        .app
+        .actions
+        .iter()
+        .find_map(|a| {
+            if let Action::Avid(wavid::Request::Disperse { data, .. }) = a {
+                Some(data.clone())
+            } else {
+                None
+            }
+        })
+        .unwrap();
+    let codec = &p.app.dealers[0].codec;
+    let mut rows = codec.prepare(&public).unwrap().rows;
+    rows[0][codec.k][0] ^= 1;
+    let prepared = codec.commit_rows(rows).unwrap();
+    let header = Header::new(&p.app.setup, &p.app.dealers[0].context, prepared.root);
+    for a in &mut p.app.actions {
+        match a {
+            Action::Rbc(wrbc::Request::Broadcast { instance, data }) if instance.slot == 0 => {
+                *data = header.encode()
+            }
+            Action::Private { packet, .. } => {
+                let old = Receipt::decode(codec, &packet.payload).unwrap();
+                let share = wiawvss::PrivateShare::decode(&old.share).unwrap();
+                packet.payload = Receipt::new(&p.app.setup, codec, &prepared, &share)
+                    .unwrap()
+                    .encode();
+            }
+            _ => {}
+        }
+    }
+    p.app
+        .actions
+        .retain(|a| !matches!(a, Action::Avid(wavid::Request::Disperse { .. })));
+    p.avid
+        .get_mut(&p.app.instance(0, 0))
+        .unwrap()
+        .disperse_prepared(prepared)
+        .unwrap();
+    s.settle();
+    s.assert_complete();
+    assert!(
+        s.parties
+            .iter()
+            .all(|p| p.app.dealers[0].complete && p.app.dealers[0].value == Some(0u8.into()))
+    );
+    assert!(s.rejected.iter().all(|r| r.contains(&0)));
+}
+
+#[test]
+fn malformed_private_tokens_cannot_obtain_honest_echoes() {
+    let mut s = Sim::new(&[1; 7], 2, None, 149);
+    s.start(None);
+    let codec = s.parties[0].app.dealers[0].codec.clone();
+    for a in &mut s.parties[0].app.actions {
+        if let Action::Private { packet, .. } = a {
+            let mut receipt = wiawvss::certified::Receipt::decode(&codec, &packet.payload).unwrap();
+            receipt.share[103] ^= 1;
+            packet.payload = receipt.encode();
+        }
+    }
+    s.settle();
+    for p in &s.parties {
+        assert!(!p.app.dealers[0].echoed);
+        assert!(!p.app.dealers[0].complete);
+    }
 }

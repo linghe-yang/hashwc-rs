@@ -6,7 +6,13 @@ use bincode::Options;
 use config::Node;
 use crypto::hash::{Hash, do_mac, verf_mac};
 use serde::{Deserialize, Serialize, de::DeserializeOwned};
-use std::{collections::HashMap, fmt::Debug, net::SocketAddr, sync::Arc, time::Duration};
+use std::{
+    collections::HashMap,
+    fmt::Debug,
+    net::SocketAddr,
+    sync::{Arc, Mutex as StdMutex, Weak},
+    time::Duration,
+};
 use tokio::{
     io::{AsyncReadExt, AsyncWriteExt},
     net::{TcpListener, TcpStream},
@@ -149,10 +155,36 @@ impl<T: DeserializeOwned + Send + 'static> Handler<T> {
     }
 }
 
+/// Share identical queued wire payloads across recipients without retaining completed sends.
+#[derive(Default)]
+struct PayloadCache {
+    entries: HashMap<Hash, Weak<Vec<u8>>>,
+    insertions: usize,
+}
+impl PayloadCache {
+    fn intern(&mut self, bytes: Vec<u8>) -> Arc<Vec<u8>> {
+        let key = crypto::hash::do_hash(&bytes);
+        if let Some(existing) = self.entries.get(&key).and_then(Weak::upgrade) {
+            // Equality keeps this a storage optimization even in the event of a hash collision.
+            if *existing == bytes {
+                return existing;
+            }
+        }
+        self.insertions += 1;
+        if self.insertions.is_multiple_of(1024) {
+            self.entries.retain(|_, value| value.strong_count() != 0);
+        }
+        let shared = Arc::new(bytes);
+        self.entries.insert(key, Arc::downgrade(&shared));
+        shared
+    }
+}
+
 pub struct Endpoint<T> {
     pub recv: mpsc::Receiver<(Replica, T)>,
     pub public_id: Hash,
-    peers: Vec<mpsc::UnboundedSender<T>>,
+    peers: Vec<mpsc::UnboundedSender<Arc<Vec<u8>>>>,
+    payloads: StdMutex<PayloadCache>,
     tasks: Vec<JoinHandle<()>>,
 }
 impl<T: Clone + Debug + Serialize + DeserializeOwned + Send + Sync + 'static> Endpoint<T> {
@@ -189,7 +221,7 @@ impl<T: Clone + Debug + Serialize + DeserializeOwned + Send + Sync + 'static> En
         })];
         let mut peers = Vec::with_capacity(n);
         for peer in 0..n {
-            let (out, mut queue) = mpsc::unbounded_channel::<T>();
+            let (out, mut queue) = mpsc::unbounded_channel::<Arc<Vec<u8>>>();
             peers.push(out);
             let tx = tx.clone();
             let key = config.sk_map[&peer].clone();
@@ -199,6 +231,10 @@ impl<T: Clone + Debug + Serialize + DeserializeOwned + Send + Sync + 'static> En
                 let mut connection = None;
                 while let Some(message) = queue.recv().await {
                     if peer == id {
+                        let message = match decode::<T>(&message) {
+                            Ok(message) => message,
+                            Err(_) => break,
+                        };
                         if tx.send((id, message)).await.is_err() {
                             break;
                         }
@@ -213,10 +249,7 @@ impl<T: Clone + Debug + Serialize + DeserializeOwned + Send + Sync + 'static> En
                         sender: id,
                         recipient: peer,
                         sequence,
-                        payload: match bincode::serialize(&message) {
-                            Ok(x) => x,
-                            Err(_) => break,
-                        },
+                        payload: (*message).clone(),
                         mac: [0; 32],
                     };
                     f.mac = frame_mac(&f, &key);
@@ -258,6 +291,7 @@ impl<T: Clone + Debug + Serialize + DeserializeOwned + Send + Sync + 'static> En
             recv,
             public_id: context,
             peers,
+            payloads: StdMutex::new(PayloadCache::default()),
             tasks,
         })
     }
@@ -266,10 +300,16 @@ impl<T: Clone + Debug + Serialize + DeserializeOwned + Send + Sync + 'static> En
         if bincode::serialized_size(&action.message)? > (MAX_FRAME_BYTES - 256) as u64 {
             return Err(anyhow!("message exceeds frame limit"));
         }
-        self.peers
+        let peer = self
+            .peers
             .get(action.recipient)
-            .ok_or_else(|| anyhow!("unknown recipient"))?
-            .send(action.message)
+            .ok_or_else(|| anyhow!("unknown recipient"))?;
+        let payload = self
+            .payloads
+            .lock()
+            .map_err(|_| anyhow!("payload cache poisoned"))?
+            .intern(bincode::serialize(&action.message)?);
+        peer.send(payload)
             .map_err(|_| anyhow!("peer sender stopped"))
     }
 }
@@ -345,6 +385,21 @@ mod tests {
         f.mac = frame_mac(&f, &key);
         assert!(exchange(handler, bincode::serialize(&f).unwrap()).await);
         assert_eq!(rx.recv().await, Some((0, 42)));
+    }
+    #[test]
+    fn identical_pending_payloads_share_storage_and_completed_ones_expire() {
+        let mut cache = PayloadCache::default();
+        let a = cache.intern(vec![1; 32768]);
+        let b = cache.intern(vec![1; 32768]);
+        assert!(Arc::ptr_eq(&a, &b));
+        let weak = Arc::downgrade(&a);
+        drop(a);
+        drop(b);
+        assert!(weak.upgrade().is_none());
+        for i in 0u32..2048 {
+            cache.intern(i.to_le_bytes().to_vec());
+        }
+        assert!(cache.entries.len() < 1024);
     }
     #[test]
     fn malformed_serialization_is_bounded() {

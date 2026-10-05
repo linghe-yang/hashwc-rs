@@ -20,7 +20,7 @@ class PlotError(ValueError):
     pass
 
 
-FIELDS = {'protocol', 'experiment_id', 'nodes', 'weight_profile', 'weight_scale', 'fault_case',
+FIELDS = {'total_weight', 'protocol', 'experiment_id', 'nodes', 'weight_profile', 'weight_scale', 'fault_case',
           'output_bits', 'rounding_bits', 'coverage_bits', 'case_name'}
 METRICS = {
     'latency_ms': ('latency_ms', 'Coin latency (ms)', 1),
@@ -51,7 +51,7 @@ def dimensions(data):
     if silent:
         fault = 'silent' if not byz else fault + '+silent'
     return dict(protocol='whcc' if data['protocol'] == 'commoncoin' else data['protocol'],
-                experiment_id=meta.get('experiment_id'), nodes=bench['nodes'], case_name=bench['name'],
+                experiment_id=meta.get('experiment_id'), nodes=bench['nodes'], total_weight=sum(bench['weights']), case_name=bench['name'],
                 weight_profile=(meta.get('weight_profile') or {}).get('id'), weight_scale=meta.get('weight_scale'),
                 fault_case=fault, output_bits=node.get('output_bits', 1),
                 rounding_bits=node['rounding_bits'], coverage_bits=node['coverage_bits'])
@@ -118,8 +118,8 @@ class Ploter:
             if not isinstance(name, str) or not re.fullmatch(r'[A-Za-z0-9_-]+', name) or name in names:
                 raise PlotError('Chart names must be unique safe filenames')
             names.add(name)
-            if chart.get('x') not in ('nodes', 'weight_scale') or chart['x'] in p['series']:
-                raise PlotError('x must be nodes or weight_scale, independent of series')
+            if chart.get('x') not in ('nodes', 'weight_scale', 'total_weight') or chart['x'] in p['series']:
+                raise PlotError('x must be nodes, weight_scale, or total_weight, independent of series')
             values = chart.get('values')
             if not isinstance(values, list) or not values or any(type(v) is not int or v < 1 for v in values) or len(set(values)) != len(values):
                 raise PlotError('Chart values must list distinct positive expected x values')
@@ -239,7 +239,7 @@ class Ploter:
             point_key = (series, dims[chart['x']])
             if point_key not in points:
                 points[point_key] = dict(series=dict(zip(params['series'], series)), x=dims[chart['x']],
-                    configuration_id=meta['configuration_id'], fault_case=dims['fault_case'], nodes=dims['nodes'], weight_scale=dims['weight_scale'],
+                    configuration_id=meta['configuration_id'], fault_case=dims['fault_case'], nodes=dims['nodes'], total_weight=sum(weights), weight_scale=dims['weight_scale'],
                     weight_profile=meta['weight_profile'], circuit=meta.get('circuit'), fault_model=data.get('fault_model', meta.get('fault_model')),
                     fault_selection=meta.get('fault_selection'), sources=[], runs=[], measurements={m: [] for m in params['metrics']})
             point = points[point_key]
@@ -272,7 +272,7 @@ class Ploter:
             if len(point['runs']) < params['min_runs']:
                 raise PlotError('Not enough distinct runs at {} x={}'.format(point['series'], point['x']))
             point['statistics'] = {m: summarize(v, params['error_bar']) for m, v in point['measurements'].items()}
-        return dict(name=chart['name'], output_bits=selected[0]['dims']['output_bits'], chart=chart, cohorts=cohorts, duplicates=duplicates,
+        return dict(name=chart['name'], implementation=selected[0]['data']['metadata']['build'].get('implementation'), output_bits=selected[0]['dims']['output_bits'], chart=chart, cohorts=cohorts, duplicates=duplicates,
                     points=sorted(points.values(), key=lambda p: (json.dumps(p['series'], sort_keys=True), p['x'])))
 
     @classmethod
@@ -307,13 +307,13 @@ class Ploter:
             profiles = sorted({p['weight_profile']['id'] for p in report['points']})
             colors = {p: plt.get_cmap('tab10')(i) for i, p in enumerate(profiles)}
             for metric in params['metrics']:
-                fig, ax = plt.subplots(figsize=(7.2, 5.2))
+                fig, ax = plt.subplots(figsize=(7.2, 6.2))
                 for _, points in sorted(grouped.items()):
                     points.sort(key=lambda p:p['x'])
                     first = points[0]
                     profile = first['weight_profile']['id']
                     fault = first['fault_case']
-                    labels = {'honest': 'Honest', 'uniform': 'Uniform', 'bimodal': 'Bimodal',
+                    labels = {'honest': 'Honest', 'uniform': 'Uniform', 'bimodal': 'Bimodal', 'near-uniform': 'Near-uniform', 'heavy-tail': 'Minority-heavy', 'aptos': 'Aptos',
                               'recovery-stress': 'Max-weight stress' if (first.get('fault_selection') or {}).get('method') == 'max-weight-then-count-v1' else 'Recovery stress'}
                     label = ' / '.join(labels.get(str(v), str(v)) for v in first['series'].values())
                     factor = METRICS[metric][2]
@@ -330,23 +330,30 @@ class Ploter:
                 ax.set_yscale(chart['yscale'])
                 ax.set_xticks(sorted(chart['values']))
                 ax.set_xticklabels([str(v) for v in sorted(chart['values'])])
-                ax.set_xlabel('Number of parties' if chart['x']=='nodes' else 'Weight scale (weights and threshold scaled together)')
+                ax.set_xlabel({'nodes': 'Number of parties', 'weight_scale': 'Weight scale (weights and threshold scaled together)',
+                               'total_weight': 'Total weight W (threshold scaled proportionally)'}[chart['x']])
                 ax.set_ylabel(METRICS[metric][1])
                 title = 'Party scalability' if chart['x']=='nodes' else 'Weight scalability | {} parties'.format(report['points'][0]['nodes'])
                 if chart.get('weight_control') == 'n_pow_n':
                     title = 'Joint party / weight stress | W = n^n'
+                elif chart['x'] == 'nodes':
+                    point = report['points'][0]
+                    title += ' | W = {}n'.format(Fraction(point['total_weight'], point['nodes']))
                 ax.set_title(title, loc='left', fontweight='bold', pad=12)
                 ax.grid(True, alpha=0.22)
                 if chart['yscale']=='linear':
                     ax.set_ylim(bottom=0)
-                ax.legend(fontsize=8, loc='best', framealpha=0.95)
+                handles, labels = ax.get_legend_handles_labels()
+                fig.legend(handles, labels, fontsize=8, loc='lower center',
+                           bbox_to_anchor=(0.5, 0.105), ncol=2, frameon=False)
                 counts = sorted({len(p['runs']) for p in report['points']})
                 security = report['output_bits']
-                note = '{}-bit coin | {} runs/point | error bars: {}\n'.format(security, '/'.join(map(str, counts)), params['error_bar'])
-                note += 'Local multiprocess; quorum STOP. Stress is bounded recovery-stress.\n'
-                note += 'Maximum feasible corruption weight when declared; not a global worst-case bound.'
+                note = '{}-bit coin | {} runs/point | error bars: {}\n'.format(security, '/'.join(map(str, counts)), params['error_bar'].replace('_', '–'))
+                label = 'Header WRBC + striped WAVID' if report.get('implementation') == 'compact-header-striped-wavid-v1' else 'Full public-record WRBC'
+                note += label + '; local multiprocess; quorum STOP.\n'
+                note += 'Recovery stress is bounded, not a proven global worst case.'
                 fig.text(0.1, 0.035, note, fontsize=7, color='#555555')
-                fig.tight_layout(rect=(0, 0.105, 1, 1))
+                fig.tight_layout(rect=(0, 0.25, 1, 1))
                 stem = '{}-{}'.format(report['name'], metric)
                 for extension in params['formats']:
                     fig.savefig(output/(stem+'.'+extension), dpi=180)

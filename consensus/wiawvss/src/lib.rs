@@ -1,6 +1,4 @@
-//! AX + WCSS + hash commitments, composed with upstream WRBC/WRA.
-pub mod msg;
+//! AX + WCSS and certified striped storage; network composition lives in whcc.
 pub mod protocol;
-pub use msg::{Action, Event, Message};
 pub use protocol::*;
 pub use wcss::{Limits, Setup};

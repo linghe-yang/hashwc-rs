@@ -55,6 +55,8 @@ class PlotTests(unittest.TestCase):
             self.assertTrue((base/'plots/test/party-latency_ms.pdf').read_bytes().startswith(b'%PDF'))
             self.assertIn('<svg',(base/'plots/test/party-latency_ms.svg').read_text())
             self.assertTrue((base/'plots/test/index.html').exists())
+            self.assertIn('W = 6n', (base/'plots/test/party-latency_ms.svg').read_text())
+            self.assertIn('Full public-record WRBC', (base/'plots/test/party-latency_ms.svg').read_text())
 
     def test_missing_grid_and_mixed_versions_are_rejected(self):
         for change in ['missing_x','missing_series','build','security','profile','conflict']:
@@ -97,6 +99,19 @@ class PlotTests(unittest.TestCase):
             rows,_,_=Ploter.discover(params['results'],base)
             with self.assertRaises(PlotError):
                 Ploter.aggregate(rows,params,params['charts'][0])
+
+    def test_total_weight_axis_uses_exact_totals(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            self.result(base, 4, 1)
+            self.result(base, 4, 10)
+            params = self.config()
+            params['charts'] = [dict(name='total', x='total_weight', values=[24,240],
+                                    filters=dict(nodes=[4]), xscale='log')]
+            result = Ploter.plot(params, base)
+            self.assertEqual(result['figures'], 2)
+            report = json.loads((base/'plots/test/total-points.json').read_text())
+            self.assertEqual([p['x'] for p in report['points']], [24,240])
 
     def test_large_run_counts_pool_observations_not_means_of_means(self):
         with tempfile.TemporaryDirectory() as directory:

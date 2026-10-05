@@ -15,10 +15,19 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
         let policy = types::Policy::from_strings(&fields[1..], &fields[0])?;
         policy.validate_async()?;
         let circuit = Circuit::build(policy, Limits::default())?;
-        let ands = circuit.gates().iter().filter(|g| matches!(g.op, wcss::Op::And)).count();
-        writeln!(stdout,
+        let ands = circuit
+            .gates()
+            .iter()
+            .filter(|g| matches!(g.op, wcss::Op::And))
+            .count();
+        writeln!(
+            stdout,
             "{{\"parties\":{},\"gates\":{},\"and_gates\":{},\"or_gates\":{}}}",
-            circuit.policy().n(), circuit.gates().len(), ands, circuit.gates().len()-ands)?;
+            circuit.policy().n(),
+            circuit.gates().len(),
+            ands,
+            circuit.gates().len() - ands
+        )?;
         stdout.flush()?;
     }
     Ok(())

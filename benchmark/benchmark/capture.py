@@ -66,10 +66,11 @@ class NativeCapture:
             raise BenchError('Native capture failed: '+log)
         counts = {}
         for field, phrase in [('captured','packets captured'), ('received','packets received by filter'), ('dropped','packets dropped by kernel')]:
-            match = re.search(r'(\d+) '+phrase, log)
-            if not match:
+            matches = re.findall(r'(\d+) '+phrase, log)
+            if not matches:
                 raise BenchError('Missing native capture statistics: '+log)
-            counts[field] = int(match.group(1))
+            # SIGUSR1 may have emitted intermediate counters; the final counters are authoritative.
+            counts[field] = int(matches[-1])
         if counts['dropped']:
             raise BenchError('Native capture dropped {} packets; result is invalid'.format(counts['dropped']))
         return counts

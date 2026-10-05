@@ -40,6 +40,7 @@ pub enum Event {
 #[derive(Debug)]
 pub enum Action {
     Rbc(wrbc::Request),
+    Avid(wavid::Request),
     Ra(wra::Request),
     Gather(wgather::Request),
     BinAa(wbinaa::Request),

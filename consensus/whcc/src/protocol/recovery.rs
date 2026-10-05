@@ -7,7 +7,8 @@ use network::Packet;
 use num_bigint::BigUint;
 use wiawvss::{
     PrivateShare,
-    terminal::{self, Terminal},
+    certified::{self, Certificate, Evidence},
+    terminal,
 };
 impl State {
     pub fn recovery_packet(&mut self, sender: usize, packet: Packet) -> Result<()> {
@@ -17,7 +18,6 @@ impl State {
         }
         match packet.kind {
             RECOVERY_TOKEN => {
-                // Early honest packets may precede local declaration/header/freeze deliveries.
                 if self.assignments.delivered(self.id) && !self.assignments.authorized(self.id, d) {
                     return Ok(());
                 }
@@ -31,23 +31,15 @@ impl State {
                 {
                     return Ok(());
                 }
-                if let Some(public) = &dealer.public
-                    && !crypto::equal(
-                        &crypto::input_commitment(&dealer.context.id(), sender, &share.token),
-                        &public.base.inputs[sender],
-                    )
-                {
-                    return Ok(());
-                }
-                if dealer.tokens.get(&sender) != Some(&share) {
-                    dealer.tokens.insert(sender, share);
+                if let std::collections::btree_map::Entry::Vacant(e) = dealer.tokens.entry(sender) {
+                    e.insert(share);
                     dealer.recovery_dirty = true;
                 }
             }
             TERMINAL => {
                 let dealer = &mut self.dealers[d];
-                if packet.payload.len() > Terminal::MAX_BYTES
-                    || packet.payload.len() < 33
+                if packet.payload.len() > certified::max_evidence_bytes(&dealer.codec)
+                    || packet.payload.len() < 36
                     || dealer.terminal_seen[sender]
                 {
                     return Ok(());
@@ -66,15 +58,17 @@ impl State {
             self.adversarial_recovery();
             return Ok(());
         }
-        // One barrier for the WHOLE vector. No token-dependent terminal is processed earlier.
         if self.coefficients.is_none() {
             return Ok(());
         }
+        let bits = self.contribution_bits();
         for d in 0..self.n {
-            if !self.dealers[d].complete {
+            let dealer = &mut self.dealers[d];
+            if !dealer.complete {
                 continue;
             }
-            let dealer = &mut self.dealers[d];
+            let header = dealer.header.as_ref().expect("completion pins header");
+            // Receipt may arrive after global completion or even after local coin output.
             if let Some(share) = &dealer.receipt {
                 for recipient in 0..self.n {
                     if !dealer.served[recipient] && self.assignments.authorized(recipient, d) {
@@ -91,9 +85,7 @@ impl State {
                     }
                 }
             }
-            // Invalid senders never occupy another authenticated sender's terminal slot.
-            let senders: Vec<_> = dealer.pending_terminals.keys().copied().collect();
-            for sender in senders {
+            for sender in dealer.pending_terminals.keys().copied().collect::<Vec<_>>() {
                 if !self.assignments.delivered(sender) {
                     continue;
                 }
@@ -101,10 +93,16 @@ impl State {
                 if !self.assignments.authorized(sender, d) || dealer.value.is_some() {
                     continue;
                 }
-                let public = dealer.public.as_ref().expect("completion pins public");
-                let decoded = Terminal::decode(public, &raw);
-                let valid = decoded.as_ref().is_ok_and(|terminal| {
-                    terminal::verify(&self.setup, &dealer.context, public, terminal)
+                let decoded = Certificate::decode(&dealer.codec, &raw);
+                let valid = decoded.as_ref().is_ok_and(|cert| {
+                    certified::verify(
+                        &self.setup,
+                        &dealer.context,
+                        &dealer.codec,
+                        header,
+                        cert,
+                        bits,
+                    )
                 });
                 self.events.push(Event::TerminalChecked {
                     dealer: d,
@@ -113,14 +111,12 @@ impl State {
                     accepted: valid,
                 });
                 if valid {
-                    let terminal = decoded.unwrap();
-                    let value = match &terminal {
-                        Terminal::Success(o) => BigUint::from_bytes_be(&o.message),
-                        _ => BigUint::from(0u8),
+                    let cert = decoded.unwrap();
+                    let (value, rejected) = match cert.evidence {
+                        Evidence::Success(o) => (BigUint::from_bytes_be(&o.message), false),
+                        _ => (BigUint::from(0u8), true),
                     };
-                    let rejected =
-                        !matches!(&terminal, Terminal::Success(_)) || value >= self.params.range();
-                    dealer.value = Some(if rejected { BigUint::from(0u8) } else { value });
+                    dealer.value = Some(value);
                     dealer.terminal = Some(raw);
                     self.events.push(Event::Terminal {
                         dealer: d,
@@ -133,33 +129,53 @@ impl State {
                 && dealer.recovery_dirty
             {
                 dealer.recovery_dirty = false;
-                let public = dealer.public.as_ref().unwrap();
-                let shares = dealer.tokens.values().cloned().collect::<Vec<_>>();
-                match terminal::recover(&self.setup, &dealer.context, public, &shares) {
-                    Ok(terminal) => {
-                        // All local outcomes pass the very same public verification predicate.
-                        anyhow::ensure!(
-                            terminal::verify(&self.setup, &dealer.context, public, &terminal),
-                            "local terminal verification failed"
-                        );
-                        let value = match &terminal {
-                            Terminal::Success(o) => BigUint::from_bytes_be(&o.message),
-                            _ => BigUint::from(0u8),
-                        };
-                        let rejected = !matches!(&terminal, Terminal::Success(_))
-                            || value >= self.params.range();
-                        dealer.value = Some(if rejected { BigUint::from(0u8) } else { value });
-                        dealer.terminal = Some(terminal.encode(public));
-                        self.events.push(Event::Terminal {
-                            dealer: d,
-                            rejected,
-                        });
+                let cert = if let Some(cert) = &dealer.storage_terminal {
+                    Some(cert.clone())
+                } else if let (Some(public), Some(prepared)) = (&dealer.public, &dealer.prepared) {
+                    match terminal::recover_bounded(
+                        &self.setup,
+                        &dealer.context,
+                        public,
+                        &dealer.tokens.values().cloned().collect::<Vec<_>>(),
+                        bits,
+                    ) {
+                        Ok(t) => Some(certified::certify(
+                            &self.setup,
+                            &dealer.codec,
+                            header,
+                            prepared,
+                            t,
+                        )?),
+                        Err(types::Error::InsufficientShares) => None,
+                        Err(e) => return Err(e.into()),
                     }
-                    Err(types::Error::InsufficientShares) => {}
-                    Err(e) => return Err(e.into()),
+                } else {
+                    None
+                };
+                if let Some(cert) = cert {
+                    anyhow::ensure!(
+                        certified::verify(
+                            &self.setup,
+                            &dealer.context,
+                            &dealer.codec,
+                            header,
+                            &cert,
+                            bits
+                        ),
+                        "invalid local terminal"
+                    );
+                    let (value, rejected) = match &cert.evidence {
+                        Evidence::Success(o) => (BigUint::from_bytes_be(&o.message), false),
+                        _ => (BigUint::from(0u8), true),
+                    };
+                    dealer.value = Some(value);
+                    dealer.terminal = Some(cert.encode());
+                    self.events.push(Event::Terminal {
+                        dealer: d,
+                        rejected,
+                    });
                 }
             }
-            // Late authorization creates a late service obligation, including after coin output.
             if self.assignments.authorized(self.id, d)
                 && !dealer.terminal_sent
                 && let Some(raw) = &dealer.terminal

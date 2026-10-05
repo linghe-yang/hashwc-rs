@@ -44,6 +44,8 @@ pub struct Context {
     pub input: mpsc::Receiver<Request>,
     pub output: mpsc::Sender<Event>,
     pub exit: oneshot::Receiver<()>,
+    pub avid_tx: mpsc::Sender<wavid::Request>,
+    pub avid_rx: mpsc::Receiver<wavid::Event>,
     pub rbc_tx: mpsc::Sender<wrbc::Request>,
     pub rbc_rx: mpsc::Receiver<wrbc::Event>,
     pub ra_tx: mpsc::Sender<wra::Request>,
@@ -89,6 +91,17 @@ impl Context {
                 state.rbc_manifest(),
             )
             .context("start WRBC")?,
+        );
+        let (avid_tx, avid_in) = mpsc::channel(1024);
+        let (avid_out, avid_rx) = mpsc::channel(1024);
+        services.push(
+            wavid::Context::spawn_with_manifest(
+                ports.node(&bound, Service::Avid)?,
+                avid_in,
+                avid_out,
+                state.avid_manifest(),
+            )
+            .context("start WAVID")?,
         );
         let (ra_tx, ra_in) = mpsc::channel(1024);
         let (ra_out, ra_rx) = mpsc::channel(1024);
@@ -140,6 +153,8 @@ impl Context {
             input,
             output,
             exit,
+            avid_tx,
+            avid_rx,
             rbc_tx,
             rbc_rx,
             ra_tx,
@@ -180,6 +195,7 @@ impl Context {
                 request=self.input.recv(),if input_open=>match request {
                     Some(Request::Start)=>self.state.start()?,None=>input_open=false,
                 },
+                event=self.avid_rx.recv()=>self.state.avid_event(event.ok_or_else(||anyhow!("WAVID stopped"))?)?,
                 event=self.rbc_rx.recv()=>self.state.rbc_event(event.ok_or_else(||anyhow!("WRBC stopped"))?)?,
                 event=self.ra_rx.recv()=>self.state.ra_event(event.ok_or_else(||anyhow!("WRA stopped"))?)?,
                 event=self.gather_rx.recv()=>self.state.gather_event(event.ok_or_else(||anyhow!("WGather stopped"))?)?,

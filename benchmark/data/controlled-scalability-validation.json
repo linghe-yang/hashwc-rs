@@ -1,0 +1,4454 @@
+{
+  "cases": 96,
+  "distinct_runs": 288,
+  "build_cohorts": 1,
+  "environment_cohorts": 1,
+  "all_capture_counters_valid": true,
+  "skipped_nodes": [
+    64
+  ],
+  "build": {
+    "benchmark_source_sha256": "f0ed79ef2d1b3f1549fe18c502e2d7a589a7b1a5ec44082df58f8e6dbf85fb8f",
+    "binary_sha256": "128a54f1b192bdbe344dcc8a8295469eb3df130efcdb0150e72d1dfd9ae96803",
+    "cargo_lock_sha256": "52fc82dd8f42f90e820c1cbff96dd3f84a791ec4fe6bd6c3e1cbc6d0e0ee7e9a",
+    "git_dirty": true,
+    "git_revision": "8c400028d772d3409d0477443ca5e95efe35edec",
+    "implementation": "full-public-record-wrbc-v1",
+    "profile": "release",
+    "rustc": "rustc 1.99.0 (b940084d7 2026-09-28)",
+    "transport": "sdc-util-tcp-nodelay-coalesced-shared-v2",
+    "transport_source_sha256": "ff020e63c102f7b28b9af291bf0c573989e38dc8eb978b66cb92d4b07c1685da"
+  },
+  "failed_attempts": [
+    {
+      "name": "heavy-tail-n46-s10-honest",
+      "exit_code": 1
+    },
+    {
+      "name": "heavy-tail-n46-s10-stress",
+      "exit_code": 1
+    },
+    {
+      "name": "heavy-tail-n46-s10-stress",
+      "exit_code": 1
+    }
+  ],
+  "configurations": [
+    {
+      "name": "aptos-n16-s1-honest",
+      "nodes": 16,
+      "profile": "aptos",
+      "scale": 1,
+      "behavior": "honest",
+      "total_weight": "4800",
+      "threshold": "1600",
+      "corrupted_weight": "0",
+      "gates": 1013,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1088.153,
+          "method": "min_max",
+          "minus": 30.817000000000007,
+          "plus": 48.75299999999993,
+          "upper": 1167.723
+        },
+        "max": 1167.723,
+        "mean": 1118.97,
+        "median": 1101.034,
+        "min": 1088.153,
+        "standard_error": 24.658475872067438,
+        "stdev": 42.70973304763208,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 58349911.0,
+          "method": "min_max",
+          "minus": 3326.583333335817,
+          "plus": 2253.041666664183,
+          "upper": 58355490.625
+        },
+        "max": 58355490.625,
+        "mean": 58353237.583333336,
+        "median": 58354311.125,
+        "min": 58349911.0,
+        "standard_error": 1697.7850833471564,
+        "stdev": 2940.650024689836,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-aptos-n16-s1-honest-n16-w4800-t1600-l128-20261005-025141Z-dfbf6fe3/whcc-0-16.json"
+    },
+    {
+      "name": "aptos-n16-s1-stress",
+      "nodes": 16,
+      "profile": "aptos",
+      "scale": 1,
+      "behavior": "recovery-stress",
+      "total_weight": "4800",
+      "threshold": "1600",
+      "corrupted_weight": "1599",
+      "gates": 1013,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1427.774,
+          "method": "min_max",
+          "minus": 9.669000000000096,
+          "plus": 9.017000000000053,
+          "upper": 1446.46
+        },
+        "max": 1446.46,
+        "mean": 1437.443,
+        "median": 1438.095,
+        "min": 1427.774,
+        "standard_error": 5.404025567420441,
+        "stdev": 9.360046848173434,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 81478107.0,
+          "method": "min_max",
+          "minus": 4326.619047626853,
+          "plus": 4482.809523805976,
+          "upper": 81486916.42857143
+        },
+        "max": 81486916.42857143,
+        "mean": 81482433.61904763,
+        "median": 81482277.42857143,
+        "min": 81478107.0,
+        "standard_error": 2544.261814189818,
+        "stdev": 4406.7907299341305,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-aptos-n16-s1-stress-n16-w4800-t1600-l128-20261005-025148Z-6554d3f3/whcc-0-16.json"
+    },
+    {
+      "name": "aptos-n16-s10-honest",
+      "nodes": 16,
+      "profile": "aptos",
+      "scale": 10,
+      "behavior": "honest",
+      "total_weight": "48000",
+      "threshold": "16000",
+      "corrupted_weight": "0",
+      "gates": 1499,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1416.686,
+          "method": "min_max",
+          "minus": 19.86166666666668,
+          "plus": 39.41033333333348,
+          "upper": 1475.958
+        },
+        "max": 1475.958,
+        "mean": 1436.5476666666666,
+        "median": 1416.999,
+        "min": 1416.686,
+        "standard_error": 19.705373821484482,
+        "stdev": 34.13070864094881,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 84785877.75,
+          "method": "min_max",
+          "minus": 2550.25,
+          "plus": 4085.125,
+          "upper": 84792513.125
+        },
+        "max": 84792513.125,
+        "mean": 84788428.0,
+        "median": 84786893.125,
+        "min": 84785877.75,
+        "standard_error": 2063.4866364864915,
+        "stdev": 3574.063695134014,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-aptos-n16-s10-honest-n16-w48000-t16000-l128-20261005-025155Z-f91c6f89/whcc-0-16.json"
+    },
+    {
+      "name": "aptos-n16-s10-stress",
+      "nodes": 16,
+      "profile": "aptos",
+      "scale": 10,
+      "behavior": "recovery-stress",
+      "total_weight": "48000",
+      "threshold": "16000",
+      "corrupted_weight": "15990",
+      "gates": 1499,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1991.538,
+          "method": "min_max",
+          "minus": 13.605333333333192,
+          "plus": 8.197666666666692,
+          "upper": 2013.341
+        },
+        "max": 2013.341,
+        "mean": 2005.1433333333332,
+        "median": 2010.551,
+        "min": 1991.538,
+        "standard_error": 6.850178740571469,
+        "stdev": 11.864857619597966,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 118777064.28571428,
+          "method": "min_max",
+          "minus": 2704.7142857164145,
+          "plus": 2754.0,
+          "upper": 118782523.0
+        },
+        "max": 118782523.0,
+        "mean": 118779769.0,
+        "median": 118779719.71428572,
+        "min": 118777064.28571428,
+        "standard_error": 1575.9877563500136,
+        "stdev": 2729.6908661047037,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-aptos-n16-s10-stress-n16-w48000-t16000-l128-20261005-025202Z-a955fa60/whcc-0-16.json"
+    },
+    {
+      "name": "aptos-n16-s100-honest",
+      "nodes": 16,
+      "profile": "aptos",
+      "scale": 100,
+      "behavior": "honest",
+      "total_weight": "480000",
+      "threshold": "160000",
+      "corrupted_weight": "0",
+      "gates": 2039,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1891.373,
+          "method": "min_max",
+          "minus": 172.67733333333308,
+          "plus": 261.3706666666667,
+          "upper": 2325.421
+        },
+        "max": 2325.421,
+        "mean": 2064.050333333333,
+        "median": 1975.357,
+        "min": 1891.373,
+        "standard_error": 132.91513220765256,
+        "stdev": 230.2157620783887,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 114410606.875,
+          "method": "min_max",
+          "minus": 3732.3125,
+          "plus": 6003.375,
+          "upper": 114420342.5625
+        },
+        "max": 114420342.5625,
+        "mean": 114414339.1875,
+        "median": 114412068.125,
+        "min": 114410606.875,
+        "standard_error": 3031.182191466654,
+        "stdev": 5250.1615626182165,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-aptos-n16-s100-honest-n16-w480000-t160000-l128-20261005-025212Z-01095672/whcc-0-16.json"
+    },
+    {
+      "name": "aptos-n16-s100-stress",
+      "nodes": 16,
+      "profile": "aptos",
+      "scale": 100,
+      "behavior": "recovery-stress",
+      "total_weight": "480000",
+      "threshold": "160000",
+      "corrupted_weight": "159900",
+      "gates": 2039,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 2559.966,
+          "method": "min_max",
+          "minus": 78.12699999999995,
+          "plus": 60.61500000000024,
+          "upper": 2698.708
+        },
+        "max": 2698.708,
+        "mean": 2638.093,
+        "median": 2655.605,
+        "min": 2559.966,
+        "standard_error": 40.997309867030765,
+        "stdev": 71.00942366334213,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 160528881.7142857,
+          "method": "min_max",
+          "minus": 24945.238095253706,
+          "plus": 18924.47619047761,
+          "upper": 160572751.42857143
+        },
+        "max": 160572751.42857143,
+        "mean": 160553826.95238096,
+        "median": 160559847.7142857,
+        "min": 160528881.7142857,
+        "standard_error": 13016.977866274588,
+        "stdev": 22546.0670253871,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-aptos-n16-s100-stress-n16-w480000-t160000-l128-20261005-025221Z-a2864dcc/whcc-0-16.json"
+    },
+    {
+      "name": "aptos-n31-s1-honest",
+      "nodes": 31,
+      "profile": "aptos",
+      "scale": 1,
+      "behavior": "honest",
+      "total_weight": "9300",
+      "threshold": "3100",
+      "corrupted_weight": "0",
+      "gates": 3323,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 12790.567,
+          "method": "min_max",
+          "minus": 83.67500000000109,
+          "plus": 48.1919999999991,
+          "upper": 12922.434
+        },
+        "max": 12922.434,
+        "mean": 12874.242,
+        "median": 12909.725,
+        "min": 12790.567,
+        "standard_error": 41.998051101608894,
+        "stdev": 72.74275832686065,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 396575751.6451613,
+          "method": "min_max",
+          "minus": 871208.6344085932,
+          "plus": 1430543.4623656273,
+          "upper": 398877503.7419355
+        },
+        "max": 398877503.7419355,
+        "mean": 397446960.27956986,
+        "median": 396887625.4516129,
+        "min": 396575751.6451613,
+        "standard_error": 720915.4518331514,
+        "stdev": 1248662.1905364918,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-aptos-n31-s1-honest-n31-w9300-t3100-l128-20261005-031020Z-c79194da/whcc-0-31.json"
+    },
+    {
+      "name": "aptos-n31-s1-stress",
+      "nodes": 31,
+      "profile": "aptos",
+      "scale": 1,
+      "behavior": "recovery-stress",
+      "total_weight": "9300",
+      "threshold": "3100",
+      "corrupted_weight": "3099",
+      "gates": 3323,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 18003.965,
+          "method": "min_max",
+          "minus": 323.2553333333344,
+          "plus": 598.9106666666667,
+          "upper": 18926.131
+        },
+        "max": 18926.131,
+        "mean": 18327.220333333335,
+        "median": 18051.565,
+        "min": 18003.965,
+        "standard_error": 299.7704288203082,
+        "stdev": 519.2176133234834,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 596118703.6923077,
+          "method": "min_max",
+          "minus": 2818.102564096451,
+          "plus": 2650.0512820482254,
+          "upper": 596124171.8461539
+        },
+        "max": 596124171.8461539,
+        "mean": 596121521.7948718,
+        "median": 596121689.8461539,
+        "min": 596118703.6923077,
+        "standard_error": 1580.75483512627,
+        "stdev": 2737.9476887488636,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-aptos-n31-s1-stress-n31-w9300-t3100-l128-20261005-031110Z-593b577b/whcc-0-31.json"
+    },
+    {
+      "name": "aptos-n31-s10-honest",
+      "nodes": 31,
+      "profile": "aptos",
+      "scale": 10,
+      "behavior": "honest",
+      "total_weight": "93000",
+      "threshold": "31000",
+      "corrupted_weight": "0",
+      "gates": 4456,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 16346.056,
+          "method": "min_max",
+          "minus": 349.8006666666661,
+          "plus": 565.2633333333324,
+          "upper": 17261.12
+        },
+        "max": 17261.12,
+        "mean": 16695.856666666667,
+        "median": 16480.394,
+        "min": 16346.056,
+        "standard_error": 285.27977587468564,
+        "stdev": 494.1190661868175,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 521382330.38709676,
+          "method": "min_max",
+          "minus": 3315238.774193585,
+          "plus": 4831555.0,
+          "upper": 529529124.16129035
+        },
+        "max": 529529124.16129035,
+        "mean": 524697569.16129035,
+        "median": 523181252.9354839,
+        "min": 521382330.38709676,
+        "standard_error": 2470962.927840939,
+        "stdev": 4279833.334639655,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-aptos-n31-s10-honest-n31-w93000-t31000-l128-20261005-031216Z-20c4f020/whcc-0-31.json"
+    },
+    {
+      "name": "aptos-n31-s10-stress",
+      "nodes": 31,
+      "profile": "aptos",
+      "scale": 10,
+      "behavior": "recovery-stress",
+      "total_weight": "93000",
+      "threshold": "31000",
+      "corrupted_weight": "30990",
+      "gates": 4456,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 22597.918,
+          "method": "min_max",
+          "minus": 1574.2783333333318,
+          "plus": 813.7586666666684,
+          "upper": 24985.955
+        },
+        "max": 24985.955,
+        "mean": 24172.196333333333,
+        "median": 24932.716,
+        "min": 22597.918,
+        "standard_error": 787.2891889012434,
+        "stdev": 1363.6248754266448,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 795886147.0,
+          "method": "min_max",
+          "minus": 18264.23076927662,
+          "plus": 22989.23076915741,
+          "upper": 795927400.4615384
+        },
+        "max": 795927400.4615384,
+        "mean": 795904411.2307693,
+        "median": 795899686.2307693,
+        "min": 795886147.0,
+        "standard_error": 12140.925842997343,
+        "stdev": 21028.7004109974,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-aptos-n31-s10-stress-n31-w93000-t31000-l128-20261005-031319Z-d175e5a5/whcc-0-31.json"
+    },
+    {
+      "name": "aptos-n31-s100-honest",
+      "nodes": 31,
+      "profile": "aptos",
+      "scale": 100,
+      "behavior": "honest",
+      "total_weight": "930000",
+      "threshold": "310000",
+      "corrupted_weight": "0",
+      "gates": 4413,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 17604.018,
+          "method": "min_max",
+          "minus": 403.5809999999983,
+          "plus": 408.3220000000001,
+          "upper": 18415.921
+        },
+        "max": 18415.921,
+        "mean": 18007.599,
+        "median": 18002.858,
+        "min": 17604.018,
+        "standard_error": 234.38819521113498,
+        "stdev": 405.972262800058,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 511650387.7741935,
+          "method": "min_max",
+          "minus": 7789634.580645204,
+          "plus": 5023307.677419364,
+          "upper": 524463330.0322581
+        },
+        "max": 524463330.0322581,
+        "mean": 519440022.3548387,
+        "median": 522206349.2580645,
+        "min": 511650387.7741935,
+        "standard_error": 3948936.3854400646,
+        "stdev": 6839758.455439587,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-aptos-n31-s100-honest-n31-w930000-t310000-l128-20261005-031444Z-e07b9ef9/whcc-0-31.json"
+    },
+    {
+      "name": "aptos-n31-s100-stress",
+      "nodes": 31,
+      "profile": "aptos",
+      "scale": 100,
+      "behavior": "recovery-stress",
+      "total_weight": "930000",
+      "threshold": "310000",
+      "corrupted_weight": "309900",
+      "gates": 4413,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 22832.468,
+          "method": "min_max",
+          "minus": 798.2703333333338,
+          "plus": 516.6596666666665,
+          "upper": 24147.398
+        },
+        "max": 24147.398,
+        "mean": 23630.738333333335,
+        "median": 23912.349,
+        "min": 22832.468,
+        "standard_error": 404.8615614875176,
+        "stdev": 701.2407945280514,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 788532497.2307693,
+          "method": "min_max",
+          "minus": 38526.7948718071,
+          "plus": 37384.35897433758,
+          "upper": 788608408.3846154
+        },
+        "max": 788608408.3846154,
+        "mean": 788571024.0256411,
+        "median": 788572166.4615384,
+        "min": 788532497.2307693,
+        "standard_error": 21921.106187097368,
+        "stdev": 37968.469674165106,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-aptos-n31-s100-stress-n31-w930000-t310000-l128-20261005-031551Z-7cf51030/whcc-0-31.json"
+    },
+    {
+      "name": "aptos-n4-s1-honest",
+      "nodes": 4,
+      "profile": "aptos",
+      "scale": 1,
+      "behavior": "honest",
+      "total_weight": "1200",
+      "threshold": "400",
+      "corrupted_weight": "0",
+      "gates": 62,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 34.863,
+          "method": "min_max",
+          "minus": 1.738666666666667,
+          "plus": 2.1043333333333365,
+          "upper": 38.706
+        },
+        "max": 38.706,
+        "mean": 36.60166666666667,
+        "median": 36.236,
+        "min": 34.863,
+        "standard_error": 1.1243437098048714,
+        "stdev": 1.9474204305525147,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 980870.5,
+          "method": "min_max",
+          "minus": 48.33333333337214,
+          "plus": 24.16666666662786,
+          "upper": 980943.0
+        },
+        "max": 980943.0,
+        "mean": 980918.8333333334,
+        "median": 980943.0,
+        "min": 980870.5,
+        "standard_error": 24.166666666666668,
+        "stdev": 41.85789451624787,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-aptos-n4-s1-honest-n4-w1200-t400-l128-20261005-024927Z-87269140/whcc-0-4.json"
+    },
+    {
+      "name": "aptos-n4-s1-stress",
+      "nodes": 4,
+      "profile": "aptos",
+      "scale": 1,
+      "behavior": "recovery-stress",
+      "total_weight": "1200",
+      "threshold": "400",
+      "corrupted_weight": "292",
+      "gates": 62,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 36.989,
+          "method": "min_max",
+          "minus": 3.5116666666666703,
+          "plus": 6.667333333333332,
+          "upper": 47.168
+        },
+        "max": 47.168,
+        "mean": 40.50066666666667,
+        "median": 37.345,
+        "min": 36.989,
+        "standard_error": 3.3352503321006925,
+        "stdev": 5.7768230311593705,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1201225.5,
+          "method": "min_max",
+          "minus": 268.6666666667443,
+          "plus": 134.33333333325572,
+          "upper": 1201628.5
+        },
+        "max": 1201628.5,
+        "mean": 1201494.1666666667,
+        "median": 1201628.5,
+        "min": 1201225.5,
+        "standard_error": 134.33333333333334,
+        "stdev": 232.6721584834192,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-aptos-n4-s1-stress-n4-w1200-t400-l128-20261005-024928Z-f568d0a9/whcc-0-4.json"
+    },
+    {
+      "name": "aptos-n4-s10-honest",
+      "nodes": 4,
+      "profile": "aptos",
+      "scale": 10,
+      "behavior": "honest",
+      "total_weight": "12000",
+      "threshold": "4000",
+      "corrupted_weight": "0",
+      "gates": 43,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 31.914,
+          "method": "min_max",
+          "minus": 0.3686666666666625,
+          "plus": 0.19933333333333536,
+          "upper": 32.482
+        },
+        "max": 32.482,
+        "mean": 32.282666666666664,
+        "median": 32.452,
+        "min": 31.914,
+        "standard_error": 0.18453665700282273,
+        "stdev": 0.31962686578780003,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 785639.0,
+          "method": "min_max",
+          "minus": 134.25,
+          "plus": 131.5,
+          "upper": 785904.75
+        },
+        "max": 785904.75,
+        "mean": 785773.25,
+        "median": 785776.0,
+        "min": 785639.0,
+        "standard_error": 76.72773835669427,
+        "stdev": 132.89634118364583,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-aptos-n4-s10-honest-n4-w12000-t4000-l128-20261005-024930Z-e2e51045/whcc-0-4.json"
+    },
+    {
+      "name": "aptos-n4-s10-stress",
+      "nodes": 4,
+      "profile": "aptos",
+      "scale": 10,
+      "behavior": "recovery-stress",
+      "total_weight": "12000",
+      "threshold": "4000",
+      "corrupted_weight": "2920",
+      "gates": 43,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 33.244,
+          "method": "min_max",
+          "minus": 0.7806666666666686,
+          "plus": 0.913333333333334,
+          "upper": 34.938
+        },
+        "max": 34.938,
+        "mean": 34.02466666666667,
+        "median": 33.892,
+        "min": 33.244,
+        "standard_error": 0.49349411794310694,
+        "stdev": 0.8547568855138491,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 947580.0,
+          "method": "min_max",
+          "minus": 607.3333333333721,
+          "plus": 311.66666666662786,
+          "upper": 948499.0
+        },
+        "max": 948499.0,
+        "mean": 948187.3333333334,
+        "median": 948483.0,
+        "min": 947580.0,
+        "standard_error": 303.70179087021825,
+        "stdev": 526.0269321368758,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-aptos-n4-s10-stress-n4-w12000-t4000-l128-20261005-024932Z-3d92417a/whcc-0-4.json"
+    },
+    {
+      "name": "aptos-n4-s100-honest",
+      "nodes": 4,
+      "profile": "aptos",
+      "scale": 100,
+      "behavior": "honest",
+      "total_weight": "120000",
+      "threshold": "40000",
+      "corrupted_weight": "0",
+      "gates": 114,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 42.146,
+          "method": "min_max",
+          "minus": 1.0120000000000005,
+          "plus": 2.012999999999998,
+          "upper": 45.171
+        },
+        "max": 45.171,
+        "mean": 43.158,
+        "median": 42.157,
+        "min": 42.146,
+        "standard_error": 1.0065050090950038,
+        "stdev": 1.7433178138251215,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1522239.75,
+          "method": "min_max",
+          "minus": 187.75,
+          "plus": 190.5,
+          "upper": 1522618.0
+        },
+        "max": 1522618.0,
+        "mean": 1522427.5,
+        "median": 1522424.75,
+        "min": 1522239.75,
+        "standard_error": 109.20002670939844,
+        "stdev": 189.13999444855654,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-aptos-n4-s100-honest-n4-w120000-t40000-l128-20261005-024933Z-1070f98c/whcc-0-4.json"
+    },
+    {
+      "name": "aptos-n4-s100-stress",
+      "nodes": 4,
+      "profile": "aptos",
+      "scale": 100,
+      "behavior": "recovery-stress",
+      "total_weight": "120000",
+      "threshold": "40000",
+      "corrupted_weight": "29200",
+      "gates": 114,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 44.974,
+          "method": "min_max",
+          "minus": 0.23166666666666913,
+          "plus": 0.3293333333333308,
+          "upper": 45.535
+        },
+        "max": 45.535,
+        "mean": 45.205666666666666,
+        "median": 45.108,
+        "min": 44.974,
+        "standard_error": 0.16914917807794524,
+        "stdev": 0.2929749704895169,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1906112.0,
+          "method": "min_max",
+          "minus": 107.5,
+          "plus": 86.0,
+          "upper": 1906305.5
+        },
+        "max": 1906305.5,
+        "mean": 1906219.5,
+        "median": 1906241.0,
+        "min": 1906112.0,
+        "standard_error": 56.883653187888704,
+        "stdev": 98.52537744155056,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-aptos-n4-s100-stress-n4-w120000-t40000-l128-20261005-024935Z-98b88783/whcc-0-4.json"
+    },
+    {
+      "name": "aptos-n46-s1-honest",
+      "nodes": 46,
+      "profile": "aptos",
+      "scale": 1,
+      "behavior": "honest",
+      "total_weight": "13800",
+      "threshold": "4600",
+      "corrupted_weight": "0",
+      "gates": 5919,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 55024.722,
+          "method": "min_max",
+          "minus": 1477.048666666662,
+          "plus": 747.0563333333339,
+          "upper": 57248.827
+        },
+        "max": 57248.827,
+        "mean": 56501.77066666666,
+        "median": 57231.763,
+        "min": 55024.722,
+        "standard_error": 738.540761186167,
+        "stdev": 1279.1901218350338,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1109415362.4782608,
+          "method": "min_max",
+          "minus": 8316506.760869503,
+          "plus": 6161731.6086957455,
+          "upper": 1123893600.847826
+        },
+        "max": 1123893600.847826,
+        "mean": 1117731869.2391303,
+        "median": 1119886644.3913043,
+        "min": 1109415362.4782608,
+        "standard_error": 4316137.87773311,
+        "stdev": 7475770.096706254,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-aptos-n46-s1-honest-n46-w13800-t4600-l128-20261005-043908Z-1ba044a6/whcc-0-46.json"
+    },
+    {
+      "name": "aptos-n46-s1-stress",
+      "nodes": 46,
+      "profile": "aptos",
+      "scale": 1,
+      "behavior": "recovery-stress",
+      "total_weight": "13800",
+      "threshold": "4600",
+      "corrupted_weight": "4598",
+      "gates": 5919,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 72846.095,
+          "method": "min_max",
+          "minus": 2190.299666666673,
+          "plus": 3299.4123333333264,
+          "upper": 78335.807
+        },
+        "max": 78335.807,
+        "mean": 75036.39466666667,
+        "median": 73927.282,
+        "min": 72846.095,
+        "standard_error": 1678.9711771653822,
+        "stdev": 2908.0633832941685,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1672702021.6,
+          "method": "min_max",
+          "minus": 144727.6333334446,
+          "plus": 87555.71666669846,
+          "upper": 1672934304.95
+        },
+        "max": 1672934304.95,
+        "mean": 1672846749.2333333,
+        "median": 1672903921.15,
+        "min": 1672702021.6,
+        "standard_error": 72893.43754946729,
+        "stdev": 126255.13737402634,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-aptos-n46-s1-stress-n46-w13800-t4600-l128-20261005-044232Z-0205ea46/whcc-0-46.json"
+    },
+    {
+      "name": "aptos-n46-s10-honest",
+      "nodes": 46,
+      "profile": "aptos",
+      "scale": 10,
+      "behavior": "honest",
+      "total_weight": "138000",
+      "threshold": "46000",
+      "corrupted_weight": "0",
+      "gates": 7652,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 73426.378,
+          "method": "min_max",
+          "minus": 761.1330000000016,
+          "plus": 937.3329999999987,
+          "upper": 75124.844
+        },
+        "max": 75124.844,
+        "mean": 74187.511,
+        "median": 74011.311,
+        "min": 73426.378,
+        "standard_error": 498.1571098522365,
+        "stdev": 862.833424415744,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1397232668.4782608,
+          "method": "min_max",
+          "minus": 3708375.8550724983,
+          "plus": 5504462.9710145,
+          "upper": 1406445507.3043478
+        },
+        "max": 1406445507.3043478,
+        "mean": 1400941044.3333333,
+        "median": 1399144957.2173913,
+        "min": 1397232668.4782608,
+        "standard_error": 2807047.4704989498,
+        "stdev": 4861948.83816188,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-aptos-n46-s10-honest-n46-w138000-t46000-l128-20261005-044652Z-074df2a0/whcc-0-46.json"
+    },
+    {
+      "name": "aptos-n46-s10-stress",
+      "nodes": 46,
+      "profile": "aptos",
+      "scale": 10,
+      "behavior": "recovery-stress",
+      "total_weight": "138000",
+      "threshold": "46000",
+      "corrupted_weight": "45980",
+      "gates": 7652,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 97300.801,
+          "method": "min_max",
+          "minus": 602.2649999999994,
+          "plus": 392.09999999999127,
+          "upper": 98295.166
+        },
+        "max": 98295.166,
+        "mean": 97903.066,
+        "median": 98113.231,
+        "min": 97300.801,
+        "standard_error": 305.67817157101405,
+        "stdev": 529.4501239257527,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 2154082885.25,
+          "method": "min_max",
+          "minus": 138863.46666669846,
+          "plus": 112351.38333320618,
+          "upper": 2154334100.1
+        },
+        "max": 2154334100.1,
+        "mean": 2154221748.7166667,
+        "median": 2154248260.8,
+        "min": 2154082885.25,
+        "standard_error": 73721.0805155264,
+        "stdev": 127688.65704176771,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-aptos-n46-s10-stress-n46-w138000-t46000-l128-20261005-045113Z-9cbd26ac/whcc-0-46.json"
+    },
+    {
+      "name": "aptos-n46-s100-honest",
+      "nodes": 46,
+      "profile": "aptos",
+      "scale": 100,
+      "behavior": "honest",
+      "total_weight": "1380000",
+      "threshold": "460000",
+      "corrupted_weight": "0",
+      "gates": 9554,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 88327.167,
+          "method": "min_max",
+          "minus": 761.0910000000003,
+          "plus": 844.3080000000045,
+          "upper": 89932.566
+        },
+        "max": 89932.566,
+        "mean": 89088.258,
+        "median": 89005.041,
+        "min": 88327.167,
+        "standard_error": 465.30287237346977,
+        "stdev": 805.9282158585866,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1644643572.826087,
+          "method": "min_max",
+          "minus": 44583840.492753506,
+          "plus": 26975480.811594248,
+          "upper": 1716202894.1304348
+        },
+        "max": 1716202894.1304348,
+        "mean": 1689227413.3188405,
+        "median": 1706835773.0,
+        "min": 1644643572.826087,
+        "standard_error": 22455325.013461214,
+        "stdev": 38893763.8237871,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-aptos-n46-s100-honest-n46-w1380000-t460000-l128-20261005-045646Z-948a8cc6/whcc-0-46.json"
+    },
+    {
+      "name": "aptos-n46-s100-stress",
+      "nodes": 46,
+      "profile": "aptos",
+      "scale": 100,
+      "behavior": "recovery-stress",
+      "total_weight": "1380000",
+      "threshold": "460000",
+      "corrupted_weight": "459800",
+      "gates": 9554,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 117891.584,
+          "method": "min_max",
+          "minus": 1520.8133333333244,
+          "plus": 1196.3256666666712,
+          "upper": 120608.723
+        },
+        "max": 120608.723,
+        "mean": 119412.39733333333,
+        "median": 119736.885,
+        "min": 117891.584,
+        "standard_error": 800.9744629084263,
+        "stdev": 1387.3284653225874,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 2682143625.75,
+          "method": "min_max",
+          "minus": 214297.7666668892,
+          "plus": 183917.88333320618,
+          "upper": 2682541841.4
+        },
+        "max": 2682541841.4,
+        "mean": 2682357923.516667,
+        "median": 2682388303.4,
+        "min": 2682143625.75,
+        "standard_error": 115954.19923366477,
+        "stdev": 200838.56442367155,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-aptos-n46-s100-stress-n46-w1380000-t460000-l128-20261005-050156Z-009f658a/whcc-0-46.json"
+    },
+    {
+      "name": "heavy-tail-n16-s1-honest",
+      "nodes": 16,
+      "profile": "heavy-tail",
+      "scale": 1,
+      "behavior": "honest",
+      "total_weight": "4800",
+      "threshold": "1600",
+      "corrupted_weight": "0",
+      "gates": 433,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 680.592,
+          "method": "min_max",
+          "minus": 2.7799999999999727,
+          "plus": 5.432999999999993,
+          "upper": 688.805
+        },
+        "max": 688.805,
+        "mean": 683.372,
+        "median": 680.719,
+        "min": 680.592,
+        "standard_error": 2.7167473812140153,
+        "stdev": 4.705544495592368,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 25821714.75,
+          "method": "min_max",
+          "minus": 6816.0,
+          "plus": 4565.4375,
+          "upper": 25833096.1875
+        },
+        "max": 25833096.1875,
+        "mean": 25828530.75,
+        "median": 25830781.3125,
+        "min": 25821714.75,
+        "standard_error": 3472.8976166119196,
+        "stdev": 6015.235121456704,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-heavy-tail-n16-s1-honest-n16-w4800-t1600-l128-20261005-025102Z-0f74780e/whcc-0-16.json"
+    },
+    {
+      "name": "heavy-tail-n16-s1-stress",
+      "nodes": 16,
+      "profile": "heavy-tail",
+      "scale": 1,
+      "behavior": "recovery-stress",
+      "total_weight": "4800",
+      "threshold": "1600",
+      "corrupted_weight": "1365",
+      "gates": 433,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 781.581,
+          "method": "min_max",
+          "minus": 6.921333333333337,
+          "plus": 6.508666666666613,
+          "upper": 795.011
+        },
+        "max": 795.011,
+        "mean": 788.5023333333334,
+        "median": 788.915,
+        "min": 781.581,
+        "standard_error": 3.882393820541351,
+        "stdev": 6.724503352169065,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 26749537.181818184,
+          "method": "min_max",
+          "minus": 3092.7878787852824,
+          "plus": 2236.8484848476946,
+          "upper": 26754866.818181816
+        },
+        "max": 26754866.818181816,
+        "mean": 26752629.96969697,
+        "median": 26753485.90909091,
+        "min": 26749537.181818184,
+        "standard_error": 1596.9481442962397,
+        "stdev": 2765.9953229739217,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-heavy-tail-n16-s1-stress-n16-w4800-t1600-l128-20261005-025107Z-30ee78ab/whcc-0-16.json"
+    },
+    {
+      "name": "heavy-tail-n16-s10-honest",
+      "nodes": 16,
+      "profile": "heavy-tail",
+      "scale": 10,
+      "behavior": "honest",
+      "total_weight": "48000",
+      "threshold": "16000",
+      "corrupted_weight": "0",
+      "gates": 917,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 966.134,
+          "method": "min_max",
+          "minus": 31.182999999999993,
+          "plus": 51.7829999999999,
+          "upper": 1049.1
+        },
+        "max": 1049.1,
+        "mean": 997.317,
+        "median": 976.717,
+        "min": 966.134,
+        "standard_error": 26.0711161313307,
+        "stdev": 45.15649774949332,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 51337549.6875,
+          "method": "min_max",
+          "minus": 1001.5625,
+          "plus": 610.25,
+          "upper": 51339161.5
+        },
+        "max": 51339161.5,
+        "mean": 51338551.25,
+        "median": 51338942.5625,
+        "min": 51337549.6875,
+        "standard_error": 504.75373146424914,
+        "stdev": 874.2591082060569,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-heavy-tail-n16-s10-honest-n16-w48000-t16000-l128-20261005-025113Z-5bde2979/whcc-0-16.json"
+    },
+    {
+      "name": "heavy-tail-n16-s10-stress",
+      "nodes": 16,
+      "profile": "heavy-tail",
+      "scale": 10,
+      "behavior": "recovery-stress",
+      "total_weight": "48000",
+      "threshold": "16000",
+      "corrupted_weight": "13650",
+      "gates": 917,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1222.802,
+          "method": "min_max",
+          "minus": 15.854333333333443,
+          "plus": 14.679666666666662,
+          "upper": 1253.336
+        },
+        "max": 1253.336,
+        "mean": 1238.6563333333334,
+        "median": 1239.831,
+        "min": 1222.802,
+        "standard_error": 8.833952877644581,
+        "stdev": 15.300855215749703,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 53242154.54545455,
+          "method": "min_max",
+          "minus": 8239.727272726595,
+          "plus": 5437.090909093618,
+          "upper": 53255831.36363637
+        },
+        "max": 53255831.36363637,
+        "mean": 53250394.27272727,
+        "median": 53253196.90909091,
+        "min": 53242154.54545455,
+        "standard_error": 4189.4676207011635,
+        "stdev": 7256.370775719112,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-heavy-tail-n16-s10-stress-n16-w48000-t16000-l128-20261005-025119Z-efd7d1ce/whcc-0-16.json"
+    },
+    {
+      "name": "heavy-tail-n16-s100-honest",
+      "nodes": 16,
+      "profile": "heavy-tail",
+      "scale": 100,
+      "behavior": "honest",
+      "total_weight": "480000",
+      "threshold": "160000",
+      "corrupted_weight": "0",
+      "gates": 1376,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1317.331,
+          "method": "min_max",
+          "minus": 62.34866666666676,
+          "plus": 77.22333333333336,
+          "upper": 1456.903
+        },
+        "max": 1456.903,
+        "mean": 1379.6796666666667,
+        "median": 1364.805,
+        "min": 1317.331,
+        "standard_error": 40.97164701487009,
+        "stdev": 70.96497429953273,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 75421974.6875,
+          "method": "min_max",
+          "minus": 1422.1458333283663,
+          "plus": 746.1666666716337,
+          "upper": 75424143.0
+        },
+        "max": 75424143.0,
+        "mean": 75423396.83333333,
+        "median": 75424072.8125,
+        "min": 75421974.6875,
+        "standard_error": 711.3615231229907,
+        "stdev": 1232.1143005986025,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-heavy-tail-n16-s100-honest-n16-w480000-t160000-l128-20261005-025126Z-cb8b20b7/whcc-0-16.json"
+    },
+    {
+      "name": "heavy-tail-n16-s100-stress",
+      "nodes": 16,
+      "profile": "heavy-tail",
+      "scale": 100,
+      "behavior": "recovery-stress",
+      "total_weight": "480000",
+      "threshold": "160000",
+      "corrupted_weight": "136500",
+      "gates": 1376,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1679.858,
+          "method": "min_max",
+          "minus": 12.019333333333407,
+          "plus": 7.6006666666667115,
+          "upper": 1699.478
+        },
+        "max": 1699.478,
+        "mean": 1691.8773333333334,
+        "median": 1696.296,
+        "min": 1679.858,
+        "standard_error": 6.07946163552154,
+        "stdev": 10.52993643538909,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 78252685.0,
+          "method": "min_max",
+          "minus": 8477.242424234748,
+          "plus": 8358.575757578015,
+          "upper": 78269520.81818181
+        },
+        "max": 78269520.81818181,
+        "mean": 78261162.24242423,
+        "median": 78261280.9090909,
+        "min": 78252685.0,
+        "standard_error": 4860.444245680212,
+        "stdev": 8418.536380873913,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-heavy-tail-n16-s100-stress-n16-w480000-t160000-l128-20261005-025133Z-6ec82a95/whcc-0-16.json"
+    },
+    {
+      "name": "heavy-tail-n31-s1-honest",
+      "nodes": 31,
+      "profile": "heavy-tail",
+      "scale": 1,
+      "behavior": "honest",
+      "total_weight": "9300",
+      "threshold": "3100",
+      "corrupted_weight": "0",
+      "gates": 1443,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 5878.505,
+          "method": "min_max",
+          "minus": 116.61833333333288,
+          "plus": 107.91166666666686,
+          "upper": 6103.035
+        },
+        "max": 6103.035,
+        "mean": 5995.123333333333,
+        "median": 6003.83,
+        "min": 5878.505,
+        "standard_error": 64.9622576535363,
+        "stdev": 112.51793083030502,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 164840662.29032257,
+          "method": "min_max",
+          "minus": 2301808.7526881695,
+          "plus": 1714889.4731183052,
+          "upper": 168857360.51612905
+        },
+        "max": 168857360.51612905,
+        "mean": 167142471.04301074,
+        "median": 167729390.32258064,
+        "min": 164840662.29032257,
+        "standard_error": 1196079.9638607425,
+        "stdev": 2071671.2673219524,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-heavy-tail-n31-s1-honest-n31-w9300-t3100-l128-20261005-030527Z-b258c783/whcc-0-31.json"
+    },
+    {
+      "name": "heavy-tail-n31-s1-stress",
+      "nodes": 31,
+      "profile": "heavy-tail",
+      "scale": 1,
+      "behavior": "recovery-stress",
+      "total_weight": "9300",
+      "threshold": "3100",
+      "corrupted_weight": "3003",
+      "gates": 1443,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 8195.174,
+          "method": "min_max",
+          "minus": 82.251666666667,
+          "plus": 63.83633333333273,
+          "upper": 8341.262
+        },
+        "max": 8341.262,
+        "mean": 8277.425666666668,
+        "median": 8295.841,
+        "min": 8195.174,
+        "standard_error": 43.165454213345605,
+        "stdev": 74.76475982930265,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 179510944.8,
+          "method": "min_max",
+          "minus": 1657.633333325386,
+          "plus": 1070.866666674614,
+          "upper": 179513673.3
+        },
+        "max": 179513673.3,
+        "mean": 179512602.43333334,
+        "median": 179513189.2,
+        "min": 179510944.8,
+        "standard_error": 840.5155963889752,
+        "stdev": 1455.815717499761,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-heavy-tail-n31-s1-stress-n31-w9300-t3100-l128-20261005-030554Z-4763b711/whcc-0-31.json"
+    },
+    {
+      "name": "heavy-tail-n31-s10-honest",
+      "nodes": 31,
+      "profile": "heavy-tail",
+      "scale": 10,
+      "behavior": "honest",
+      "total_weight": "93000",
+      "threshold": "31000",
+      "corrupted_weight": "0",
+      "gates": 3305,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 11377.44,
+          "method": "min_max",
+          "minus": 256.9320000000007,
+          "plus": 350.39899999999943,
+          "upper": 11984.771
+        },
+        "max": 11984.771,
+        "mean": 11634.372000000001,
+        "median": 11540.905,
+        "min": 11377.44,
+        "standard_error": 181.44310031614137,
+        "stdev": 314.26866843037345,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 355249431.2258065,
+          "method": "min_max",
+          "minus": 186531.655913949,
+          "plus": 313890.86021506786,
+          "upper": 355749853.7419355
+        },
+        "max": 355749853.7419355,
+        "mean": 355435962.8817204,
+        "median": 355308603.67741936,
+        "min": 355249431.2258065,
+        "standard_error": 157872.25727612505,
+        "stdev": 273442.77070783393,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-heavy-tail-n31-s10-honest-n31-w93000-t31000-l128-20261005-030629Z-11086362/whcc-0-31.json"
+    },
+    {
+      "name": "heavy-tail-n31-s10-stress",
+      "nodes": 31,
+      "profile": "heavy-tail",
+      "scale": 10,
+      "behavior": "recovery-stress",
+      "total_weight": "93000",
+      "threshold": "31000",
+      "corrupted_weight": "30030",
+      "gates": 3305,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 16845.347,
+          "method": "min_max",
+          "minus": 144.90499999999884,
+          "plus": 179.43599999999788,
+          "upper": 17169.688
+        },
+        "max": 17169.688,
+        "mean": 16990.252,
+        "median": 16955.721,
+        "min": 16845.347,
+        "standard_error": 95.2077789906536,
+        "stdev": 164.90471048760074,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 396469635.95,
+          "method": "min_max",
+          "minus": 10758.783333361149,
+          "plus": 7721.16666662693,
+          "upper": 396488115.9
+        },
+        "max": 396488115.9,
+        "mean": 396480394.73333335,
+        "median": 396483432.35,
+        "min": 396469635.95,
+        "standard_error": 5546.694939657006,
+        "stdev": 9607.157449571123,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-heavy-tail-n31-s10-stress-n31-w93000-t31000-l128-20261005-030714Z-dda5373d/whcc-0-31.json"
+    },
+    {
+      "name": "heavy-tail-n31-s100-honest",
+      "nodes": 31,
+      "profile": "heavy-tail",
+      "scale": 100,
+      "behavior": "honest",
+      "total_weight": "930000",
+      "threshold": "310000",
+      "corrupted_weight": "0",
+      "gates": 3892,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 13253.021,
+          "method": "min_max",
+          "minus": 372.2016666666659,
+          "plus": 364.95533333333333,
+          "upper": 13990.178
+        },
+        "max": 13990.178,
+        "mean": 13625.222666666667,
+        "median": 13632.469,
+        "min": 13253.021,
+        "standard_error": 212.82973842356793,
+        "stdev": 368.6319203112137,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 414435609.2258065,
+          "method": "min_max",
+          "minus": 958810.4301075339,
+          "plus": 772471.505376339,
+          "upper": 416166891.16129035
+        },
+        "max": 416166891.16129035,
+        "mean": 415394419.655914,
+        "median": 415580758.58064514,
+        "min": 414435609.2258065,
+        "standard_error": 508388.2804791592,
+        "stdev": 880554.3317624805,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-heavy-tail-n31-s100-honest-n31-w930000-t310000-l128-20261005-030817Z-d1f485da/whcc-0-31.json"
+    },
+    {
+      "name": "heavy-tail-n31-s100-stress",
+      "nodes": 31,
+      "profile": "heavy-tail",
+      "scale": 100,
+      "behavior": "recovery-stress",
+      "total_weight": "930000",
+      "threshold": "310000",
+      "corrupted_weight": "300300",
+      "gates": 3892,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 19443.502,
+          "method": "min_max",
+          "minus": 58.318666666666104,
+          "plus": 94.79033333333427,
+          "upper": 19596.611
+        },
+        "max": 19596.611,
+        "mean": 19501.820666666667,
+        "median": 19465.349,
+        "min": 19443.502,
+        "standard_error": 47.81292824586758,
+        "stdev": 82.81442098048772,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 465205138.5,
+          "method": "min_max",
+          "minus": 4003.833333313465,
+          "plus": 7926.516666710377,
+          "upper": 465217068.85
+        },
+        "max": 465217068.85,
+        "mean": 465209142.3333333,
+        "median": 465205219.65,
+        "min": 465205138.5,
+        "standard_error": 3963.327565784247,
+        "stdev": 6864.684710976597,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-heavy-tail-n31-s100-stress-n31-w930000-t310000-l128-20261005-030909Z-b37a7b49/whcc-0-31.json"
+    },
+    {
+      "name": "heavy-tail-n4-s1-honest",
+      "nodes": 4,
+      "profile": "heavy-tail",
+      "scale": 1,
+      "behavior": "honest",
+      "total_weight": "1200",
+      "threshold": "400",
+      "corrupted_weight": "0",
+      "gates": 41,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 31.213,
+          "method": "min_max",
+          "minus": 0.6153333333333322,
+          "plus": 0.48166666666666913,
+          "upper": 32.31
+        },
+        "max": 32.31,
+        "mean": 31.828333333333333,
+        "median": 31.962,
+        "min": 31.213,
+        "standard_error": 0.32365224821987243,
+        "stdev": 0.5605821379007128,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 422564.25,
+          "method": "min_max",
+          "minus": 199240.0,
+          "plus": 99620.0,
+          "upper": 721424.25
+        },
+        "max": 721424.25,
+        "mean": 621804.25,
+        "median": 721424.25,
+        "min": 422564.25,
+        "standard_error": 99620.00000000001,
+        "stdev": 172546.90145001156,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-heavy-tail-n4-s1-honest-n4-w1200-t400-l128-20261005-024917Z-5b580e83/whcc-0-4.json"
+    },
+    {
+      "name": "heavy-tail-n4-s1-stress",
+      "nodes": 4,
+      "profile": "heavy-tail",
+      "scale": 1,
+      "behavior": "recovery-stress",
+      "total_weight": "1200",
+      "threshold": "400",
+      "corrupted_weight": "382",
+      "gates": 41,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 33.293,
+          "method": "min_max",
+          "minus": 2.634999999999998,
+          "plus": 4.885000000000005,
+          "upper": 40.813
+        },
+        "max": 40.813,
+        "mean": 35.928,
+        "median": 33.678,
+        "min": 33.293,
+        "standard_error": 2.4450272663783,
+        "stdev": 4.2349114512584585,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 696146.0,
+          "method": "min_max",
+          "minus": 0.0,
+          "plus": 0.0,
+          "upper": 696146.0
+        },
+        "max": 696146.0,
+        "mean": 696146.0,
+        "median": 696146.0,
+        "min": 696146.0,
+        "standard_error": 0.0,
+        "stdev": 0.0,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-heavy-tail-n4-s1-stress-n4-w1200-t400-l128-20261005-024918Z-4ab40047/whcc-0-4.json"
+    },
+    {
+      "name": "heavy-tail-n4-s10-honest",
+      "nodes": 4,
+      "profile": "heavy-tail",
+      "scale": 10,
+      "behavior": "honest",
+      "total_weight": "12000",
+      "threshold": "4000",
+      "corrupted_weight": "0",
+      "gates": 64,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 36.443,
+          "method": "min_max",
+          "minus": 1.3830000000000027,
+          "plus": 1.5600000000000023,
+          "upper": 39.386
+        },
+        "max": 39.386,
+        "mean": 37.826,
+        "median": 37.649,
+        "min": 36.443,
+        "standard_error": 0.8541680162590979,
+        "stdev": 1.4794624023610763,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 535630.5,
+          "method": "min_max",
+          "minus": 271190.0,
+          "plus": 135595.0,
+          "upper": 942415.5
+        },
+        "max": 942415.5,
+        "mean": 806820.5,
+        "median": 942415.5,
+        "min": 535630.5,
+        "standard_error": 135595.0,
+        "stdev": 234857.42925230192,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-heavy-tail-n4-s10-honest-n4-w12000-t4000-l128-20261005-024920Z-2f606b83/whcc-0-4.json"
+    },
+    {
+      "name": "heavy-tail-n4-s10-stress",
+      "nodes": 4,
+      "profile": "heavy-tail",
+      "scale": 10,
+      "behavior": "recovery-stress",
+      "total_weight": "12000",
+      "threshold": "4000",
+      "corrupted_weight": "3820",
+      "gates": 64,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 37.415,
+          "method": "min_max",
+          "minus": 1.4126666666666665,
+          "plus": 0.9103333333333339,
+          "upper": 39.738
+        },
+        "max": 39.738,
+        "mean": 38.827666666666666,
+        "median": 39.33,
+        "min": 37.415,
+        "standard_error": 0.7160857335387836,
+        "stdev": 1.240296873064402,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 905736.0,
+          "method": "min_max",
+          "minus": 0.0,
+          "plus": 0.0,
+          "upper": 905736.0
+        },
+        "max": 905736.0,
+        "mean": 905736.0,
+        "median": 905736.0,
+        "min": 905736.0,
+        "standard_error": 0.0,
+        "stdev": 0.0,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-heavy-tail-n4-s10-stress-n4-w12000-t4000-l128-20261005-024922Z-a8aad9f1/whcc-0-4.json"
+    },
+    {
+      "name": "heavy-tail-n4-s100-honest",
+      "nodes": 4,
+      "profile": "heavy-tail",
+      "scale": 100,
+      "behavior": "honest",
+      "total_weight": "120000",
+      "threshold": "40000",
+      "corrupted_weight": "0",
+      "gates": 98,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 39.399,
+          "method": "min_max",
+          "minus": 0.5859999999999985,
+          "plus": 0.6730000000000018,
+          "upper": 40.658
+        },
+        "max": 40.658,
+        "mean": 39.985,
+        "median": 39.898,
+        "min": 39.399,
+        "standard_error": 0.36603597273127864,
+        "stdev": 0.6339929021684707,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1278066.25,
+          "method": "min_max",
+          "minus": 447.8333333332557,
+          "plus": 887.6666666667443,
+          "upper": 1279401.75
+        },
+        "max": 1279401.75,
+        "mean": 1278514.0833333333,
+        "median": 1278074.25,
+        "min": 1278066.25,
+        "standard_error": 443.83934155402574,
+        "stdev": 768.752289969489,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-heavy-tail-n4-s100-honest-n4-w120000-t40000-l128-20261005-024923Z-63d68e70/whcc-0-4.json"
+    },
+    {
+      "name": "heavy-tail-n4-s100-stress",
+      "nodes": 4,
+      "profile": "heavy-tail",
+      "scale": 100,
+      "behavior": "recovery-stress",
+      "total_weight": "120000",
+      "threshold": "40000",
+      "corrupted_weight": "38200",
+      "gates": 98,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 39.717,
+          "method": "min_max",
+          "minus": 2.126333333333335,
+          "plus": 1.2326666666666668,
+          "upper": 43.076
+        },
+        "max": 43.076,
+        "mean": 41.843333333333334,
+        "median": 42.737,
+        "min": 39.717,
+        "standard_error": 1.0676610469203758,
+        "stdev": 1.8492431785282697,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1222933.0,
+          "method": "min_max",
+          "minus": 42.66666666674428,
+          "plus": 21.333333333255723,
+          "upper": 1222997.0
+        },
+        "max": 1222997.0,
+        "mean": 1222975.6666666667,
+        "median": 1222997.0,
+        "min": 1222933.0,
+        "standard_error": 21.333333333333332,
+        "stdev": 36.95041722813605,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-heavy-tail-n4-s100-stress-n4-w120000-t40000-l128-20261005-024925Z-a474ec98/whcc-0-4.json"
+    },
+    {
+      "name": "heavy-tail-n46-s1-honest",
+      "nodes": 46,
+      "profile": "heavy-tail",
+      "scale": 1,
+      "behavior": "honest",
+      "total_weight": "13800",
+      "threshold": "4600",
+      "corrupted_weight": "0",
+      "gates": 2209,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 21809.387,
+          "method": "min_max",
+          "minus": 562.0926666666674,
+          "plus": 413.79733333333206,
+          "upper": 22785.277
+        },
+        "max": 22785.277,
+        "mean": 22371.479666666666,
+        "median": 22519.775,
+        "min": 21809.387,
+        "standard_error": 291.30965909225273,
+        "stdev": 504.5631302833507,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 392718150.65217394,
+          "method": "min_max",
+          "minus": 1390720.579710126,
+          "plus": 1784669.4637681246,
+          "upper": 395893540.6956522
+        },
+        "max": 395893540.6956522,
+        "mean": 394108871.23188406,
+        "median": 393714922.34782606,
+        "min": 392718150.65217394,
+        "standard_error": 937580.6231098402,
+        "stdev": 1623937.2754183298,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-heavy-tail-n46-s1-honest-n46-w13800-t4600-l128-20261005-041243Z-58d8adde/whcc-0-46.json"
+    },
+    {
+      "name": "heavy-tail-n46-s1-stress",
+      "nodes": 46,
+      "profile": "heavy-tail",
+      "scale": 1,
+      "behavior": "recovery-stress",
+      "total_weight": "13800",
+      "threshold": "4600",
+      "corrupted_weight": "4368",
+      "gates": 2209,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 30531.469,
+          "method": "min_max",
+          "minus": 287.4310000000005,
+          "plus": 159.97899999999936,
+          "upper": 30978.879
+        },
+        "max": 30978.879,
+        "mean": 30818.9,
+        "median": 30946.352,
+        "min": 30531.469,
+        "standard_error": 144.02191529185149,
+        "stdev": 249.45327468886777,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 437999706.7,
+          "method": "min_max",
+          "minus": 400355.5,
+          "plus": 290365.8000000119,
+          "upper": 438690428.0
+        },
+        "max": 438690428.0,
+        "mean": 438400062.2,
+        "median": 438510051.9,
+        "min": 437999706.7,
+        "standard_error": 206839.1316522675,
+        "stdev": 358255.88501515525,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-heavy-tail-n46-s1-stress-n46-w13800-t4600-l128-20261005-041415Z-3226a951/whcc-0-46.json"
+    },
+    {
+      "name": "heavy-tail-n46-s10-honest",
+      "nodes": 46,
+      "profile": "heavy-tail",
+      "scale": 10,
+      "behavior": "honest",
+      "total_weight": "138000",
+      "threshold": "46000",
+      "corrupted_weight": "0",
+      "gates": 4948,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 43010.551,
+          "method": "min_max",
+          "minus": 1586.612000000001,
+          "plus": 946.1630000000005,
+          "upper": 45543.326
+        },
+        "max": 45543.326,
+        "mean": 44597.163,
+        "median": 45237.612,
+        "min": 43010.551,
+        "standard_error": 798.1997434554424,
+        "stdev": 1382.5225102532697,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 846203367.1304348,
+          "method": "min_max",
+          "minus": 1940420.086956501,
+          "plus": 3640809.4347826242,
+          "upper": 851784596.6521739
+        },
+        "max": 851784596.6521739,
+        "mean": 848143787.2173913,
+        "median": 846443397.8695652,
+        "min": 846203367.1304348,
+        "standard_error": 1821722.9659705209,
+        "stdev": 3155316.734376011,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-heavy-tail-n46-s10-honest-n46-w138000-t46000-l128-20261005-041851Z-4edcd055/whcc-0-46.json"
+    },
+    {
+      "name": "heavy-tail-n46-s10-stress",
+      "nodes": 46,
+      "profile": "heavy-tail",
+      "scale": 10,
+      "behavior": "recovery-stress",
+      "total_weight": "138000",
+      "threshold": "46000",
+      "corrupted_weight": "43680",
+      "gates": 4948,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 62507.366,
+          "method": "min_max",
+          "minus": 985.9943333333285,
+          "plus": 502.08466666666936,
+          "upper": 63995.445
+        },
+        "max": 63995.445,
+        "mean": 63493.36033333333,
+        "median": 63977.27,
+        "min": 62507.366,
+        "standard_error": 493.02508444646435,
+        "stdev": 853.9444956672124,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 942080233.0,
+          "method": "min_max",
+          "minus": 6769378.022222161,
+          "plus": 3388278.5111111403,
+          "upper": 952237889.5333333
+        },
+        "max": 952237889.5333333,
+        "mean": 948849611.0222222,
+        "median": 952230710.5333333,
+        "min": 942080233.0,
+        "standard_error": 3384689.64556176,
+        "stdev": 5862454.433965263,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-heavy-tail-n46-s10-stress-n46-w138000-t46000-l128-20261005-042718Z-6c20aa87/whcc-0-46.json"
+    },
+    {
+      "name": "heavy-tail-n46-s100-honest",
+      "nodes": 46,
+      "profile": "heavy-tail",
+      "scale": 100,
+      "behavior": "honest",
+      "total_weight": "1380000",
+      "threshold": "460000",
+      "corrupted_weight": "0",
+      "gates": 6417,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 54171.149,
+          "method": "min_max",
+          "minus": 1489.3776666666672,
+          "plus": 1093.904333333332,
+          "upper": 56754.431
+        },
+        "max": 56754.431,
+        "mean": 55660.526666666665,
+        "median": 56056.0,
+        "min": 54171.149,
+        "standard_error": 771.4998036107621,
+        "stdev": 1336.2768578832506,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1091854974.1304348,
+          "method": "min_max",
+          "minus": 4722750.637681246,
+          "plus": 4037928.601449251,
+          "upper": 1100615653.3695652
+        },
+        "max": 1100615653.3695652,
+        "mean": 1096577724.768116,
+        "median": 1097262546.8043478,
+        "min": 1091854974.1304348,
+        "standard_error": 2552065.248559459,
+        "stdev": 4420306.674735879,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-heavy-tail-n46-s100-honest-n46-w1380000-t460000-l128-20261005-043100Z-3ea9c309/whcc-0-46.json"
+    },
+    {
+      "name": "heavy-tail-n46-s100-stress",
+      "nodes": 46,
+      "profile": "heavy-tail",
+      "scale": 100,
+      "behavior": "recovery-stress",
+      "total_weight": "1380000",
+      "threshold": "460000",
+      "corrupted_weight": "436800",
+      "gates": 6417,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 82191.433,
+          "method": "min_max",
+          "minus": 2308.2833333333256,
+          "plus": 2432.700666666671,
+          "upper": 86932.417
+        },
+        "max": 86932.417,
+        "mean": 84499.71633333333,
+        "median": 84375.299,
+        "min": 82191.433,
+        "standard_error": 1370.0172841597446,
+        "stdev": 2372.9395434122057,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1219115650.1666667,
+          "method": "min_max",
+          "minus": 3617162.2888889313,
+          "plus": 2944060.777777672,
+          "upper": 1225676873.2333333
+        },
+        "max": 1225676873.2333333,
+        "mean": 1222732812.4555557,
+        "median": 1223405913.9666667,
+        "min": 1219115650.1666667,
+        "standard_error": 1923729.993687135,
+        "stdev": 3331998.089110273,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-heavy-tail-n46-s100-stress-n46-w1380000-t460000-l128-20261005-043420Z-46754040/whcc-0-46.json"
+    },
+    {
+      "name": "near-uniform-n16-s1-honest",
+      "nodes": 16,
+      "profile": "near-uniform",
+      "scale": 1,
+      "behavior": "honest",
+      "total_weight": "4800",
+      "threshold": "1600",
+      "corrupted_weight": "0",
+      "gates": 819,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 940.705,
+          "method": "min_max",
+          "minus": 78.42533333333336,
+          "plus": 148.59766666666667,
+          "upper": 1167.728
+        },
+        "max": 1167.728,
+        "mean": 1019.1303333333334,
+        "median": 948.958,
+        "min": 940.705,
+        "standard_error": 74.33702062528769,
+        "stdev": 128.75549660629383,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 48703658.6875,
+          "method": "min_max",
+          "minus": 321531.25,
+          "plus": 636240.5625,
+          "upper": 49661430.5
+        },
+        "max": 49661430.5,
+        "mean": 49025189.9375,
+        "median": 48710480.625,
+        "min": 48703658.6875,
+        "standard_error": 318126.3767412519,
+        "stdev": 551011.0477436462,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-near-uniform-n16-s1-honest-n16-w4800-t1600-l128-20261005-025017Z-4fe6d3d4/whcc-0-16.json"
+    },
+    {
+      "name": "near-uniform-n16-s1-stress",
+      "nodes": 16,
+      "profile": "near-uniform",
+      "scale": 1,
+      "behavior": "recovery-stress",
+      "total_weight": "4800",
+      "threshold": "1600",
+      "corrupted_weight": "1505",
+      "gates": 819,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1151.27,
+          "method": "min_max",
+          "minus": 4.606333333333396,
+          "plus": 2.3766666666665515,
+          "upper": 1158.253
+        },
+        "max": 1158.253,
+        "mean": 1155.8763333333334,
+        "median": 1158.106,
+        "min": 1151.27,
+        "standard_error": 2.303557562650522,
+        "stdev": 3.9898787366702306,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 45959722.90909091,
+          "method": "min_max",
+          "minus": 3314.363636367023,
+          "plus": 2227.7272727265954,
+          "upper": 45965265.0
+        },
+        "max": 45965265.0,
+        "mean": 45963037.27272727,
+        "median": 45964123.90909091,
+        "min": 45959722.90909091,
+        "standard_error": 1689.6031931833093,
+        "stdev": 2926.4785752241046,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-near-uniform-n16-s1-stress-n16-w4800-t1600-l128-20261005-025024Z-341de277/whcc-0-16.json"
+    },
+    {
+      "name": "near-uniform-n16-s10-honest",
+      "nodes": 16,
+      "profile": "near-uniform",
+      "scale": 10,
+      "behavior": "honest",
+      "total_weight": "48000",
+      "threshold": "16000",
+      "corrupted_weight": "0",
+      "gates": 1249,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1228.313,
+          "method": "min_max",
+          "minus": 86.7639999999999,
+          "plus": 162.36799999999994,
+          "upper": 1477.445
+        },
+        "max": 1477.445,
+        "mean": 1315.077,
+        "median": 1239.473,
+        "min": 1228.313,
+        "standard_error": 81.24789631738163,
+        "stdev": 140.72548442979326,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 72343229.375,
+          "method": "min_max",
+          "minus": 323751.14583332837,
+          "plus": 642720.7291666716,
+          "upper": 73309701.25
+        },
+        "max": 73309701.25,
+        "mean": 72666980.52083333,
+        "median": 72348010.9375,
+        "min": 72343229.375,
+        "standard_error": 321363.32896499155,
+        "stdev": 556617.6134568363,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-near-uniform-n16-s10-honest-n16-w48000-t16000-l128-20261005-025030Z-42102a3e/whcc-0-16.json"
+    },
+    {
+      "name": "near-uniform-n16-s10-stress",
+      "nodes": 16,
+      "profile": "near-uniform",
+      "scale": 10,
+      "behavior": "recovery-stress",
+      "total_weight": "48000",
+      "threshold": "16000",
+      "corrupted_weight": "15050",
+      "gates": 1249,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1566.68,
+          "method": "min_max",
+          "minus": 10.758000000000038,
+          "plus": 8.871999999999844,
+          "upper": 1586.31
+        },
+        "max": 1586.31,
+        "mean": 1577.438,
+        "median": 1579.324,
+        "min": 1566.68,
+        "standard_error": 5.744619859776014,
+        "stdev": 9.949973467301255,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 68227541.63636364,
+          "method": "min_max",
+          "minus": 6629.696969687939,
+          "plus": 4003.757575765252,
+          "upper": 68238175.0909091
+        },
+        "max": 68238175.0909091,
+        "mean": 68234171.33333333,
+        "median": 68236797.27272727,
+        "min": 68227541.63636364,
+        "standard_error": 3338.625324291931,
+        "stdev": 5782.668689109743,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-near-uniform-n16-s10-stress-n16-w48000-t16000-l128-20261005-025038Z-aa1a67dd/whcc-0-16.json"
+    },
+    {
+      "name": "near-uniform-n16-s100-honest",
+      "nodes": 16,
+      "profile": "near-uniform",
+      "scale": 100,
+      "behavior": "honest",
+      "total_weight": "480000",
+      "threshold": "160000",
+      "corrupted_weight": "0",
+      "gates": 1439,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1387.236,
+          "method": "min_max",
+          "minus": 69.96900000000005,
+          "plus": 137.42599999999993,
+          "upper": 1594.631
+        },
+        "max": 1594.631,
+        "mean": 1457.2050000000002,
+        "median": 1389.748,
+        "min": 1387.236,
+        "standard_error": 68.71682628245672,
+        "stdev": 119.0210344560994,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 82981687.875,
+          "method": "min_max",
+          "minus": 324365.125,
+          "plus": 639826.25,
+          "upper": 83945879.25
+        },
+        "max": 83945879.25,
+        "mean": 83306053.0,
+        "median": 82990591.875,
+        "min": 82981687.875,
+        "standard_error": 319923.4507116751,
+        "stdev": 554123.6711653788,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-near-uniform-n16-s100-honest-n16-w480000-t160000-l128-20261005-025046Z-d1bca3fa/whcc-0-16.json"
+    },
+    {
+      "name": "near-uniform-n16-s100-stress",
+      "nodes": 16,
+      "profile": "near-uniform",
+      "scale": 100,
+      "behavior": "recovery-stress",
+      "total_weight": "480000",
+      "threshold": "160000",
+      "corrupted_weight": "150500",
+      "gates": 1439,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1757.57,
+          "method": "min_max",
+          "minus": 89.2793333333334,
+          "plus": 174.00266666666676,
+          "upper": 2020.852
+        },
+        "max": 2020.852,
+        "mean": 1846.8493333333333,
+        "median": 1762.126,
+        "min": 1757.57,
+        "standard_error": 87.01127377019094,
+        "stdev": 150.7079470012559,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 78241386.36363636,
+          "method": "min_max",
+          "minus": 315478.66666667163,
+          "plus": 628308.3333333284,
+          "upper": 79185173.36363636
+        },
+        "max": 79185173.36363636,
+        "mean": 78556865.03030303,
+        "median": 78244035.36363636,
+        "min": 78241386.36363636,
+        "standard_error": 314155.09736558114,
+        "stdev": 544132.5900939341,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-near-uniform-n16-s100-stress-n16-w480000-t160000-l128-20261005-025053Z-77c8819c/whcc-0-16.json"
+    },
+    {
+      "name": "near-uniform-n31-s1-honest",
+      "nodes": 31,
+      "profile": "near-uniform",
+      "scale": 1,
+      "behavior": "honest",
+      "total_weight": "9300",
+      "threshold": "3100",
+      "corrupted_weight": "0",
+      "gates": 3269,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 12478.941,
+          "method": "min_max",
+          "minus": 216.58299999999872,
+          "plus": 322.41300000000047,
+          "upper": 13017.937
+        },
+        "max": 13017.937,
+        "mean": 12695.524,
+        "median": 12589.694,
+        "min": 12478.941,
+        "standard_error": 164.34634533914434,
+        "stdev": 284.6562201656585,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 395940681.16129035,
+          "method": "min_max",
+          "minus": 18415.021505355835,
+          "plus": 25200.365591406822,
+          "upper": 395984296.5483871
+        },
+        "max": 395984296.5483871,
+        "mean": 395959096.1827957,
+        "median": 395952310.83870965,
+        "min": 395940681.16129035,
+        "standard_error": 13039.76186738972,
+        "stdev": 22585.530072918213,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-near-uniform-n31-s1-honest-n31-w9300-t3100-l128-20261005-025817Z-b989dbdb/whcc-0-31.json"
+    },
+    {
+      "name": "near-uniform-n31-s1-stress",
+      "nodes": 31,
+      "profile": "near-uniform",
+      "scale": 1,
+      "behavior": "recovery-stress",
+      "total_weight": "9300",
+      "threshold": "3100",
+      "corrupted_weight": "3010",
+      "gates": 3269,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 16052.435,
+          "method": "min_max",
+          "minus": 45.81066666666629,
+          "plus": 47.3073333333341,
+          "upper": 16145.553
+        },
+        "max": 16145.553,
+        "mean": 16098.245666666666,
+        "median": 16096.749,
+        "min": 16052.435,
+        "standard_error": 26.891265554285784,
+        "stdev": 46.577038219849825,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 370233922.95238096,
+          "method": "min_max",
+          "minus": 3180.317460298538,
+          "plus": 2916.3492063879967,
+          "upper": 370240019.61904764
+        },
+        "max": 370240019.61904764,
+        "mean": 370237103.26984125,
+        "median": 370237367.2380952,
+        "min": 370233922.95238096,
+        "standard_error": 1764.8980650915646,
+        "stdev": 3056.8931189185932,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-near-uniform-n31-s1-stress-n31-w9300-t3100-l128-20261005-025907Z-59d96efd/whcc-0-31.json"
+    },
+    {
+      "name": "near-uniform-n31-s10-honest",
+      "nodes": 31,
+      "profile": "near-uniform",
+      "scale": 10,
+      "behavior": "honest",
+      "total_weight": "93000",
+      "threshold": "31000",
+      "corrupted_weight": "0",
+      "gates": 4694,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 17224.029,
+          "method": "min_max",
+          "minus": 373.630000000001,
+          "plus": 228.17599999999948,
+          "upper": 17825.835
+        },
+        "max": 17825.835,
+        "mean": 17597.659,
+        "median": 17743.113,
+        "min": 17224.029,
+        "standard_error": 188.33504276156407,
+        "stdev": 326.2058629086861,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 564137800.451613,
+          "method": "min_max",
+          "minus": 11277.483870983124,
+          "plus": 9993.7096773386,
+          "upper": 564159071.6451613
+        },
+        "max": 564159071.6451613,
+        "mean": 564149077.9354839,
+        "median": 564150361.7096775,
+        "min": 564137800.451613,
+        "standard_error": 6173.923006689471,
+        "stdev": 10693.548329604568,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-near-uniform-n31-s10-honest-n31-w93000-t31000-l128-20261005-030006Z-176e6713/whcc-0-31.json"
+    },
+    {
+      "name": "near-uniform-n31-s10-stress",
+      "nodes": 31,
+      "profile": "near-uniform",
+      "scale": 10,
+      "behavior": "recovery-stress",
+      "total_weight": "93000",
+      "threshold": "31000",
+      "corrupted_weight": "30100",
+      "gates": 4694,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 23923.594,
+          "method": "min_max",
+          "minus": 216.22899999999936,
+          "plus": 302.1939999999995,
+          "upper": 24442.017
+        },
+        "max": 24442.017,
+        "mean": 24139.823,
+        "median": 24053.858,
+        "min": 23923.594,
+        "standard_error": 155.70601321186425,
+        "stdev": 269.6907259269397,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 527351549.3333333,
+          "method": "min_max",
+          "minus": 3672.0952380895615,
+          "plus": 4453.9047619104385,
+          "upper": 527359675.3333333
+        },
+        "max": 527359675.3333333,
+        "mean": 527355221.4285714,
+        "median": 527354439.61904764,
+        "min": 527351549.3333333,
+        "standard_error": 2378.121709711691,
+        "stdev": 4119.027627803213,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-near-uniform-n31-s10-stress-n31-w93000-t31000-l128-20261005-030112Z-ca1376c4/whcc-0-31.json"
+    },
+    {
+      "name": "near-uniform-n31-s100-honest",
+      "nodes": 31,
+      "profile": "near-uniform",
+      "scale": 100,
+      "behavior": "honest",
+      "total_weight": "930000",
+      "threshold": "310000",
+      "corrupted_weight": "0",
+      "gates": 5300,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 19627.468,
+          "method": "min_max",
+          "minus": 791.1453333333338,
+          "plus": 579.1786666666667,
+          "upper": 20997.792
+        },
+        "max": 20997.792,
+        "mean": 20418.613333333335,
+        "median": 20630.58,
+        "min": 19627.468,
+        "standard_error": 409.5299610843851,
+        "stdev": 709.3266998198601,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 635935390.6451613,
+          "method": "min_max",
+          "minus": 42494.79569900036,
+          "plus": 22843.139784932137,
+          "upper": 636000728.5806452
+        },
+        "max": 636000728.5806452,
+        "mean": 635977885.4408603,
+        "median": 635997537.0967742,
+        "min": 635935390.6451613,
+        "standard_error": 21267.362620119653,
+        "stdev": 36836.1526010384,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-near-uniform-n31-s100-honest-n31-w930000-t310000-l128-20261005-030238Z-0cef0a6b/whcc-0-31.json"
+    },
+    {
+      "name": "near-uniform-n31-s100-stress",
+      "nodes": 31,
+      "profile": "near-uniform",
+      "scale": 100,
+      "behavior": "recovery-stress",
+      "total_weight": "930000",
+      "threshold": "310000",
+      "corrupted_weight": "301000",
+      "gates": 5300,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 26732.126,
+          "method": "min_max",
+          "minus": 232.1489999999976,
+          "plus": 186.5020000000004,
+          "upper": 27150.777
+        },
+        "max": 27150.777,
+        "mean": 26964.274999999998,
+        "median": 27009.922,
+        "min": 26732.126,
+        "standard_error": 122.99038093417381,
+        "stdev": 213.0255886202396,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 594478202.7619047,
+          "method": "min_max",
+          "minus": 2667.111111164093,
+          "plus": 1783.07936501503,
+          "upper": 594482652.9523809
+        },
+        "max": 594482652.9523809,
+        "mean": 594480869.8730159,
+        "median": 594481753.9047619,
+        "min": 594478202.7619047,
+        "standard_error": 1358.575591641601,
+        "stdev": 2353.1219506462003,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-near-uniform-n31-s100-stress-n31-w930000-t310000-l128-20261005-030352Z-95069fbb/whcc-0-31.json"
+    },
+    {
+      "name": "near-uniform-n4-s1-honest",
+      "nodes": 4,
+      "profile": "near-uniform",
+      "scale": 1,
+      "behavior": "honest",
+      "total_weight": "1200",
+      "threshold": "400",
+      "corrupted_weight": "0",
+      "gates": 61,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 35.191,
+          "method": "min_max",
+          "minus": 0.913333333333334,
+          "plus": 0.67766666666666,
+          "upper": 36.782
+        },
+        "max": 36.782,
+        "mean": 36.10433333333334,
+        "median": 36.34,
+        "min": 35.191,
+        "standard_error": 0.4741569126120345,
+        "stdev": 0.8212638634040399,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 965495.5,
+          "method": "min_max",
+          "minus": 142.33333333337214,
+          "plus": 147.66666666662786,
+          "upper": 965785.5
+        },
+        "max": 965785.5,
+        "mean": 965637.8333333334,
+        "median": 965632.5,
+        "min": 965495.5,
+        "standard_error": 83.7582500082496,
+        "stdev": 145.07354456734464,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-near-uniform-n4-s1-honest-n4-w1200-t400-l128-20261005-024907Z-598f1aa4/whcc-0-4.json"
+    },
+    {
+      "name": "near-uniform-n4-s1-stress",
+      "nodes": 4,
+      "profile": "near-uniform",
+      "scale": 1,
+      "behavior": "recovery-stress",
+      "total_weight": "1200",
+      "threshold": "400",
+      "corrupted_weight": "301",
+      "gates": 61,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 36.023,
+          "method": "min_max",
+          "minus": 1.086666666666666,
+          "plus": 1.5163333333333284,
+          "upper": 38.626
+        },
+        "max": 38.626,
+        "mean": 37.10966666666667,
+        "median": 36.68,
+        "min": 36.023,
+        "standard_error": 0.7815289146566762,
+        "stdev": 1.353647787769524,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 755003.6666666666,
+          "method": "min_max",
+          "minus": 124162.4444444445,
+          "plus": 62081.22222222225,
+          "upper": 941247.3333333334
+        },
+        "max": 941247.3333333334,
+        "mean": 879166.1111111111,
+        "median": 941247.3333333334,
+        "min": 755003.6666666666,
+        "standard_error": 62081.22222222224,
+        "stdev": 107527.83108486296,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-near-uniform-n4-s1-stress-n4-w1200-t400-l128-20261005-024909Z-252af23f/whcc-0-4.json"
+    },
+    {
+      "name": "near-uniform-n4-s10-honest",
+      "nodes": 4,
+      "profile": "near-uniform",
+      "scale": 10,
+      "behavior": "honest",
+      "total_weight": "12000",
+      "threshold": "4000",
+      "corrupted_weight": "0",
+      "gates": 91,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 38.106,
+          "method": "min_max",
+          "minus": 1.06666666666667,
+          "plus": 1.9023333333333312,
+          "upper": 41.075
+        },
+        "max": 41.075,
+        "mean": 39.17266666666667,
+        "median": 38.337,
+        "min": 38.106,
+        "standard_error": 0.9535013255249193,
+        "stdev": 1.6515127408934314,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1284883.0,
+          "method": "min_max",
+          "minus": 120.91666666674428,
+          "plus": 169.08333333325572,
+          "upper": 1285173.0
+        },
+        "max": 1285173.0,
+        "mean": 1285003.9166666667,
+        "median": 1284955.75,
+        "min": 1284883.0,
+        "standard_error": 87.11108010912147,
+        "stdev": 150.880816651201,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-near-uniform-n4-s10-honest-n4-w12000-t4000-l128-20261005-024910Z-eaf2a38c/whcc-0-4.json"
+    },
+    {
+      "name": "near-uniform-n4-s10-stress",
+      "nodes": 4,
+      "profile": "near-uniform",
+      "scale": 10,
+      "behavior": "recovery-stress",
+      "total_weight": "12000",
+      "threshold": "4000",
+      "corrupted_weight": "3010",
+      "gates": 91,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 40.471,
+          "method": "min_max",
+          "minus": 1.4110000000000014,
+          "plus": 1.1920000000000002,
+          "upper": 43.074
+        },
+        "max": 43.074,
+        "mean": 41.882,
+        "median": 42.101,
+        "min": 40.471,
+        "standard_error": 0.7593578427417038,
+        "stdev": 1.3152463647545285,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1249755.6666666667,
+          "method": "min_max",
+          "minus": 0.0,
+          "plus": 0.0,
+          "upper": 1249755.6666666667
+        },
+        "max": 1249755.6666666667,
+        "mean": 1249755.6666666667,
+        "median": 1249755.6666666667,
+        "min": 1249755.6666666667,
+        "standard_error": 0.0,
+        "stdev": 0.0,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-near-uniform-n4-s10-stress-n4-w12000-t4000-l128-20261005-024912Z-5d764581/whcc-0-4.json"
+    },
+    {
+      "name": "near-uniform-n4-s100-honest",
+      "nodes": 4,
+      "profile": "near-uniform",
+      "scale": 100,
+      "behavior": "honest",
+      "total_weight": "120000",
+      "threshold": "40000",
+      "corrupted_weight": "0",
+      "gates": 115,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 42.269,
+          "method": "min_max",
+          "minus": 3.5960000000000036,
+          "plus": 5.18,
+          "upper": 51.045
+        },
+        "max": 51.045,
+        "mean": 45.865,
+        "median": 44.281,
+        "min": 42.269,
+        "standard_error": 2.65432577754377,
+        "stdev": 4.597427106545575,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1534600.5,
+          "method": "min_max",
+          "minus": 907.3333333332557,
+          "plus": 1222.1666666667443,
+          "upper": 1536730.0
+        },
+        "max": 1536730.0,
+        "mean": 1535507.8333333333,
+        "median": 1535193.0,
+        "min": 1534600.5,
+        "standard_error": 634.5687730875022,
+        "stdev": 1099.1053558841998,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-near-uniform-n4-s100-honest-n4-w120000-t40000-l128-20261005-024913Z-3723aff5/whcc-0-4.json"
+    },
+    {
+      "name": "near-uniform-n4-s100-stress",
+      "nodes": 4,
+      "profile": "near-uniform",
+      "scale": 100,
+      "behavior": "recovery-stress",
+      "total_weight": "120000",
+      "threshold": "40000",
+      "corrupted_weight": "30100",
+      "gates": 115,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 43.429,
+          "method": "min_max",
+          "minus": 0.5636666666666628,
+          "plus": 1.018333333333338,
+          "upper": 45.011
+        },
+        "max": 45.011,
+        "mean": 43.992666666666665,
+        "median": 43.538,
+        "min": 43.429,
+        "standard_error": 0.5101379987589426,
+        "stdev": 0.8835849327219973,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1491780.0,
+          "method": "min_max",
+          "minus": 100.22222222224809,
+          "plus": 50.11111111100763,
+          "upper": 1491930.3333333333
+        },
+        "max": 1491930.3333333333,
+        "mean": 1491880.2222222222,
+        "median": 1491930.3333333333,
+        "min": 1491780.0,
+        "standard_error": 50.11111111108524,
+        "stdev": 86.79499046812893,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-near-uniform-n4-s100-stress-n4-w120000-t40000-l128-20261005-024915Z-65e72927/whcc-0-4.json"
+    },
+    {
+      "name": "near-uniform-n46-s1-honest",
+      "nodes": 46,
+      "profile": "near-uniform",
+      "scale": 1,
+      "behavior": "honest",
+      "total_weight": "13800",
+      "threshold": "4600",
+      "corrupted_weight": "0",
+      "gates": 5379,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 50510.248,
+          "method": "min_max",
+          "minus": 879.0686666666661,
+          "plus": 598.1523333333316,
+          "upper": 51987.469
+        },
+        "max": 51987.469,
+        "mean": 51389.316666666666,
+        "median": 51670.233,
+        "min": 50510.248,
+        "standard_error": 448.973258468821,
+        "stdev": 777.6444949077516,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1053373774.1086956,
+          "method": "min_max",
+          "minus": 1958200.579710126,
+          "plus": 979364.0507246256,
+          "upper": 1056311338.7391304
+        },
+        "max": 1056311338.7391304,
+        "mean": 1055331974.6884058,
+        "median": 1056310811.2173913,
+        "min": 1053373774.1086956,
+        "standard_error": 979100.3016975331,
+        "stdev": 1695851.4682461435,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-near-uniform-n46-s1-honest-n46-w13800-t4600-l128-20261005-034131Z-f8d9b9bf/whcc-0-46.json"
+    },
+    {
+      "name": "near-uniform-n46-s1-stress",
+      "nodes": 46,
+      "profile": "near-uniform",
+      "scale": 1,
+      "behavior": "recovery-stress",
+      "total_weight": "13800",
+      "threshold": "4600",
+      "corrupted_weight": "4515",
+      "gates": 5379,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 75542.316,
+          "method": "min_max",
+          "minus": 486.9953333333251,
+          "plus": 566.5376666666707,
+          "upper": 76595.849
+        },
+        "max": 76595.849,
+        "mean": 76029.31133333333,
+        "median": 75949.769,
+        "min": 75542.316,
+        "standard_error": 306.7182108582901,
+        "stdev": 531.2515248131825,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 987867306.5806452,
+          "method": "min_max",
+          "minus": 19707.021505355835,
+          "plus": 23309.817204236984,
+          "upper": 987910323.4193548
+        },
+        "max": 987910323.4193548,
+        "mean": 987887013.6021506,
+        "median": 987883410.8064516,
+        "min": 987867306.5806452,
+        "standard_error": 12547.871078103484,
+        "stdev": 21733.550234099297,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-near-uniform-n46-s1-stress-n46-w13800-t4600-l128-20261005-034438Z-3d595ce5/whcc-0-46.json"
+    },
+    {
+      "name": "near-uniform-n46-s10-honest",
+      "nodes": 46,
+      "profile": "near-uniform",
+      "scale": 10,
+      "behavior": "honest",
+      "total_weight": "138000",
+      "threshold": "46000",
+      "corrupted_weight": "0",
+      "gates": 8815,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 85616.166,
+          "method": "min_max",
+          "minus": 922.4606666666659,
+          "plus": 1310.9943333333358,
+          "upper": 87849.621
+        },
+        "max": 87849.621,
+        "mean": 86538.62666666666,
+        "median": 86150.093,
+        "min": 85616.166,
+        "standard_error": 673.374367608474,
+        "stdev": 1166.3186172124394,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1682422589.8913043,
+          "method": "min_max",
+          "minus": 11485546.760869503,
+          "plus": 15217233.326086998,
+          "upper": 1709125369.9782608
+        },
+        "max": 1709125369.9782608,
+        "mean": 1693908136.6521738,
+        "median": 1690176450.0869565,
+        "min": 1682422589.8913043,
+        "standard_error": 7931030.398774547,
+        "stdev": 13736947.607050767,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-near-uniform-n46-s10-honest-n46-w138000-t46000-l128-20261005-034859Z-2eb250db/whcc-0-46.json"
+    },
+    {
+      "name": "near-uniform-n46-s10-stress",
+      "nodes": 46,
+      "profile": "near-uniform",
+      "scale": 10,
+      "behavior": "recovery-stress",
+      "total_weight": "138000",
+      "threshold": "46000",
+      "corrupted_weight": "45150",
+      "gates": 8815,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 116696.733,
+          "method": "min_max",
+          "minus": 2883.4236666666693,
+          "plus": 2524.2583333333314,
+          "upper": 122104.415
+        },
+        "max": 122104.415,
+        "mean": 119580.15666666666,
+        "median": 119939.322,
+        "min": 116696.733,
+        "standard_error": 1571.3588552356352,
+        "stdev": 2721.6733741913886,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1603876087.096774,
+          "method": "min_max",
+          "minus": 47310.03225803375,
+          "plus": 65615.38709688187,
+          "upper": 1603989012.516129
+        },
+        "max": 1603989012.516129,
+        "mean": 1603923397.1290321,
+        "median": 1603905091.7741935,
+        "min": 1603876087.096774,
+        "standard_error": 33859.27788139527,
+        "stdev": 58645.9895981697,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-near-uniform-n46-s10-stress-n46-w138000-t46000-l128-20261005-035402Z-05ea75ce/whcc-0-46.json"
+    },
+    {
+      "name": "near-uniform-n46-s100-honest",
+      "nodes": 46,
+      "profile": "near-uniform",
+      "scale": 100,
+      "behavior": "honest",
+      "total_weight": "1380000",
+      "threshold": "460000",
+      "corrupted_weight": "0",
+      "gates": 9219,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 83021.171,
+          "method": "min_max",
+          "minus": 890.4539999999979,
+          "plus": 1523.327999999994,
+          "upper": 85434.953
+        },
+        "max": 85434.953,
+        "mean": 83911.625,
+        "median": 83278.751,
+        "min": 83021.171,
+        "standard_error": 765.2849166134112,
+        "stdev": 1325.5123578405396,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1718913565.826087,
+          "method": "min_max",
+          "minus": 23888474.065217257,
+          "plus": 21540144.04347825,
+          "upper": 1764342183.9347825
+        },
+        "max": 1764342183.9347825,
+        "mean": 1742802039.8913043,
+        "median": 1745150369.9130435,
+        "min": 1718913565.826087,
+        "standard_error": 13166571.639758462,
+        "stdev": 22805171.04155712,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-near-uniform-n46-s100-honest-n46-w1380000-t460000-l128-20261005-040044Z-24eef83e/whcc-0-46.json"
+    },
+    {
+      "name": "near-uniform-n46-s100-stress",
+      "nodes": 46,
+      "profile": "near-uniform",
+      "scale": 100,
+      "behavior": "recovery-stress",
+      "total_weight": "1380000",
+      "threshold": "460000",
+      "corrupted_weight": "451500",
+      "gates": 9219,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 124249.984,
+          "method": "min_max",
+          "minus": 2236.9429999999993,
+          "plus": 3584.793000000005,
+          "upper": 130071.72
+        },
+        "max": 130071.72,
+        "mean": 126486.927,
+        "median": 125139.077,
+        "min": 124249.984,
+        "standard_error": 1810.67917554887,
+        "stdev": 3136.188328257569,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1675339171.483871,
+          "method": "min_max",
+          "minus": 156162.4731183052,
+          "plus": 220694.62365579605,
+          "upper": 1675716028.580645
+        },
+        "max": 1675716028.580645,
+        "mean": 1675495333.9569893,
+        "median": 1675430801.8064516,
+        "min": 1675339171.483871,
+        "standard_error": 113473.36939712847,
+        "stdev": 196541.64110185788,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-near-uniform-n46-s100-stress-n46-w1380000-t460000-l128-20261005-040539Z-673f2f8f/whcc-0-46.json"
+    },
+    {
+      "name": "uniform-n16-s1-honest",
+      "nodes": 16,
+      "profile": "uniform",
+      "scale": 1,
+      "behavior": "honest",
+      "total_weight": "4800",
+      "threshold": "1600",
+      "corrupted_weight": "0",
+      "gates": 659,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 775.275,
+          "method": "min_max",
+          "minus": 8.54200000000003,
+          "plus": 15.336000000000013,
+          "upper": 799.153
+        },
+        "max": 799.153,
+        "mean": 783.817,
+        "median": 777.023,
+        "min": 775.275,
+        "standard_error": 7.684585176399143,
+        "stdev": 13.310091960613958,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 34596730.75,
+          "method": "min_max",
+          "minus": 2793.375,
+          "plus": 2907.6875,
+          "upper": 34602431.8125
+        },
+        "max": 34602431.8125,
+        "mean": 34599524.125,
+        "median": 34599409.8125,
+        "min": 34596730.75,
+        "standard_error": 1646.7471894585349,
+        "stdev": 2852.2497993634342,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-uniform-n16-s1-honest-n16-w4800-t1600-l128-20261005-024937Z-fa291f21/whcc-0-16.json"
+    },
+    {
+      "name": "uniform-n16-s1-stress",
+      "nodes": 16,
+      "profile": "uniform",
+      "scale": 1,
+      "behavior": "recovery-stress",
+      "total_weight": "4800",
+      "threshold": "1600",
+      "corrupted_weight": "1500",
+      "gates": 659,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 942.494,
+          "method": "min_max",
+          "minus": 42.26599999999996,
+          "plus": 45.16599999999994,
+          "upper": 1029.926
+        },
+        "max": 1029.926,
+        "mean": 984.76,
+        "median": 981.86,
+        "min": 942.494,
+        "standard_error": 25.28106113279264,
+        "stdev": 43.788082351251646,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 34592979.36363637,
+          "method": "min_max",
+          "minus": 6761.939393937588,
+          "plus": 3495.969696968794,
+          "upper": 34603237.27272727
+        },
+        "max": 34603237.27272727,
+        "mean": 34599741.303030305,
+        "median": 34603007.27272727,
+        "min": 34592979.36363637,
+        "standard_error": 3381.6215674073574,
+        "stdev": 5857.140366720246,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-uniform-n16-s1-stress-n16-w4800-t1600-l128-20261005-024942Z-16319dd2/whcc-0-16.json"
+    },
+    {
+      "name": "uniform-n16-s10-honest",
+      "nodes": 16,
+      "profile": "uniform",
+      "scale": 10,
+      "behavior": "honest",
+      "total_weight": "48000",
+      "threshold": "16000",
+      "corrupted_weight": "0",
+      "gates": 1363,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1258.318,
+          "method": "min_max",
+          "minus": 83.13233333333324,
+          "plus": 159.87766666666676,
+          "upper": 1501.328
+        },
+        "max": 1501.328,
+        "mean": 1341.4503333333332,
+        "median": 1264.705,
+        "min": 1258.318,
+        "standard_error": 79.96009351823224,
+        "stdev": 138.4949445515371,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 68236211.75,
+          "method": "min_max",
+          "minus": 315401.91666667163,
+          "plus": 626451.0208333284,
+          "upper": 69178064.6875
+        },
+        "max": 69178064.6875,
+        "mean": 68551613.66666667,
+        "median": 68240564.5625,
+        "min": 68236211.75,
+        "standard_error": 313228.03081860836,
+        "stdev": 542526.8637325797,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-uniform-n16-s10-honest-n16-w48000-t16000-l128-20261005-024948Z-6499490b/whcc-0-16.json"
+    },
+    {
+      "name": "uniform-n16-s10-stress",
+      "nodes": 16,
+      "profile": "uniform",
+      "scale": 10,
+      "behavior": "recovery-stress",
+      "total_weight": "48000",
+      "threshold": "16000",
+      "corrupted_weight": "15000",
+      "gates": 1363,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1586.007,
+          "method": "min_max",
+          "minus": 23.682000000000016,
+          "plus": 26.81600000000003,
+          "upper": 1636.505
+        },
+        "max": 1636.505,
+        "mean": 1609.689,
+        "median": 1606.555,
+        "min": 1586.007,
+        "standard_error": 14.661496831269778,
+        "stdev": 25.394457426769353,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 68229010.0,
+          "method": "min_max",
+          "minus": 4366.0,
+          "plus": 4861.090909093618,
+          "upper": 68238237.0909091
+        },
+        "max": 68238237.0909091,
+        "mean": 68233376.0,
+        "median": 68232880.9090909,
+        "min": 68229010.0,
+        "standard_error": 2675.109836833489,
+        "stdev": 4633.426153222892,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-uniform-n16-s10-stress-n16-w48000-t16000-l128-20261005-024955Z-8ea60bff/whcc-0-16.json"
+    },
+    {
+      "name": "uniform-n16-s100-honest",
+      "nodes": 16,
+      "profile": "uniform",
+      "scale": 100,
+      "behavior": "honest",
+      "total_weight": "480000",
+      "threshold": "160000",
+      "corrupted_weight": "0",
+      "gates": 1241,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1157.012,
+          "method": "min_max",
+          "minus": 23.165333333333365,
+          "plus": 23.46866666666665,
+          "upper": 1203.646
+        },
+        "max": 1203.646,
+        "mean": 1180.1773333333333,
+        "median": 1179.874,
+        "min": 1157.012,
+        "standard_error": 13.462930554344817,
+        "stdev": 23.318479738896652,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 62400651.25,
+          "method": "min_max",
+          "minus": 4900.458333335817,
+          "plus": 3786.979166664183,
+          "upper": 62409338.6875
+        },
+        "max": 62409338.6875,
+        "mean": 62405551.708333336,
+        "median": 62406665.1875,
+        "min": 62400651.25,
+        "standard_error": 2568.901806223306,
+        "stdev": 4449.468448034224,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-uniform-n16-s100-honest-n16-w480000-t160000-l128-20261005-025003Z-224e97f7/whcc-0-16.json"
+    },
+    {
+      "name": "uniform-n16-s100-stress",
+      "nodes": 16,
+      "profile": "uniform",
+      "scale": 100,
+      "behavior": "recovery-stress",
+      "total_weight": "480000",
+      "threshold": "160000",
+      "corrupted_weight": "150000",
+      "gates": 1241,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1450.387,
+          "method": "min_max",
+          "minus": 40.202999999999975,
+          "plus": 68.43900000000008,
+          "upper": 1559.029
+        },
+        "max": 1559.029,
+        "mean": 1490.59,
+        "median": 1462.354,
+        "min": 1450.387,
+        "standard_error": 34.39343354479166,
+        "stdev": 59.57117434632291,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 62404347.54545455,
+          "method": "min_max",
+          "minus": 2295.7272727265954,
+          "plus": 1624.0,
+          "upper": 62408267.27272727
+        },
+        "max": 62408267.27272727,
+        "mean": 62406643.27272727,
+        "median": 62407315.0,
+        "min": 62404347.54545455,
+        "standard_error": 1180.3217950814235,
+        "stdev": 2044.3773183619264,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-uniform-n16-s100-stress-n16-w480000-t160000-l128-20261005-025010Z-10fb70d0/whcc-0-16.json"
+    },
+    {
+      "name": "uniform-n31-s1-honest",
+      "nodes": 31,
+      "profile": "uniform",
+      "scale": 1,
+      "behavior": "honest",
+      "total_weight": "9300",
+      "threshold": "3100",
+      "corrupted_weight": "0",
+      "gates": 2525,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 8636.774,
+          "method": "min_max",
+          "minus": 160.08666666666613,
+          "plus": 254.494333333334,
+          "upper": 9051.355
+        },
+        "max": 9051.355,
+        "mean": 8796.860666666666,
+        "median": 8702.453,
+        "min": 8636.774,
+        "standard_error": 128.65192968410716,
+        "stdev": 222.8316787046522,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 267509092.0,
+          "method": "min_max",
+          "minus": 5830.344086021185,
+          "plus": 5792.043010741472,
+          "upper": 267520714.38709676
+        },
+        "max": 267520714.38709676,
+        "mean": 267514922.34408602,
+        "median": 267514960.6451613,
+        "min": 267509092.0,
+        "standard_error": 3355.1488136904086,
+        "stdev": 5811.288212266232,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-uniform-n31-s1-honest-n31-w9300-t3100-l128-20261005-025232Z-099f8491/whcc-0-31.json"
+    },
+    {
+      "name": "uniform-n31-s1-stress",
+      "nodes": 31,
+      "profile": "uniform",
+      "scale": 1,
+      "behavior": "recovery-stress",
+      "total_weight": "9300",
+      "threshold": "3100",
+      "corrupted_weight": "3000",
+      "gates": 2525,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 11095.832,
+          "method": "min_max",
+          "minus": 211.8203333333331,
+          "plus": 248.63966666666602,
+          "upper": 11556.292
+        },
+        "max": 11556.292,
+        "mean": 11307.652333333333,
+        "median": 11270.833,
+        "min": 11095.832,
+        "standard_error": 134.1921512612084,
+        "stdev": 232.42762396138096,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 267524804.2857143,
+          "method": "min_max",
+          "minus": 3504.349206328392,
+          "plus": 3324.984126985073,
+          "upper": 267531633.6190476
+        },
+        "max": 267531633.6190476,
+        "mean": 267528308.63492063,
+        "median": 267528488.0,
+        "min": 267524804.2857143,
+        "standard_error": 1973.4975144100406,
+        "stdev": 3418.1979635690827,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-uniform-n31-s1-stress-n31-w9300-t3100-l128-20261005-025309Z-1b21052b/whcc-0-31.json"
+    },
+    {
+      "name": "uniform-n31-s10-honest",
+      "nodes": 31,
+      "profile": "uniform",
+      "scale": 10,
+      "behavior": "honest",
+      "total_weight": "93000",
+      "threshold": "31000",
+      "corrupted_weight": "0",
+      "gates": 5070,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 15698.106,
+          "method": "min_max",
+          "minus": 682.7390000000014,
+          "plus": 881.3420000000006,
+          "upper": 17262.187
+        },
+        "max": 17262.187,
+        "mean": 16380.845000000001,
+        "median": 16182.242,
+        "min": 15698.106,
+        "standard_error": 462.30210445371534,
+        "stdev": 800.7307333598491,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 528010871.0967742,
+          "method": "min_max",
+          "minus": 657.5698924660683,
+          "plus": 518.8172042965889,
+          "upper": 528012047.483871
+        },
+        "max": 528012047.483871,
+        "mean": 528011528.6666667,
+        "median": 528011667.41935486,
+        "min": 528010871.0967742,
+        "standard_error": 346.60779069581946,
+        "stdev": 600.3423037843585,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-uniform-n31-s10-honest-n31-w93000-t31000-l128-20261005-025354Z-96c66309/whcc-0-31.json"
+    },
+    {
+      "name": "uniform-n31-s10-stress",
+      "nodes": 31,
+      "profile": "uniform",
+      "scale": 10,
+      "behavior": "recovery-stress",
+      "total_weight": "93000",
+      "threshold": "31000",
+      "corrupted_weight": "30000",
+      "gates": 5070,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 20817.684,
+          "method": "min_max",
+          "minus": 298.1389999999992,
+          "plus": 571.0629999999983,
+          "upper": 21686.886
+        },
+        "max": 21686.886,
+        "mean": 21115.823,
+        "median": 20842.899,
+        "min": 20817.684,
+        "standard_error": 285.6242645697307,
+        "stdev": 494.71573810926867,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 528020560.38095236,
+          "method": "min_max",
+          "minus": 3886.142857134342,
+          "plus": 3267.9047619104385,
+          "upper": 528027714.4285714
+        },
+        "max": 528027714.4285714,
+        "mean": 528024446.5238095,
+        "median": 528025064.7619048,
+        "min": 528020560.38095236,
+        "standard_error": 2088.2020249261077,
+        "stdev": 3616.872003640229,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-uniform-n31-s10-stress-n31-w93000-t31000-l128-20261005-025455Z-1d75a044/whcc-0-31.json"
+    },
+    {
+      "name": "uniform-n31-s100-honest",
+      "nodes": 31,
+      "profile": "uniform",
+      "scale": 100,
+      "behavior": "honest",
+      "total_weight": "930000",
+      "threshold": "310000",
+      "corrupted_weight": "0",
+      "gates": 4584,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 13963.74,
+          "method": "min_max",
+          "minus": 245.35266666666757,
+          "plus": 382.16733333333286,
+          "upper": 14591.26
+        },
+        "max": 14591.26,
+        "mean": 14209.092666666667,
+        "median": 14072.278,
+        "min": 13963.74,
+        "standard_error": 193.63541976382098,
+        "stdev": 335.38638517586463,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 477303731.9354839,
+          "method": "min_max",
+          "minus": 16226.021505355835,
+          "plus": 17059.26881724596,
+          "upper": 477337017.2258065
+        },
+        "max": 477337017.2258065,
+        "mean": 477319957.9569892,
+        "median": 477319124.7096774,
+        "min": 477303731.9354839,
+        "standard_error": 9617.663676399476,
+        "stdev": 16658.282137633567,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-uniform-n31-s100-honest-n31-w930000-t310000-l128-20261005-025611Z-aafc01e9/whcc-0-31.json"
+    },
+    {
+      "name": "uniform-n31-s100-stress",
+      "nodes": 31,
+      "profile": "uniform",
+      "scale": 100,
+      "behavior": "recovery-stress",
+      "total_weight": "930000",
+      "threshold": "310000",
+      "corrupted_weight": "300000",
+      "gates": 4584,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 19752.756,
+          "method": "min_max",
+          "minus": 222.84299999999712,
+          "plus": 204.6959999999999,
+          "upper": 20180.295
+        },
+        "max": 20180.295,
+        "mean": 19975.599,
+        "median": 19993.746,
+        "min": 19752.756,
+        "standard_error": 123.75295866766089,
+        "stdev": 214.34641199935993,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 477324768.0952381,
+          "method": "min_max",
+          "minus": 3336.9523809552193,
+          "plus": 4981.523809552193,
+          "upper": 477333086.5714286
+        },
+        "max": 477333086.5714286,
+        "mean": 477328105.04761904,
+        "median": 477326460.47619045,
+        "min": 477324768.0952381,
+        "standard_error": 2538.2226669349952,
+        "stdev": 4396.3306200543875,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-uniform-n31-s100-stress-n31-w930000-t310000-l128-20261005-025705Z-d39954e5/whcc-0-31.json"
+    },
+    {
+      "name": "uniform-n4-s1-honest",
+      "nodes": 4,
+      "profile": "uniform",
+      "scale": 1,
+      "behavior": "honest",
+      "total_weight": "1200",
+      "threshold": "400",
+      "corrupted_weight": "0",
+      "gates": 49,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 33.248,
+          "method": "min_max",
+          "minus": 0.3643333333333345,
+          "plus": 0.5716666666666654,
+          "upper": 34.184
+        },
+        "max": 34.184,
+        "mean": 33.61233333333333,
+        "median": 33.405,
+        "min": 33.248,
+        "standard_error": 0.2894041771947625,
+        "stdev": 0.5012627388239949,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 759397.0,
+          "method": "min_max",
+          "minus": 381.33333333337214,
+          "plus": 267.16666666662786,
+          "upper": 760045.5
+        },
+        "max": 760045.5,
+        "mean": 759778.3333333334,
+        "median": 759892.5,
+        "min": 759397.0,
+        "standard_error": 195.7154254977818,
+        "stdev": 338.9890607871194,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-uniform-n4-s1-honest-n4-w1200-t400-l128-20261005-024854Z-6c7da7de/whcc-0-4.json"
+    },
+    {
+      "name": "uniform-n4-s1-stress",
+      "nodes": 4,
+      "profile": "uniform",
+      "scale": 1,
+      "behavior": "recovery-stress",
+      "total_weight": "1200",
+      "threshold": "400",
+      "corrupted_weight": "300",
+      "gates": 49,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 34.014,
+          "method": "min_max",
+          "minus": 0.8643333333333274,
+          "plus": 0.5796666666666681,
+          "upper": 35.458
+        },
+        "max": 35.458,
+        "mean": 34.87833333333333,
+        "median": 35.163,
+        "min": 34.014,
+        "standard_error": 0.4404771402821146,
+        "stdev": 0.7629287865412662,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 759381.0,
+          "method": "min_max",
+          "minus": 50.111111111124046,
+          "plus": 100.22222222224809,
+          "upper": 759531.3333333334
+        },
+        "max": 759531.3333333334,
+        "mean": 759431.1111111111,
+        "median": 759381.0,
+        "min": 759381.0,
+        "standard_error": 50.11111111112405,
+        "stdev": 86.79499046819615,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-uniform-n4-s1-stress-n4-w1200-t400-l128-20261005-024859Z-d09cb9b1/whcc-0-4.json"
+    },
+    {
+      "name": "uniform-n4-s10-honest",
+      "nodes": 4,
+      "profile": "uniform",
+      "scale": 10,
+      "behavior": "honest",
+      "total_weight": "12000",
+      "threshold": "4000",
+      "corrupted_weight": "0",
+      "gates": 107,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 39.678,
+          "method": "min_max",
+          "minus": 0.847999999999999,
+          "plus": 1.4370000000000047,
+          "upper": 41.963
+        },
+        "max": 41.963,
+        "mean": 40.525999999999996,
+        "median": 39.937,
+        "min": 39.678,
+        "standard_error": 0.7223796324186716,
+        "stdev": 1.2511982257020688,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1285947.75,
+          "method": "min_max",
+          "minus": 1497.0,
+          "plus": 941.25,
+          "upper": 1288386.0
+        },
+        "max": 1288386.0,
+        "mean": 1287444.75,
+        "median": 1288000.5,
+        "min": 1285947.75,
+        "standard_error": 756.727452587786,
+        "stdev": 1310.690395364214,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-uniform-n4-s10-honest-n4-w12000-t4000-l128-20261005-024900Z-9378ce95/whcc-0-4.json"
+    },
+    {
+      "name": "uniform-n4-s10-stress",
+      "nodes": 4,
+      "profile": "uniform",
+      "scale": 10,
+      "behavior": "recovery-stress",
+      "total_weight": "12000",
+      "threshold": "4000",
+      "corrupted_weight": "3000",
+      "gates": 107,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 42.865,
+          "method": "min_max",
+          "minus": 0.34899999999999665,
+          "plus": 0.3819999999999979,
+          "upper": 43.596
+        },
+        "max": 43.596,
+        "mean": 43.214,
+        "median": 43.181,
+        "min": 42.865,
+        "standard_error": 0.21166561679529505,
+        "stdev": 0.3666156025048553,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1285231.3333333333,
+          "method": "min_max",
+          "minus": 1503.3333333332557,
+          "plus": 751.6666666667443,
+          "upper": 1287486.3333333333
+        },
+        "max": 1287486.3333333333,
+        "mean": 1286734.6666666665,
+        "median": 1287486.3333333333,
+        "min": 1285231.3333333333,
+        "standard_error": 751.6666666666667,
+        "stdev": 1301.9248570226061,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-uniform-n4-s10-stress-n4-w12000-t4000-l128-20261005-024902Z-2480ca37/whcc-0-4.json"
+    },
+    {
+      "name": "uniform-n4-s100-honest",
+      "nodes": 4,
+      "profile": "uniform",
+      "scale": 100,
+      "behavior": "honest",
+      "total_weight": "120000",
+      "threshold": "40000",
+      "corrupted_weight": "0",
+      "gates": 97,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 38.825,
+          "method": "min_max",
+          "minus": 0.6129999999999995,
+          "plus": 0.32399999999999807,
+          "upper": 39.762
+        },
+        "max": 39.762,
+        "mean": 39.438,
+        "median": 39.727,
+        "min": 38.825,
+        "standard_error": 0.30666648550719156,
+        "stdev": 0.5311619338770405,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1188557.25,
+          "method": "min_max",
+          "minus": 914.9166666667443,
+          "plus": 839.8333333332557,
+          "upper": 1190312.0
+        },
+        "max": 1190312.0,
+        "mean": 1189472.1666666667,
+        "median": 1189547.25,
+        "min": 1188557.25,
+        "standard_error": 507.94193265022375,
+        "stdev": 879.7812346449163,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-uniform-n4-s100-honest-n4-w120000-t40000-l128-20261005-024904Z-8a869c1f/whcc-0-4.json"
+    },
+    {
+      "name": "uniform-n4-s100-stress",
+      "nodes": 4,
+      "profile": "uniform",
+      "scale": 100,
+      "behavior": "recovery-stress",
+      "total_weight": "120000",
+      "threshold": "40000",
+      "corrupted_weight": "30000",
+      "gates": 97,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 40.427,
+          "method": "min_max",
+          "minus": 1.532666666666664,
+          "plus": 1.9193333333333342,
+          "upper": 43.879
+        },
+        "max": 43.879,
+        "mean": 41.959666666666664,
+        "median": 41.573,
+        "min": 40.427,
+        "standard_error": 1.0150877356717054,
+        "stdev": 1.7581835323234403,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1189371.3333333333,
+          "method": "min_max",
+          "minus": 189.55555555550382,
+          "plus": 379.11111111124046,
+          "upper": 1189940.0
+        },
+        "max": 1189940.0,
+        "mean": 1189560.8888888888,
+        "median": 1189371.3333333333,
+        "min": 1189371.3333333333,
+        "standard_error": 189.55555555558144,
+        "stdev": 328.319853079212,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-uniform-n4-s100-stress-n4-w120000-t40000-l128-20261005-024905Z-4710755c/whcc-0-4.json"
+    },
+    {
+      "name": "uniform-n46-s1-honest",
+      "nodes": 46,
+      "profile": "uniform",
+      "scale": 1,
+      "behavior": "honest",
+      "total_weight": "13800",
+      "threshold": "4600",
+      "corrupted_weight": "0",
+      "gates": 4091,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 35563.445,
+          "method": "min_max",
+          "minus": 490.47233333333133,
+          "plus": 720.7186666666676,
+          "upper": 36774.636
+        },
+        "max": 36774.636,
+        "mean": 36053.91733333333,
+        "median": 35823.671,
+        "min": 35563.445,
+        "standard_error": 368.1059358981379,
+        "stdev": 637.5781835432671,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 698271778.3695652,
+          "method": "min_max",
+          "minus": 17618.586956501007,
+          "plus": 23923.73913037777,
+          "upper": 698313320.6956521
+        },
+        "max": 698313320.6956521,
+        "mean": 698289396.9565217,
+        "median": 698283091.8043479,
+        "min": 698271778.3695652,
+        "standard_error": 12399.696530277793,
+        "stdev": 21476.904388876657,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-uniform-n46-s1-honest-n46-w13800-t4600-l128-20261005-031715Z-7f287f3e/whcc-0-46.json"
+    },
+    {
+      "name": "uniform-n46-s1-stress",
+      "nodes": 46,
+      "profile": "uniform",
+      "scale": 1,
+      "behavior": "recovery-stress",
+      "total_weight": "13800",
+      "threshold": "4600",
+      "corrupted_weight": "4500",
+      "gates": 4091,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 46142.569,
+          "method": "min_max",
+          "minus": 600.3826666666646,
+          "plus": 546.5833333333358,
+          "upper": 47289.535
+        },
+        "max": 47289.535,
+        "mean": 46742.95166666667,
+        "median": 46796.751,
+        "min": 46142.569,
+        "standard_error": 332.1914746494523,
+        "stdev": 575.3725119340801,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 698258540.3548387,
+          "method": "min_max",
+          "minus": 2323.7956988811493,
+          "plus": 1986.8817204236984,
+          "upper": 698262851.032258
+        },
+        "max": 698262851.032258,
+        "mean": 698260864.1505376,
+        "median": 698261201.0645162,
+        "min": 698258540.3548387,
+        "standard_error": 1255.735936284159,
+        "stdev": 2174.9984425342377,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-uniform-n46-s1-stress-n46-w13800-t4600-l128-20261005-031931Z-a3c42bbd/whcc-0-46.json"
+    },
+    {
+      "name": "uniform-n46-s10-honest",
+      "nodes": 46,
+      "profile": "uniform",
+      "scale": 10,
+      "behavior": "honest",
+      "total_weight": "138000",
+      "threshold": "46000",
+      "corrupted_weight": "0",
+      "gates": 9283,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 76122.533,
+          "method": "min_max",
+          "minus": 235.73300000000745,
+          "plus": 242.7850000000035,
+          "upper": 76601.051
+        },
+        "max": 76601.051,
+        "mean": 76358.266,
+        "median": 76351.214,
+        "min": 76122.533,
+        "standard_error": 138.18124222556716,
+        "stdev": 239.33693218766422,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1554104645.6956522,
+          "method": "min_max",
+          "minus": 553933.1521737576,
+          "plus": 502203.60869574547,
+          "upper": 1555160782.4565217
+        },
+        "max": 1555160782.4565217,
+        "mean": 1554658578.847826,
+        "median": 1554710308.3913043,
+        "min": 1554104645.6956522,
+        "standard_error": 305975.58381147915,
+        "stdev": 529965.2570370311,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-uniform-n46-s10-honest-n46-w138000-t46000-l128-20261005-032219Z-45552182/whcc-0-46.json"
+    },
+    {
+      "name": "uniform-n46-s10-stress",
+      "nodes": 46,
+      "profile": "uniform",
+      "scale": 10,
+      "behavior": "recovery-stress",
+      "total_weight": "138000",
+      "threshold": "46000",
+      "corrupted_weight": "45000",
+      "gates": 9283,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 99600.424,
+          "method": "min_max",
+          "minus": 1123.0813333333354,
+          "plus": 1216.9146666666638,
+          "upper": 101940.42
+        },
+        "max": 101940.42,
+        "mean": 100723.50533333333,
+        "median": 100629.672,
+        "min": 99600.424,
+        "standard_error": 677.1259953748962,
+        "stdev": 1172.8166271149687,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1555139232.8709676,
+          "method": "min_max",
+          "minus": 185010.66666674614,
+          "plus": 284131.97849464417,
+          "upper": 1555608375.516129
+        },
+        "max": 1555608375.516129,
+        "mean": 1555324243.5376344,
+        "median": 1555225122.2258065,
+        "min": 1555139232.8709676,
+        "standard_error": 144213.36186488764,
+        "stdev": 249784.86988030138,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-uniform-n46-s10-stress-n46-w138000-t46000-l128-20261005-032650Z-15a2ea72/whcc-0-46.json"
+    },
+    {
+      "name": "uniform-n46-s100-honest",
+      "nodes": 46,
+      "profile": "uniform",
+      "scale": 100,
+      "behavior": "honest",
+      "total_weight": "1380000",
+      "threshold": "460000",
+      "corrupted_weight": "0",
+      "gates": 8057,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 65589.342,
+          "method": "min_max",
+          "minus": 1645.650999999998,
+          "plus": 1349.5580000000045,
+          "upper": 68584.551
+        },
+        "max": 68584.551,
+        "mean": 67234.993,
+        "median": 67531.086,
+        "min": 65589.342,
+        "standard_error": 877.2252726460863,
+        "stdev": 1519.3987419064822,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1352359144.2608695,
+          "method": "min_max",
+          "minus": 18333.949275493622,
+          "plus": 17480.876811504364,
+          "upper": 1352394959.0869565
+        },
+        "max": 1352394959.0869565,
+        "mean": 1352377478.210145,
+        "median": 1352378331.2826087,
+        "min": 1352359144.2608695,
+        "standard_error": 10347.64452072527,
+        "stdev": 17922.64604855787,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-uniform-n46-s100-honest-n46-w1380000-t460000-l128-20261005-033232Z-38c2ed65/whcc-0-46.json"
+    },
+    {
+      "name": "uniform-n46-s100-stress",
+      "nodes": 46,
+      "profile": "uniform",
+      "scale": 100,
+      "behavior": "recovery-stress",
+      "total_weight": "1380000",
+      "threshold": "460000",
+      "corrupted_weight": "450000",
+      "gates": 8057,
+      "latency_ms": {
+        "count": 3,
+        "error_bar": {
+          "lower": 85876.9,
+          "method": "min_max",
+          "minus": 1313.795333333328,
+          "plus": 801.7006666666712,
+          "upper": 87992.396
+        },
+        "max": 87992.396,
+        "mean": 87190.69533333332,
+        "median": 87702.79,
+        "min": 85876.9,
+        "standard_error": 662.1962302886087,
+        "stdev": 1146.9575154404508,
+        "variability_estimated": true
+      },
+      "honest_sent_bytes": {
+        "count": 3,
+        "error_bar": {
+          "lower": 1352340997.6774194,
+          "method": "min_max",
+          "minus": 62279.79569888115,
+          "plus": 52296.559139728546,
+          "upper": 1352455574.032258
+        },
+        "max": 1352455574.032258,
+        "mean": 1352403277.4731183,
+        "median": 1352413260.7096775,
+        "min": 1352340997.6774194,
+        "standard_error": 33449.88306493139,
+        "stdev": 57936.896975698925,
+        "variability_estimated": true
+      },
+      "source": "results/whcc-uniform-n46-s100-stress-n46-w1380000-t460000-l128-20261005-033631Z-3ecba1ac/whcc-0-46.json"
+    }
+  ]
+}

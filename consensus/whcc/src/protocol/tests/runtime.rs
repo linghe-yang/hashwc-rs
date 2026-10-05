@@ -5,7 +5,7 @@ fn free_base(n: usize) -> u16 {
     for _ in 0..100 {
         let random = crypto::random().unwrap();
         let base = 20000 + u16::from_le_bytes([random[0], random[1]]) % 30000;
-        let held = (0..6 * n)
+        let held = (0..config::SERVICE_COUNT * n)
             .map(|i| std::net::TcpListener::bind(("127.0.0.1", base + i as u16)))
             .collect::<std::io::Result<Vec<_>>>();
         if held.is_ok() {
@@ -15,7 +15,7 @@ fn free_base(n: usize) -> u16 {
     panic!("no local port range available")
 }
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
-async fn actual_node_channels_and_six_tcp_services_complete_with_a_silent_peer() {
+async fn actual_node_channels_and_seven_tcp_services_complete_with_a_silent_peer() {
     complete_with_silent_peer(1).await;
 }
 #[tokio::test(flavor = "multi_thread", worker_threads = 4)]
@@ -156,7 +156,7 @@ async fn slow_event_consumer_does_not_block_protocol_or_shutdown() {
         handles.push(service);
         outputs.push(output);
     }
-    // Fill the application event channels while the six network services keep working.
+    // Fill the application event channels while the seven network services keep working.
     tokio::time::timeout(Duration::from_secs(10), async {
         loop {
             if outputs.iter().all(|r| !r.is_empty()) {

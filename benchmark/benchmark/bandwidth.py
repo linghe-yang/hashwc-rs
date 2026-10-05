@@ -264,7 +264,8 @@ class BandwidthMeter:
                 if self.per_party is not None:
                     self.attribute(packet, service, size)
             if packets != counts['captured'] or self.unattributed:
-                raise BenchError('Incomplete native capture or sender attribution')
+                raise BenchError('Incomplete native capture: parsed={}, reported={}, unassigned_bytes={}'.format(
+                    packets, counts['captured'], self.unattributed))
             return dict(backend='linux-libpcap-tcpdump', capture_filter='loopback-one-copy-tcp-syn-or-payload-v1',
                         direction='incoming-loopback-twin',
                         snapshot_bytes=256, requested_buffer_bytes=128*1024*1024,

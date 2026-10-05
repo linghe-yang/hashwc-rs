@@ -1,0 +1,176 @@
+{
+  "charts": [
+    {
+      "filters": {
+        "weight_scale": [
+          1
+        ]
+      },
+      "name": "party-scale-1",
+      "values": [
+        4,
+        16,
+        31,
+        46,
+        64
+      ],
+      "x": "nodes",
+      "yscale": "log"
+    },
+    {
+      "filters": {
+        "weight_scale": [
+          10
+        ]
+      },
+      "name": "party-scale-10",
+      "values": [
+        4,
+        16,
+        31,
+        46,
+        64
+      ],
+      "x": "nodes",
+      "yscale": "log"
+    },
+    {
+      "filters": {
+        "weight_scale": [
+          100
+        ]
+      },
+      "name": "party-scale-100",
+      "values": [
+        4,
+        16,
+        31,
+        46,
+        64
+      ],
+      "x": "nodes",
+      "yscale": "log"
+    },
+    {
+      "filters": {
+        "nodes": [
+          4
+        ]
+      },
+      "name": "weight-n4",
+      "values": [
+        1200,
+        12000,
+        120000
+      ],
+      "x": "total_weight",
+      "xscale": "log"
+    },
+    {
+      "filters": {
+        "nodes": [
+          16
+        ]
+      },
+      "name": "weight-n16",
+      "values": [
+        4800,
+        48000,
+        480000
+      ],
+      "x": "total_weight",
+      "xscale": "log"
+    },
+    {
+      "filters": {
+        "nodes": [
+          31
+        ]
+      },
+      "name": "weight-n31",
+      "values": [
+        9300,
+        93000,
+        930000
+      ],
+      "x": "total_weight",
+      "xscale": "log"
+    },
+    {
+      "filters": {
+        "nodes": [
+          46
+        ]
+      },
+      "name": "weight-n46",
+      "values": [
+        13800,
+        138000,
+        1380000
+      ],
+      "x": "total_weight",
+      "xscale": "log"
+    },
+    {
+      "filters": {
+        "nodes": [
+          64
+        ]
+      },
+      "name": "weight-n64",
+      "values": [
+        19200,
+        192000,
+        1920000
+      ],
+      "x": "total_weight",
+      "xscale": "log"
+    }
+  ],
+  "error_bar": "min_max",
+  "filters": {
+    "coverage_bits": [
+      40
+    ],
+    "experiment_id": [
+      "controlled-20261005-v1"
+    ],
+    "fault_case": [
+      "honest",
+      "recovery-stress"
+    ],
+    "output_bits": [
+      128
+    ],
+    "protocol": [
+      "whcc"
+    ],
+    "rounding_bits": [
+      64
+    ],
+    "weight_profile": [
+      "uniform",
+      "near-uniform",
+      "heavy-tail",
+      "aptos"
+    ]
+  },
+  "formats": [
+    "pdf",
+    "svg",
+    "png"
+  ],
+  "metrics": [
+    "latency_ms",
+    "avg_sent_bytes_per_honest_party"
+  ],
+  "min_runs": 3,
+  "output": "plots/controlled-scalability",
+  "results": [
+    "results"
+  ],
+  "series": [
+    "weight_profile",
+    "fault_case"
+  ]
+}

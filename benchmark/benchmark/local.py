@@ -231,8 +231,8 @@ class LocalBench:
             build = dict(profile='release', rustc=subprocess.check_output(['rustc', '--version'], text=True).strip())
             build['binary_sha256'] = hashlib.sha256((PathMaker.binary_path()/'node').read_bytes()).hexdigest()
             build['cargo_lock_sha256'] = hashlib.sha256((PathMaker.ROOT/'Cargo.lock').read_bytes()).hexdigest()
-            build['implementation'] = 'full-public-record-wrbc-v1'
-            build['transport'] = 'sdc-util-tcp-nodelay-coalesced-v1'
+            build['implementation'] = 'compact-header-striped-wavid-v1'
+            build['transport'] = 'sdc-util-tcp-nodelay-coalesced-shared-v2'
             build['transport_source_sha256'] = fingerprint({
                 str(p.relative_to(PathMaker.ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
                 for folder in ['vendor/sdc-util/src', 'network/src']

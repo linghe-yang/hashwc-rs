@@ -6,6 +6,7 @@ use network::Packet;
 use sdc_types::{Dyadic, Weight};
 use wiawvss::{
     Opening, PrivateShare, Public, ax,
+    certified::{self, Certificate, Evidence, Header, Receipt},
     terminal::{self, Terminal},
 };
 
@@ -19,7 +20,7 @@ fn corrupt_dealer_passes_share_checks_but_requires_verifiable_root_fault() {
     let raw = actions
         .iter()
         .find_map(|a| match a {
-            Action::Rbc(wrbc::Request::Broadcast { instance, data }) if instance.slot == 0 => {
+            Action::Avid(wavid::Request::Disperse { instance, data }) if instance.slot == 0 => {
                 Some(data)
             }
             _ => None,
@@ -30,9 +31,14 @@ fn corrupt_dealer_passes_share_checks_but_requires_verifiable_root_fault() {
     let shares: Vec<_> = actions
         .iter()
         .filter_map(|a| match a {
-            Action::Private { packet, .. } if packet.kind == PRIVATE_TOKEN => {
-                Some(PrivateShare::decode(&packet.payload).unwrap())
-            }
+            Action::Private { packet, .. } if packet.kind == PRIVATE_TOKEN => Some(
+                PrivateShare::decode(
+                    &Receipt::decode(&state.dealers[3].codec, &packet.payload)
+                        .unwrap()
+                        .share,
+                )
+                .unwrap(),
+            ),
             _ => None,
         })
         .collect();
@@ -62,6 +68,12 @@ fn adversary_withholds_tokens_and_uses_each_authorized_terminal_slot_once() {
             },
         )
         .unwrap();
+        let prep = state.dealers[d].codec.prepare(&public.encode()).unwrap();
+        state.dealers[d].header = Some(Header::new(
+            &state.setup,
+            &state.dealers[d].context,
+            prep.root,
+        ));
         state.dealers[d].public = Some(public);
         state.dealers[d].receipt = Some(shares[3].clone());
         state.dealers[d].complete = false; // Forgery need not wait for the local WRA output.
@@ -84,6 +96,17 @@ fn adversary_withholds_tokens_and_uses_each_authorized_terminal_slot_once() {
     ]);
     state.advance().unwrap();
     assert!(state.drain_actions().is_empty());
+    assert_eq!(
+        actions
+            .iter()
+            .filter(|a| matches!(a, Action::Avid(wavid::Request::Retrieve { .. })))
+            .count(),
+        4
+    );
+    let actions = actions
+        .into_iter()
+        .filter(|a| !matches!(a, Action::Avid(_)))
+        .collect::<Vec<_>>();
     assert_eq!(actions.len(), 4 * 3);
     for action in actions {
         let Action::Recovery { recipient, packet } = action else {
@@ -92,13 +115,15 @@ fn adversary_withholds_tokens_and_uses_each_authorized_terminal_slot_once() {
         assert_ne!(recipient, 3);
         assert_eq!(packet.kind, TERMINAL);
         let d = packet.dealer;
-        let public = state.dealers[d].public.as_ref().unwrap();
-        let terminal = Terminal::decode(public, &packet.payload).unwrap();
-        assert!(!terminal::verify(
+        let dealer = &state.dealers[d];
+        let cert = Certificate::decode(&dealer.codec, &packet.payload).unwrap();
+        assert!(!certified::verify(
             &state.setup,
-            &state.dealers[d].context,
-            public,
-            &terminal
+            &dealer.context,
+            &dealer.codec,
+            dealer.header.as_ref().unwrap(),
+            &cert,
+            state.contribution_bits()
         ));
     }
     for _ in 0..5 {
@@ -129,12 +154,26 @@ fn forged_opening_is_checked_once_and_cannot_block_an_honest_root_fault() {
         &shares[..3],
     )
     .unwrap();
-    let forged = Terminal::Success(Opening {
-        message: [0; 32],
-        randomness: [0; 32],
-    })
-    .encode(&public);
-    let valid = proof.encode(&public);
+    let prepared = state.dealers[3].codec.prepare(&public.encode()).unwrap();
+    let header = Header::new(&state.setup, &state.dealers[3].context, prepared.root);
+    let forged = Certificate {
+        header_id: header.id(),
+        evidence: Evidence::Success(Opening {
+            message: [0; 32],
+            randomness: [0; 32],
+        }),
+    }
+    .encode();
+    let valid = certified::certify(
+        &state.setup,
+        &state.dealers[3].codec,
+        &header,
+        &prepared,
+        proof,
+    )
+    .unwrap()
+    .encode();
+    state.dealers[3].header = Some(header);
     state.dealers[3].public = Some(public);
     state.dealers[3].complete = true;
 

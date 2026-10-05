@@ -88,3 +88,19 @@ def policy(ctx, nodes, total_weight=None, distribution=None, pool=None, output=N
     except (ConfigError, OSError, ValueError, KeyError, RuntimeError, subprocess.SubprocessError) as e:
         Print.error(e)
         raise Exit(code=1)
+
+@task(auto_shortflags=False)
+def matrix(ctx, nodes='4,16,31,46,64', scales='1,10,100', mean_weight=300, runs=3,
+           fault_case='both', snapshot='data/aptos-mainnet-v7479751174',
+           profiles='uniform,near-uniform,heavy-tail,aptos', experiment_id='controlled-20261005-v1',
+           output='policies/controlled-scalability.json', plot_output='plot-configs/controlled-scalability.json'):
+    """Generate a controlled party/weight matrix and matching plot configuration."""
+    from benchmark.matrix import write_matrix
+    try:
+        result = write_matrix(output=output, plot_output=plot_output, nodes=nodes, scales=scales,
+            mean_weight=mean_weight, runs=runs, fault_case=fault_case, snapshot=snapshot,
+            profiles=profiles, experiment_id=experiment_id)
+        print(result)
+    except (ConfigError, OSError, ValueError, KeyError) as e:
+        Print.error(e)
+        raise Exit(code=1)

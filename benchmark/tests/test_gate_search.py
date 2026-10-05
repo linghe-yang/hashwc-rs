@@ -47,7 +47,7 @@ class GateSearchTests(unittest.TestCase):
             self.assertEqual(case.threshold, n**n//3)
             self.assertEqual(case.fault_weight_threshold, n**n//3-1)
             self.assertLess(case.corrupted_weight, case.threshold)
-            self.assertEqual(len(case.ports(parsed.node_parameters)), 6*n)
+            self.assertEqual(len(case.ports(parsed.node_parameters)), 7*n)
 
     def test_production_oracle_and_search_reproducibility(self):
         binary = PathMaker.BENCHMARK.parent/'target/release/examples/count_gates'
@@ -60,7 +60,8 @@ class GateSearchTests(unittest.TestCase):
             self.assertEqual(score['and_gates']+score['or_gates'], score['gates'])
         finally:
             oracle.close()
-        baselines = json.loads((PathMaker.BENCHMARK/'policies/weights-npow.json').read_text())['cases']
+        baselines = [dict(nodes=4, weights=[64]*4, byzantine_nodes=[],
+                          metadata=dict(weight_profile=dict(id='uniform')))]
         with tempfile.TemporaryDirectory() as temporary, contextlib.redirect_stdout(io.StringIO()):
             first = search(4, binary, baselines, 24, 64, 123, Path(temporary))
             second = search(4, binary, baselines, 24, 64, 123, Path(temporary))

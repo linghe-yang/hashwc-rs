@@ -68,12 +68,13 @@ cargo run --release --locked -p node -- run --config path/to/node0.json --parame
 
 | 服务 | 端口 |
 | --- | --- |
-| WRBC：公开共享记录与采样名单 | b_i |
+| WRBC：紧凑 header 与采样名单 | b_i |
 | WRA：共享完成 | b_i + s |
 | WGather | b_i + 2s |
 | WBinAA | b_i + 3s |
 | 私有份额 | b_i + 4s |
 | 恢复 token 与终止证据 | b_i + 5s |
+| WAVID：bulk 分散存储与授权取回 | b_i + 6s |
 
 本地用相同 IP 和不同基础端口，例如 20000+i；远程用不同 IP 和相同基础端口，例如各主机均为 20000。端口通过 Node::with_protocol_port_offset() 派生。启动前检查跨节点、跨服务冲突及 u16 溢出。因上游监听器使用 IPv4 wildcard，要求显式 IPv4 peer 地址，loopback 别名按同一主机处理。
 
@@ -83,9 +84,9 @@ cargo run --release --locked -p node -- run --config path/to/node0.json --parame
 
 当前已经实现完整的单次随机币控制流程：独立采样并 RBC 声明 → wiAwVSS 共享完成 → WGather → 整向量 WBinAA 冻结 → 定向恢复和可验证终止 → 精确整数聚合。条件为静态腐化、私密认证可靠异步信道、实际腐化权重 B < T <= W/3。
 
-当前继续使用阶段一的**完整公开记录 WRBC**。这实现了随机币的恢复和终止语义，但不是附件最终的 compact-header / systematic-striped-storage 优化。上游 WRBC 内部虽使用 WAVID，也不能据此声称已实现论文该优化的通信复杂度。
+当前使用 **112 字节 header WRBC + 独立 systematic-striped WAVID**。仅在本地存储包和私有 token 的系统码 opening 都验证通过后向 WRA 输入 true；WRA 输出 true 才标记 sharing 完成并进入 Gather。完整 bulk 仅由名单授权的恢复方取回；其他方通过短证据和本地重新生成验证终止。详细状态条件见 [协议说明](docs/whcc.md)。旧 results 的 full-public-record-wrbc-v1 仍只代表旧基线，不可与新实现混合统计。
 
-Rust 测试包括确定性消息调度、静默故障、恶意 dealer、伪造拒绝、迟到名单和冻结屏障；另有单进程 tokio + loopback TCP 测试，实际启动每方六个独立服务。另提供基于 Fabric 的本地多进程 benchmark，输出延迟及按子协议统计的 TCP 数据字节数。
+Rust 测试包括确定性消息调度、静默故障、恶意 dealer、伪造拒绝、迟到名单和冻结屏障；另有单进程 tokio + loopback TCP 测试，实际启动每方七个独立服务。另提供基于 Fabric 的本地多进程 benchmark，输出延迟及按子协议统计的 TCP 数据字节数。
 
 日志沿用 log + env_logger，毫秒时间戳；共享完成、Gather、冻结、终止和 coin 输出均记录公开事件，不记录私有 token、AX 随机数或尚未公开的贡献。
 

@@ -12,6 +12,7 @@ zeroize.workspace = true
 log.workspace = true
 anyhow.workspace = true
 sdc-types.workspace = true
-wrbc.workspace = true
-wra.workspace = true
 serde.workspace = true
+
+wavid.workspace = true
+bincode.workspace = true

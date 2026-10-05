@@ -2,7 +2,7 @@
 use anyhow::{Result, ensure};
 pub use sdc_config::Node;
 use std::{collections::BTreeSet, net::SocketAddr};
-pub const SERVICE_COUNT: usize = 6;
+pub const SERVICE_COUNT: usize = 7;
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 #[repr(usize)]
 pub enum Service {
@@ -12,15 +12,17 @@ pub enum Service {
     BinAa = 3,
     Private = 4,
     Recovery = 5,
+    Avid = 6,
 }
 impl Service {
-    pub const ALL: [Self; 6] = [
+    pub const ALL: [Self; 7] = [
         Self::Rbc,
         Self::Ra,
         Self::Gather,
         Self::BinAa,
         Self::Private,
         Self::Recovery,
+        Self::Avid,
     ];
 }
 #[derive(Clone, Debug)]

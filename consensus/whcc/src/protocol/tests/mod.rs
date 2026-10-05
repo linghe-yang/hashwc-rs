@@ -1,4 +1,5 @@
 mod adversary;
+mod completion;
 mod runtime;
 mod simulation;
 use config::Node;

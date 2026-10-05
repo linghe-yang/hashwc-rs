@@ -1,0 +1,12 @@
+{
+  "nodes": 64,
+  "profile": "aptos",
+  "scale": 100,
+  "behavior": "recovery-stress",
+  "latency_ms": 361541.967,
+  "total_sent_bytes": 253957073085,
+  "dropped_packets": 0,
+  "attribution": "complete after final-counter parser fix; original capture replayed",
+  "formal_curve": false,
+  "note": "Single pilot; runtime also overlapped validation tasks. Used only to establish resource feasibility and skip long runs, not as a formal measurement point."
+}

@@ -30,6 +30,7 @@ env_logger = "0.11"
 clap = { version = "4.5", features = ["derive"] }
 # Pin the shared primitive implementation; do not copy its protocol logic here.
 sdc-types = { package = "types", git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e" }
+wavid = { git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e" }
 wrbc = { git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e" }
 wra = { git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e" }
 

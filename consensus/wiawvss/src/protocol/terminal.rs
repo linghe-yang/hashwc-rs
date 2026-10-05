@@ -1,12 +1,12 @@
-//! Bounded publicly verifiable terminals for the full-public-transcript wiAwVSS.
-//! The common transcript is already authenticated by WRBC: no Merkle field paths are needed.
+//! Local terminal predicates evaluated by a recoverer against its decoded bulk.
+//! Network certificates authenticate the required fields in certified.rs.
 use crate::{Context, Opening, PrivateShare, Public, ax};
 use crypto::{Block, edge_pad, equal, hash, input_commitment, wire_commitment, xor};
 use types::{Error, Result};
 use wcss::{Op, Setup};
 use zeroize::Zeroizing;
 
-#[derive(Clone, PartialEq, Eq)]
+#[derive(Clone, PartialEq, Eq, serde::Serialize, serde::Deserialize)]
 pub enum Terminal {
     Success(Opening),
     TrueFault,
@@ -91,7 +91,7 @@ impl Terminal {
         })
     }
 }
-fn candidate(context: &Context, p: &Public, output: usize, token: &Block) -> Opening {
+pub fn candidate(context: &Context, p: &Public, output: usize, token: &Block) -> Opening {
     let k = Zeroizing::new(xor(
         &p.base.encrypted_key,
         &hash(
@@ -187,6 +187,15 @@ pub fn recover(
     c: &Context,
     p: &Public,
     shares: &[PrivateShare],
+) -> Result<Terminal> {
+    recover_bounded(setup, c, p, shares, 256)
+}
+pub fn recover_bounded(
+    setup: &Setup,
+    c: &Context,
+    p: &Public,
+    shares: &[PrivateShare],
+    bits: usize,
 ) -> Result<Terminal> {
     if c.validate(setup).is_err()
         || p.setup_id != setup.id()
@@ -287,7 +296,9 @@ pub fn recover(
         return Err(Error::InvalidCommitment);
     }
     let opening = candidate(c, p, circuit.output(), &values[circuit.output()]);
-    if ax::verify_opening(setup, c, p, &opening) {
+    if ax::verify_opening(setup, c, p, &opening)
+        && super::certified::in_range(&opening.message, bits)
+    {
         Ok(Terminal::Success(opening))
     } else {
         Ok(Terminal::RootFault {

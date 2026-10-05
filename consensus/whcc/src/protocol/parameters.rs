@@ -66,9 +66,9 @@ impl Parameters {
         }
     }
     pub fn context_id(&self, node: &Node, setup: &Setup) -> Block {
-        // Preserve the cryptographic domain across the public protocol rename.
+        // Bind the compact-header / striped-storage protocol version.
         hash(
-            b"commoncoin/context/v2",
+            b"whcc/striped-context/v3",
             &[
                 &node.session_id,
                 &setup.id(),

@@ -27,3 +27,6 @@ num-traits.workspace = true
 anyhow.workspace = true
 log.workspace = true
 zeroize.workspace = true
+
+wavid.workspace = true
+bincode.workspace = true

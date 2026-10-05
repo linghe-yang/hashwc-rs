@@ -90,7 +90,9 @@ class LogParser:
                                           bandwidth='mean of per-party log counters for every active party, including parties aborted before output',
                                           bandwidth_window='PREPARE through STOP receipt and party process exit; control channel excluded',
                                           termination='quorum completion, not all-party completion',
-                                          implementation='full public-record WRBC baseline'),
+                                          implementation=('full public-record WRBC baseline'
+                                                          if runs[0]['build'].get('implementation', 'full-public-record-wrbc-v1') == 'full-public-record-wrbc-v1'
+                                                          else runs[0]['build']['implementation'])),
                          artifacts=self.directory)
 
     @staticmethod
@@ -123,6 +125,9 @@ class LogParser:
             for index in range(1, bench['runs']+1):
                 run_path = directory/'run-{:03}'.format(index)
                 manifest = json.loads((run_path/'run.json').read_text(encoding='utf8'))
+                services = {'wrbc', 'wra', 'wgather', 'wbinaa', 'private', 'recovery'}
+                if manifest['build'].get('implementation') == 'compact-header-striped-wavid-v1':
+                    services.add('wavid')
                 session = manifest['session']
                 epoch = config['node_params']['epoch'] + index-1
                 if session in sessions or manifest['epoch'] != epoch or manifest['active_parties'] != active:
@@ -286,7 +291,7 @@ class LogParser:
         lines += [' Error bars: observed min/max across runs, not a confidence interval.',
                   ' Completion: matching FINISH weight > T; STOP aborts remaining work.',
                   ' Bandwidth: TCP payload until STOP/exit, excluding synchronizer traffic.',
-                  ' Implementation: full public-record WRBC baseline',
+                  ' Implementation: {}'.format(self.data['measurement']['implementation']),
                   ' Artifacts: {}'.format(self.directory), '-----------------------------------------', '']
         return '\n'.join(lines)
 

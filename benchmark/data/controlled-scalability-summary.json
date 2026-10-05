@@ -1,0 +1,1730 @@
+[
+  {
+    "name": "uniform-n46-s100-honest",
+    "nodes": 46,
+    "runs": 3,
+    "latency_ms": [
+      67531.086,
+      68584.551,
+      65589.342
+    ],
+    "honest_sent_bytes": [
+      1352359144.2608695,
+      1352378331.2826087,
+      1352394959.0869565
+    ],
+    "total_weight": "1380000",
+    "threshold": "460000",
+    "source": "results/whcc-uniform-n46-s100-honest-n46-w1380000-t460000-l128-20261005-033232Z-38c2ed65/whcc-0-46.json"
+  },
+  {
+    "name": "aptos-n46-s10-honest",
+    "nodes": 46,
+    "runs": 3,
+    "latency_ms": [
+      75124.844,
+      73426.378,
+      74011.311
+    ],
+    "honest_sent_bytes": [
+      1406445507.3043478,
+      1397232668.4782608,
+      1399144957.2173913
+    ],
+    "total_weight": "138000",
+    "threshold": "46000",
+    "source": "results/whcc-aptos-n46-s10-honest-n46-w138000-t46000-l128-20261005-044652Z-074df2a0/whcc-0-46.json"
+  },
+  {
+    "name": "aptos-n46-s100-honest",
+    "nodes": 46,
+    "runs": 3,
+    "latency_ms": [
+      89932.566,
+      89005.041,
+      88327.167
+    ],
+    "honest_sent_bytes": [
+      1706835773.0,
+      1716202894.1304348,
+      1644643572.826087
+    ],
+    "total_weight": "1380000",
+    "threshold": "460000",
+    "source": "results/whcc-aptos-n46-s100-honest-n46-w1380000-t460000-l128-20261005-045646Z-948a8cc6/whcc-0-46.json"
+  },
+  {
+    "name": "aptos-n16-s100-stress",
+    "nodes": 16,
+    "runs": 3,
+    "latency_ms": [
+      2655.605,
+      2698.708,
+      2559.966
+    ],
+    "honest_sent_bytes": [
+      160559847.7142857,
+      160572751.42857143,
+      160528881.7142857
+    ],
+    "total_weight": "480000",
+    "threshold": "160000",
+    "source": "results/whcc-aptos-n16-s100-stress-n16-w480000-t160000-l128-20261005-025221Z-a2864dcc/whcc-0-16.json"
+  },
+  {
+    "name": "uniform-n46-s10-honest",
+    "nodes": 46,
+    "runs": 3,
+    "latency_ms": [
+      76122.533,
+      76601.051,
+      76351.214
+    ],
+    "honest_sent_bytes": [
+      1554104645.6956522,
+      1554710308.3913043,
+      1555160782.4565217
+    ],
+    "total_weight": "138000",
+    "threshold": "46000",
+    "source": "results/whcc-uniform-n46-s10-honest-n46-w138000-t46000-l128-20261005-032219Z-45552182/whcc-0-46.json"
+  },
+  {
+    "name": "heavy-tail-n4-s1-honest",
+    "nodes": 4,
+    "runs": 3,
+    "latency_ms": [
+      32.31,
+      31.962,
+      31.213
+    ],
+    "honest_sent_bytes": [
+      721424.25,
+      422564.25,
+      721424.25
+    ],
+    "total_weight": "1200",
+    "threshold": "400",
+    "source": "results/whcc-heavy-tail-n4-s1-honest-n4-w1200-t400-l128-20261005-024917Z-5b580e83/whcc-0-4.json"
+  },
+  {
+    "name": "aptos-n16-s10-honest",
+    "nodes": 16,
+    "runs": 3,
+    "latency_ms": [
+      1416.999,
+      1416.686,
+      1475.958
+    ],
+    "honest_sent_bytes": [
+      84786893.125,
+      84792513.125,
+      84785877.75
+    ],
+    "total_weight": "48000",
+    "threshold": "16000",
+    "source": "results/whcc-aptos-n16-s10-honest-n16-w48000-t16000-l128-20261005-025155Z-f91c6f89/whcc-0-16.json"
+  },
+  {
+    "name": "uniform-n4-s10-stress",
+    "nodes": 4,
+    "runs": 3,
+    "latency_ms": [
+      43.596,
+      43.181,
+      42.865
+    ],
+    "honest_sent_bytes": [
+      1287486.3333333333,
+      1285231.3333333333,
+      1287486.3333333333
+    ],
+    "total_weight": "12000",
+    "threshold": "4000",
+    "source": "results/whcc-uniform-n4-s10-stress-n4-w12000-t4000-l128-20261005-024902Z-2480ca37/whcc-0-4.json"
+  },
+  {
+    "name": "uniform-n31-s100-honest",
+    "nodes": 31,
+    "runs": 3,
+    "latency_ms": [
+      14072.278,
+      13963.74,
+      14591.26
+    ],
+    "honest_sent_bytes": [
+      477319124.7096774,
+      477303731.9354839,
+      477337017.2258065
+    ],
+    "total_weight": "930000",
+    "threshold": "310000",
+    "source": "results/whcc-uniform-n31-s100-honest-n31-w930000-t310000-l128-20261005-025611Z-aafc01e9/whcc-0-31.json"
+  },
+  {
+    "name": "near-uniform-n16-s100-stress",
+    "nodes": 16,
+    "runs": 3,
+    "latency_ms": [
+      1757.57,
+      1762.126,
+      2020.852
+    ],
+    "honest_sent_bytes": [
+      78241386.36363636,
+      78244035.36363636,
+      79185173.36363636
+    ],
+    "total_weight": "480000",
+    "threshold": "160000",
+    "source": "results/whcc-near-uniform-n16-s100-stress-n16-w480000-t160000-l128-20261005-025053Z-77c8819c/whcc-0-16.json"
+  },
+  {
+    "name": "uniform-n16-s10-honest",
+    "nodes": 16,
+    "runs": 3,
+    "latency_ms": [
+      1258.318,
+      1501.328,
+      1264.705
+    ],
+    "honest_sent_bytes": [
+      68240564.5625,
+      69178064.6875,
+      68236211.75
+    ],
+    "total_weight": "48000",
+    "threshold": "16000",
+    "source": "results/whcc-uniform-n16-s10-honest-n16-w48000-t16000-l128-20261005-024948Z-6499490b/whcc-0-16.json"
+  },
+  {
+    "name": "near-uniform-n31-s1-honest",
+    "nodes": 31,
+    "runs": 3,
+    "latency_ms": [
+      12478.941,
+      13017.937,
+      12589.694
+    ],
+    "honest_sent_bytes": [
+      395952310.83870965,
+      395984296.5483871,
+      395940681.16129035
+    ],
+    "total_weight": "9300",
+    "threshold": "3100",
+    "source": "results/whcc-near-uniform-n31-s1-honest-n31-w9300-t3100-l128-20261005-025817Z-b989dbdb/whcc-0-31.json"
+  },
+  {
+    "name": "near-uniform-n31-s100-honest",
+    "nodes": 31,
+    "runs": 3,
+    "latency_ms": [
+      20630.58,
+      20997.792,
+      19627.468
+    ],
+    "honest_sent_bytes": [
+      635997537.0967742,
+      635935390.6451613,
+      636000728.5806452
+    ],
+    "total_weight": "930000",
+    "threshold": "310000",
+    "source": "results/whcc-near-uniform-n31-s100-honest-n31-w930000-t310000-l128-20261005-030238Z-0cef0a6b/whcc-0-31.json"
+  },
+  {
+    "name": "heavy-tail-n31-s10-stress",
+    "nodes": 31,
+    "runs": 3,
+    "latency_ms": [
+      16955.721,
+      17169.688,
+      16845.347
+    ],
+    "honest_sent_bytes": [
+      396469635.95,
+      396483432.35,
+      396488115.9
+    ],
+    "total_weight": "93000",
+    "threshold": "31000",
+    "source": "results/whcc-heavy-tail-n31-s10-stress-n31-w93000-t31000-l128-20261005-030714Z-dda5373d/whcc-0-31.json"
+  },
+  {
+    "name": "heavy-tail-n31-s1-stress",
+    "nodes": 31,
+    "runs": 3,
+    "latency_ms": [
+      8195.174,
+      8295.841,
+      8341.262
+    ],
+    "honest_sent_bytes": [
+      179513673.3,
+      179510944.8,
+      179513189.2
+    ],
+    "total_weight": "9300",
+    "threshold": "3100",
+    "source": "results/whcc-heavy-tail-n31-s1-stress-n31-w9300-t3100-l128-20261005-030554Z-4763b711/whcc-0-31.json"
+  },
+  {
+    "name": "uniform-n4-s100-stress",
+    "nodes": 4,
+    "runs": 3,
+    "latency_ms": [
+      43.879,
+      41.573,
+      40.427
+    ],
+    "honest_sent_bytes": [
+      1189940.0,
+      1189371.3333333333,
+      1189371.3333333333
+    ],
+    "total_weight": "120000",
+    "threshold": "40000",
+    "source": "results/whcc-uniform-n4-s100-stress-n4-w120000-t40000-l128-20261005-024905Z-4710755c/whcc-0-4.json"
+  },
+  {
+    "name": "near-uniform-n46-s100-stress",
+    "nodes": 46,
+    "runs": 3,
+    "latency_ms": [
+      124249.984,
+      125139.077,
+      130071.72
+    ],
+    "honest_sent_bytes": [
+      1675339171.483871,
+      1675716028.580645,
+      1675430801.8064516
+    ],
+    "total_weight": "1380000",
+    "threshold": "460000",
+    "source": "results/whcc-near-uniform-n46-s100-stress-n46-w1380000-t460000-l128-20261005-040539Z-673f2f8f/whcc-0-46.json"
+  },
+  {
+    "name": "near-uniform-n46-s10-stress",
+    "nodes": 46,
+    "runs": 3,
+    "latency_ms": [
+      116696.733,
+      119939.322,
+      122104.415
+    ],
+    "honest_sent_bytes": [
+      1603876087.096774,
+      1603989012.516129,
+      1603905091.7741935
+    ],
+    "total_weight": "138000",
+    "threshold": "46000",
+    "source": "results/whcc-near-uniform-n46-s10-stress-n46-w138000-t46000-l128-20261005-035402Z-05ea75ce/whcc-0-46.json"
+  },
+  {
+    "name": "heavy-tail-n16-s10-honest",
+    "nodes": 16,
+    "runs": 3,
+    "latency_ms": [
+      976.717,
+      1049.1,
+      966.134
+    ],
+    "honest_sent_bytes": [
+      51338942.5625,
+      51339161.5,
+      51337549.6875
+    ],
+    "total_weight": "48000",
+    "threshold": "16000",
+    "source": "results/whcc-heavy-tail-n16-s10-honest-n16-w48000-t16000-l128-20261005-025113Z-5bde2979/whcc-0-16.json"
+  },
+  {
+    "name": "heavy-tail-n16-s10-stress",
+    "nodes": 16,
+    "runs": 3,
+    "latency_ms": [
+      1222.802,
+      1239.831,
+      1253.336
+    ],
+    "honest_sent_bytes": [
+      53255831.36363637,
+      53242154.54545455,
+      53253196.90909091
+    ],
+    "total_weight": "48000",
+    "threshold": "16000",
+    "source": "results/whcc-heavy-tail-n16-s10-stress-n16-w48000-t16000-l128-20261005-025119Z-efd7d1ce/whcc-0-16.json"
+  },
+  {
+    "name": "uniform-n31-s1-honest",
+    "nodes": 31,
+    "runs": 3,
+    "latency_ms": [
+      9051.355,
+      8702.453,
+      8636.774
+    ],
+    "honest_sent_bytes": [
+      267514960.6451613,
+      267520714.38709676,
+      267509092.0
+    ],
+    "total_weight": "9300",
+    "threshold": "3100",
+    "source": "results/whcc-uniform-n31-s1-honest-n31-w9300-t3100-l128-20261005-025232Z-099f8491/whcc-0-31.json"
+  },
+  {
+    "name": "aptos-n4-s100-stress",
+    "nodes": 4,
+    "runs": 3,
+    "latency_ms": [
+      45.108,
+      45.535,
+      44.974
+    ],
+    "honest_sent_bytes": [
+      1906241.0,
+      1906305.5,
+      1906112.0
+    ],
+    "total_weight": "120000",
+    "threshold": "40000",
+    "source": "results/whcc-aptos-n4-s100-stress-n4-w120000-t40000-l128-20261005-024935Z-98b88783/whcc-0-4.json"
+  },
+  {
+    "name": "heavy-tail-n31-s100-stress",
+    "nodes": 31,
+    "runs": 3,
+    "latency_ms": [
+      19465.349,
+      19443.502,
+      19596.611
+    ],
+    "honest_sent_bytes": [
+      465205219.65,
+      465217068.85,
+      465205138.5
+    ],
+    "total_weight": "930000",
+    "threshold": "310000",
+    "source": "results/whcc-heavy-tail-n31-s100-stress-n31-w930000-t310000-l128-20261005-030909Z-b37a7b49/whcc-0-31.json"
+  },
+  {
+    "name": "uniform-n31-s100-stress",
+    "nodes": 31,
+    "runs": 3,
+    "latency_ms": [
+      19752.756,
+      19993.746,
+      20180.295
+    ],
+    "honest_sent_bytes": [
+      477333086.5714286,
+      477324768.0952381,
+      477326460.47619045
+    ],
+    "total_weight": "930000",
+    "threshold": "310000",
+    "source": "results/whcc-uniform-n31-s100-stress-n31-w930000-t310000-l128-20261005-025705Z-d39954e5/whcc-0-31.json"
+  },
+  {
+    "name": "uniform-n16-s10-stress",
+    "nodes": 16,
+    "runs": 3,
+    "latency_ms": [
+      1636.505,
+      1586.007,
+      1606.555
+    ],
+    "honest_sent_bytes": [
+      68232880.9090909,
+      68229010.0,
+      68238237.0909091
+    ],
+    "total_weight": "48000",
+    "threshold": "16000",
+    "source": "results/whcc-uniform-n16-s10-stress-n16-w48000-t16000-l128-20261005-024955Z-8ea60bff/whcc-0-16.json"
+  },
+  {
+    "name": "uniform-n46-s1-stress",
+    "nodes": 46,
+    "runs": 3,
+    "latency_ms": [
+      47289.535,
+      46796.751,
+      46142.569
+    ],
+    "honest_sent_bytes": [
+      698261201.0645162,
+      698258540.3548387,
+      698262851.032258
+    ],
+    "total_weight": "13800",
+    "threshold": "4600",
+    "source": "results/whcc-uniform-n46-s1-stress-n46-w13800-t4600-l128-20261005-031931Z-a3c42bbd/whcc-0-46.json"
+  },
+  {
+    "name": "aptos-n31-s100-honest",
+    "nodes": 31,
+    "runs": 3,
+    "latency_ms": [
+      17604.018,
+      18415.921,
+      18002.858
+    ],
+    "honest_sent_bytes": [
+      511650387.7741935,
+      524463330.0322581,
+      522206349.2580645
+    ],
+    "total_weight": "930000",
+    "threshold": "310000",
+    "source": "results/whcc-aptos-n31-s100-honest-n31-w930000-t310000-l128-20261005-031444Z-e07b9ef9/whcc-0-31.json"
+  },
+  {
+    "name": "near-uniform-n46-s1-stress",
+    "nodes": 46,
+    "runs": 3,
+    "latency_ms": [
+      75949.769,
+      75542.316,
+      76595.849
+    ],
+    "honest_sent_bytes": [
+      987867306.5806452,
+      987883410.8064516,
+      987910323.4193548
+    ],
+    "total_weight": "13800",
+    "threshold": "4600",
+    "source": "results/whcc-near-uniform-n46-s1-stress-n46-w13800-t4600-l128-20261005-034438Z-3d595ce5/whcc-0-46.json"
+  },
+  {
+    "name": "heavy-tail-n46-s100-stress",
+    "nodes": 46,
+    "runs": 3,
+    "latency_ms": [
+      82191.433,
+      86932.417,
+      84375.299
+    ],
+    "honest_sent_bytes": [
+      1223405913.9666667,
+      1219115650.1666667,
+      1225676873.2333333
+    ],
+    "total_weight": "1380000",
+    "threshold": "460000",
+    "source": "results/whcc-heavy-tail-n46-s100-stress-n46-w1380000-t460000-l128-20261005-043420Z-46754040/whcc-0-46.json"
+  },
+  {
+    "name": "aptos-n31-s10-stress",
+    "nodes": 31,
+    "runs": 3,
+    "latency_ms": [
+      22597.918,
+      24985.955,
+      24932.716
+    ],
+    "honest_sent_bytes": [
+      795899686.2307693,
+      795927400.4615384,
+      795886147.0
+    ],
+    "total_weight": "93000",
+    "threshold": "31000",
+    "source": "results/whcc-aptos-n31-s10-stress-n31-w93000-t31000-l128-20261005-031319Z-d175e5a5/whcc-0-31.json"
+  },
+  {
+    "name": "near-uniform-n31-s10-honest",
+    "nodes": 31,
+    "runs": 3,
+    "latency_ms": [
+      17825.835,
+      17224.029,
+      17743.113
+    ],
+    "honest_sent_bytes": [
+      564159071.6451613,
+      564150361.7096775,
+      564137800.451613
+    ],
+    "total_weight": "93000",
+    "threshold": "31000",
+    "source": "results/whcc-near-uniform-n31-s10-honest-n31-w93000-t31000-l128-20261005-030006Z-176e6713/whcc-0-31.json"
+  },
+  {
+    "name": "near-uniform-n46-s100-honest",
+    "nodes": 46,
+    "runs": 3,
+    "latency_ms": [
+      85434.953,
+      83278.751,
+      83021.171
+    ],
+    "honest_sent_bytes": [
+      1718913565.826087,
+      1745150369.9130435,
+      1764342183.9347825
+    ],
+    "total_weight": "1380000",
+    "threshold": "460000",
+    "source": "results/whcc-near-uniform-n46-s100-honest-n46-w1380000-t460000-l128-20261005-040044Z-24eef83e/whcc-0-46.json"
+  },
+  {
+    "name": "heavy-tail-n16-s1-stress",
+    "nodes": 16,
+    "runs": 3,
+    "latency_ms": [
+      788.915,
+      795.011,
+      781.581
+    ],
+    "honest_sent_bytes": [
+      26753485.90909091,
+      26754866.818181816,
+      26749537.181818184
+    ],
+    "total_weight": "4800",
+    "threshold": "1600",
+    "source": "results/whcc-heavy-tail-n16-s1-stress-n16-w4800-t1600-l128-20261005-025107Z-30ee78ab/whcc-0-16.json"
+  },
+  {
+    "name": "heavy-tail-n4-s10-stress",
+    "nodes": 4,
+    "runs": 3,
+    "latency_ms": [
+      39.738,
+      37.415,
+      39.33
+    ],
+    "honest_sent_bytes": [
+      905736.0,
+      905736.0,
+      905736.0
+    ],
+    "total_weight": "12000",
+    "threshold": "4000",
+    "source": "results/whcc-heavy-tail-n4-s10-stress-n4-w12000-t4000-l128-20261005-024922Z-a8aad9f1/whcc-0-4.json"
+  },
+  {
+    "name": "near-uniform-n31-s10-stress",
+    "nodes": 31,
+    "runs": 3,
+    "latency_ms": [
+      24442.017,
+      24053.858,
+      23923.594
+    ],
+    "honest_sent_bytes": [
+      527354439.61904764,
+      527351549.3333333,
+      527359675.3333333
+    ],
+    "total_weight": "93000",
+    "threshold": "31000",
+    "source": "results/whcc-near-uniform-n31-s10-stress-n31-w93000-t31000-l128-20261005-030112Z-ca1376c4/whcc-0-31.json"
+  },
+  {
+    "name": "uniform-n46-s1-honest",
+    "nodes": 46,
+    "runs": 3,
+    "latency_ms": [
+      35563.445,
+      36774.636,
+      35823.671
+    ],
+    "honest_sent_bytes": [
+      698313320.6956521,
+      698271778.3695652,
+      698283091.8043479
+    ],
+    "total_weight": "13800",
+    "threshold": "4600",
+    "source": "results/whcc-uniform-n46-s1-honest-n46-w13800-t4600-l128-20261005-031715Z-7f287f3e/whcc-0-46.json"
+  },
+  {
+    "name": "uniform-n16-s1-stress",
+    "nodes": 16,
+    "runs": 3,
+    "latency_ms": [
+      981.86,
+      1029.926,
+      942.494
+    ],
+    "honest_sent_bytes": [
+      34592979.36363637,
+      34603237.27272727,
+      34603007.27272727
+    ],
+    "total_weight": "4800",
+    "threshold": "1600",
+    "source": "results/whcc-uniform-n16-s1-stress-n16-w4800-t1600-l128-20261005-024942Z-16319dd2/whcc-0-16.json"
+  },
+  {
+    "name": "uniform-n16-s1-honest",
+    "nodes": 16,
+    "runs": 3,
+    "latency_ms": [
+      775.275,
+      777.023,
+      799.153
+    ],
+    "honest_sent_bytes": [
+      34599409.8125,
+      34596730.75,
+      34602431.8125
+    ],
+    "total_weight": "4800",
+    "threshold": "1600",
+    "source": "results/whcc-uniform-n16-s1-honest-n16-w4800-t1600-l128-20261005-024937Z-fa291f21/whcc-0-16.json"
+  },
+  {
+    "name": "heavy-tail-n4-s100-honest",
+    "nodes": 4,
+    "runs": 3,
+    "latency_ms": [
+      39.898,
+      40.658,
+      39.399
+    ],
+    "honest_sent_bytes": [
+      1279401.75,
+      1278074.25,
+      1278066.25
+    ],
+    "total_weight": "120000",
+    "threshold": "40000",
+    "source": "results/whcc-heavy-tail-n4-s100-honest-n4-w120000-t40000-l128-20261005-024923Z-63d68e70/whcc-0-4.json"
+  },
+  {
+    "name": "aptos-n46-s1-stress",
+    "nodes": 46,
+    "runs": 3,
+    "latency_ms": [
+      73927.282,
+      72846.095,
+      78335.807
+    ],
+    "honest_sent_bytes": [
+      1672702021.6,
+      1672903921.15,
+      1672934304.95
+    ],
+    "total_weight": "13800",
+    "threshold": "4600",
+    "source": "results/whcc-aptos-n46-s1-stress-n46-w13800-t4600-l128-20261005-044232Z-0205ea46/whcc-0-46.json"
+  },
+  {
+    "name": "heavy-tail-n31-s10-honest",
+    "nodes": 31,
+    "runs": 3,
+    "latency_ms": [
+      11984.771,
+      11540.905,
+      11377.44
+    ],
+    "honest_sent_bytes": [
+      355749853.7419355,
+      355308603.67741936,
+      355249431.2258065
+    ],
+    "total_weight": "93000",
+    "threshold": "31000",
+    "source": "results/whcc-heavy-tail-n31-s10-honest-n31-w93000-t31000-l128-20261005-030629Z-11086362/whcc-0-31.json"
+  },
+  {
+    "name": "aptos-n16-s1-stress",
+    "nodes": 16,
+    "runs": 3,
+    "latency_ms": [
+      1438.095,
+      1446.46,
+      1427.774
+    ],
+    "honest_sent_bytes": [
+      81482277.42857143,
+      81478107.0,
+      81486916.42857143
+    ],
+    "total_weight": "4800",
+    "threshold": "1600",
+    "source": "results/whcc-aptos-n16-s1-stress-n16-w4800-t1600-l128-20261005-025148Z-6554d3f3/whcc-0-16.json"
+  },
+  {
+    "name": "uniform-n31-s10-stress",
+    "nodes": 31,
+    "runs": 3,
+    "latency_ms": [
+      21686.886,
+      20817.684,
+      20842.899
+    ],
+    "honest_sent_bytes": [
+      528025064.7619048,
+      528027714.4285714,
+      528020560.38095236
+    ],
+    "total_weight": "93000",
+    "threshold": "31000",
+    "source": "results/whcc-uniform-n31-s10-stress-n31-w93000-t31000-l128-20261005-025455Z-1d75a044/whcc-0-31.json"
+  },
+  {
+    "name": "near-uniform-n4-s100-honest",
+    "nodes": 4,
+    "runs": 3,
+    "latency_ms": [
+      51.045,
+      42.269,
+      44.281
+    ],
+    "honest_sent_bytes": [
+      1534600.5,
+      1536730.0,
+      1535193.0
+    ],
+    "total_weight": "120000",
+    "threshold": "40000",
+    "source": "results/whcc-near-uniform-n4-s100-honest-n4-w120000-t40000-l128-20261005-024913Z-3723aff5/whcc-0-4.json"
+  },
+  {
+    "name": "heavy-tail-n16-s100-honest",
+    "nodes": 16,
+    "runs": 3,
+    "latency_ms": [
+      1364.805,
+      1317.331,
+      1456.903
+    ],
+    "honest_sent_bytes": [
+      75421974.6875,
+      75424072.8125,
+      75424143.0
+    ],
+    "total_weight": "480000",
+    "threshold": "160000",
+    "source": "results/whcc-heavy-tail-n16-s100-honest-n16-w480000-t160000-l128-20261005-025126Z-cb8b20b7/whcc-0-16.json"
+  },
+  {
+    "name": "heavy-tail-n31-s100-honest",
+    "nodes": 31,
+    "runs": 3,
+    "latency_ms": [
+      13632.469,
+      13990.178,
+      13253.021
+    ],
+    "honest_sent_bytes": [
+      415580758.58064514,
+      416166891.16129035,
+      414435609.2258065
+    ],
+    "total_weight": "930000",
+    "threshold": "310000",
+    "source": "results/whcc-heavy-tail-n31-s100-honest-n31-w930000-t310000-l128-20261005-030817Z-d1f485da/whcc-0-31.json"
+  },
+  {
+    "name": "aptos-n31-s1-honest",
+    "nodes": 31,
+    "runs": 3,
+    "latency_ms": [
+      12790.567,
+      12922.434,
+      12909.725
+    ],
+    "honest_sent_bytes": [
+      398877503.7419355,
+      396887625.4516129,
+      396575751.6451613
+    ],
+    "total_weight": "9300",
+    "threshold": "3100",
+    "source": "results/whcc-aptos-n31-s1-honest-n31-w9300-t3100-l128-20261005-031020Z-c79194da/whcc-0-31.json"
+  },
+  {
+    "name": "uniform-n31-s10-honest",
+    "nodes": 31,
+    "runs": 3,
+    "latency_ms": [
+      17262.187,
+      15698.106,
+      16182.242
+    ],
+    "honest_sent_bytes": [
+      528011667.41935486,
+      528010871.0967742,
+      528012047.483871
+    ],
+    "total_weight": "93000",
+    "threshold": "31000",
+    "source": "results/whcc-uniform-n31-s10-honest-n31-w93000-t31000-l128-20261005-025354Z-96c66309/whcc-0-31.json"
+  },
+  {
+    "name": "near-uniform-n4-s1-honest",
+    "nodes": 4,
+    "runs": 3,
+    "latency_ms": [
+      36.34,
+      36.782,
+      35.191
+    ],
+    "honest_sent_bytes": [
+      965495.5,
+      965785.5,
+      965632.5
+    ],
+    "total_weight": "1200",
+    "threshold": "400",
+    "source": "results/whcc-near-uniform-n4-s1-honest-n4-w1200-t400-l128-20261005-024907Z-598f1aa4/whcc-0-4.json"
+  },
+  {
+    "name": "heavy-tail-n46-s100-honest",
+    "nodes": 46,
+    "runs": 3,
+    "latency_ms": [
+      56056.0,
+      54171.149,
+      56754.431
+    ],
+    "honest_sent_bytes": [
+      1091854974.1304348,
+      1097262546.8043478,
+      1100615653.3695652
+    ],
+    "total_weight": "1380000",
+    "threshold": "460000",
+    "source": "results/whcc-heavy-tail-n46-s100-honest-n46-w1380000-t460000-l128-20261005-043100Z-3ea9c309/whcc-0-46.json"
+  },
+  {
+    "name": "near-uniform-n31-s1-stress",
+    "nodes": 31,
+    "runs": 3,
+    "latency_ms": [
+      16096.749,
+      16145.553,
+      16052.435
+    ],
+    "honest_sent_bytes": [
+      370233922.95238096,
+      370237367.2380952,
+      370240019.61904764
+    ],
+    "total_weight": "9300",
+    "threshold": "3100",
+    "source": "results/whcc-near-uniform-n31-s1-stress-n31-w9300-t3100-l128-20261005-025907Z-59d96efd/whcc-0-31.json"
+  },
+  {
+    "name": "uniform-n31-s1-stress",
+    "nodes": 31,
+    "runs": 3,
+    "latency_ms": [
+      11556.292,
+      11095.832,
+      11270.833
+    ],
+    "honest_sent_bytes": [
+      267531633.6190476,
+      267524804.2857143,
+      267528488.0
+    ],
+    "total_weight": "9300",
+    "threshold": "3100",
+    "source": "results/whcc-uniform-n31-s1-stress-n31-w9300-t3100-l128-20261005-025309Z-1b21052b/whcc-0-31.json"
+  },
+  {
+    "name": "near-uniform-n16-s100-honest",
+    "nodes": 16,
+    "runs": 3,
+    "latency_ms": [
+      1389.748,
+      1594.631,
+      1387.236
+    ],
+    "honest_sent_bytes": [
+      82981687.875,
+      83945879.25,
+      82990591.875
+    ],
+    "total_weight": "480000",
+    "threshold": "160000",
+    "source": "results/whcc-near-uniform-n16-s100-honest-n16-w480000-t160000-l128-20261005-025046Z-d1bca3fa/whcc-0-16.json"
+  },
+  {
+    "name": "aptos-n46-s10-stress",
+    "nodes": 46,
+    "runs": 3,
+    "latency_ms": [
+      98295.166,
+      97300.801,
+      98113.231
+    ],
+    "honest_sent_bytes": [
+      2154248260.8,
+      2154082885.25,
+      2154334100.1
+    ],
+    "total_weight": "138000",
+    "threshold": "46000",
+    "source": "results/whcc-aptos-n46-s10-stress-n46-w138000-t46000-l128-20261005-045113Z-9cbd26ac/whcc-0-46.json"
+  },
+  {
+    "name": "aptos-n46-s100-stress",
+    "nodes": 46,
+    "runs": 3,
+    "latency_ms": [
+      119736.885,
+      120608.723,
+      117891.584
+    ],
+    "honest_sent_bytes": [
+      2682388303.4,
+      2682541841.4,
+      2682143625.75
+    ],
+    "total_weight": "1380000",
+    "threshold": "460000",
+    "source": "results/whcc-aptos-n46-s100-stress-n46-w1380000-t460000-l128-20261005-050156Z-009f658a/whcc-0-46.json"
+  },
+  {
+    "name": "aptos-n46-s1-honest",
+    "nodes": 46,
+    "runs": 3,
+    "latency_ms": [
+      57231.763,
+      57248.827,
+      55024.722
+    ],
+    "honest_sent_bytes": [
+      1109415362.4782608,
+      1123893600.847826,
+      1119886644.3913043
+    ],
+    "total_weight": "13800",
+    "threshold": "4600",
+    "source": "results/whcc-aptos-n46-s1-honest-n46-w13800-t4600-l128-20261005-043908Z-1ba044a6/whcc-0-46.json"
+  },
+  {
+    "name": "heavy-tail-n46-s10-honest",
+    "nodes": 46,
+    "runs": 3,
+    "latency_ms": [
+      43010.551,
+      45237.612,
+      45543.326
+    ],
+    "honest_sent_bytes": [
+      846443397.8695652,
+      846203367.1304348,
+      851784596.6521739
+    ],
+    "total_weight": "138000",
+    "threshold": "46000",
+    "source": "results/whcc-heavy-tail-n46-s10-honest-n46-w138000-t46000-l128-20261005-041851Z-4edcd055/whcc-0-46.json"
+  },
+  {
+    "name": "heavy-tail-n46-s1-stress",
+    "nodes": 46,
+    "runs": 3,
+    "latency_ms": [
+      30978.879,
+      30946.352,
+      30531.469
+    ],
+    "honest_sent_bytes": [
+      437999706.7,
+      438510051.9,
+      438690428.0
+    ],
+    "total_weight": "13800",
+    "threshold": "4600",
+    "source": "results/whcc-heavy-tail-n46-s1-stress-n46-w13800-t4600-l128-20261005-041415Z-3226a951/whcc-0-46.json"
+  },
+  {
+    "name": "near-uniform-n16-s10-stress",
+    "nodes": 16,
+    "runs": 3,
+    "latency_ms": [
+      1579.324,
+      1586.31,
+      1566.68
+    ],
+    "honest_sent_bytes": [
+      68227541.63636364,
+      68238175.0909091,
+      68236797.27272727
+    ],
+    "total_weight": "48000",
+    "threshold": "16000",
+    "source": "results/whcc-near-uniform-n16-s10-stress-n16-w48000-t16000-l128-20261005-025038Z-aa1a67dd/whcc-0-16.json"
+  },
+  {
+    "name": "near-uniform-n46-s1-honest",
+    "nodes": 46,
+    "runs": 3,
+    "latency_ms": [
+      50510.248,
+      51987.469,
+      51670.233
+    ],
+    "honest_sent_bytes": [
+      1056310811.2173913,
+      1056311338.7391304,
+      1053373774.1086956
+    ],
+    "total_weight": "13800",
+    "threshold": "4600",
+    "source": "results/whcc-near-uniform-n46-s1-honest-n46-w13800-t4600-l128-20261005-034131Z-f8d9b9bf/whcc-0-46.json"
+  },
+  {
+    "name": "uniform-n4-s1-honest",
+    "nodes": 4,
+    "runs": 3,
+    "latency_ms": [
+      34.184,
+      33.405,
+      33.248
+    ],
+    "honest_sent_bytes": [
+      760045.5,
+      759397.0,
+      759892.5
+    ],
+    "total_weight": "1200",
+    "threshold": "400",
+    "source": "results/whcc-uniform-n4-s1-honest-n4-w1200-t400-l128-20261005-024854Z-6c7da7de/whcc-0-4.json"
+  },
+  {
+    "name": "aptos-n4-s1-stress",
+    "nodes": 4,
+    "runs": 3,
+    "latency_ms": [
+      37.345,
+      47.168,
+      36.989
+    ],
+    "honest_sent_bytes": [
+      1201628.5,
+      1201628.5,
+      1201225.5
+    ],
+    "total_weight": "1200",
+    "threshold": "400",
+    "source": "results/whcc-aptos-n4-s1-stress-n4-w1200-t400-l128-20261005-024928Z-f568d0a9/whcc-0-4.json"
+  },
+  {
+    "name": "heavy-tail-n16-s1-honest",
+    "nodes": 16,
+    "runs": 3,
+    "latency_ms": [
+      688.805,
+      680.592,
+      680.719
+    ],
+    "honest_sent_bytes": [
+      25830781.3125,
+      25833096.1875,
+      25821714.75
+    ],
+    "total_weight": "4800",
+    "threshold": "1600",
+    "source": "results/whcc-heavy-tail-n16-s1-honest-n16-w4800-t1600-l128-20261005-025102Z-0f74780e/whcc-0-16.json"
+  },
+  {
+    "name": "uniform-n46-s100-stress",
+    "nodes": 46,
+    "runs": 3,
+    "latency_ms": [
+      87992.396,
+      85876.9,
+      87702.79
+    ],
+    "honest_sent_bytes": [
+      1352340997.6774194,
+      1352413260.7096775,
+      1352455574.032258
+    ],
+    "total_weight": "1380000",
+    "threshold": "460000",
+    "source": "results/whcc-uniform-n46-s100-stress-n46-w1380000-t460000-l128-20261005-033631Z-3ecba1ac/whcc-0-46.json"
+  },
+  {
+    "name": "aptos-n16-s10-stress",
+    "nodes": 16,
+    "runs": 3,
+    "latency_ms": [
+      2010.551,
+      1991.538,
+      2013.341
+    ],
+    "honest_sent_bytes": [
+      118779719.71428572,
+      118777064.28571428,
+      118782523.0
+    ],
+    "total_weight": "48000",
+    "threshold": "16000",
+    "source": "results/whcc-aptos-n16-s10-stress-n16-w48000-t16000-l128-20261005-025202Z-a955fa60/whcc-0-16.json"
+  },
+  {
+    "name": "near-uniform-n4-s100-stress",
+    "nodes": 4,
+    "runs": 3,
+    "latency_ms": [
+      45.011,
+      43.538,
+      43.429
+    ],
+    "honest_sent_bytes": [
+      1491780.0,
+      1491930.3333333333,
+      1491930.3333333333
+    ],
+    "total_weight": "120000",
+    "threshold": "40000",
+    "source": "results/whcc-near-uniform-n4-s100-stress-n4-w120000-t40000-l128-20261005-024915Z-65e72927/whcc-0-4.json"
+  },
+  {
+    "name": "aptos-n16-s100-honest",
+    "nodes": 16,
+    "runs": 3,
+    "latency_ms": [
+      1891.373,
+      2325.421,
+      1975.357
+    ],
+    "honest_sent_bytes": [
+      114412068.125,
+      114420342.5625,
+      114410606.875
+    ],
+    "total_weight": "480000",
+    "threshold": "160000",
+    "source": "results/whcc-aptos-n16-s100-honest-n16-w480000-t160000-l128-20261005-025212Z-01095672/whcc-0-16.json"
+  },
+  {
+    "name": "aptos-n31-s1-stress",
+    "nodes": 31,
+    "runs": 3,
+    "latency_ms": [
+      18051.565,
+      18003.965,
+      18926.131
+    ],
+    "honest_sent_bytes": [
+      596121689.8461539,
+      596118703.6923077,
+      596124171.8461539
+    ],
+    "total_weight": "9300",
+    "threshold": "3100",
+    "source": "results/whcc-aptos-n31-s1-stress-n31-w9300-t3100-l128-20261005-031110Z-593b577b/whcc-0-31.json"
+  },
+  {
+    "name": "uniform-n4-s100-honest",
+    "nodes": 4,
+    "runs": 3,
+    "latency_ms": [
+      39.762,
+      39.727,
+      38.825
+    ],
+    "honest_sent_bytes": [
+      1189547.25,
+      1190312.0,
+      1188557.25
+    ],
+    "total_weight": "120000",
+    "threshold": "40000",
+    "source": "results/whcc-uniform-n4-s100-honest-n4-w120000-t40000-l128-20261005-024904Z-8a869c1f/whcc-0-4.json"
+  },
+  {
+    "name": "near-uniform-n4-s10-stress",
+    "nodes": 4,
+    "runs": 3,
+    "latency_ms": [
+      40.471,
+      42.101,
+      43.074
+    ],
+    "honest_sent_bytes": [
+      1249755.6666666667,
+      1249755.6666666667,
+      1249755.6666666667
+    ],
+    "total_weight": "12000",
+    "threshold": "4000",
+    "source": "results/whcc-near-uniform-n4-s10-stress-n4-w12000-t4000-l128-20261005-024912Z-5d764581/whcc-0-4.json"
+  },
+  {
+    "name": "near-uniform-n4-s10-honest",
+    "nodes": 4,
+    "runs": 3,
+    "latency_ms": [
+      38.106,
+      41.075,
+      38.337
+    ],
+    "honest_sent_bytes": [
+      1285173.0,
+      1284883.0,
+      1284955.75
+    ],
+    "total_weight": "12000",
+    "threshold": "4000",
+    "source": "results/whcc-near-uniform-n4-s10-honest-n4-w12000-t4000-l128-20261005-024910Z-eaf2a38c/whcc-0-4.json"
+  },
+  {
+    "name": "heavy-tail-n4-s10-honest",
+    "nodes": 4,
+    "runs": 3,
+    "latency_ms": [
+      39.386,
+      37.649,
+      36.443
+    ],
+    "honest_sent_bytes": [
+      942415.5,
+      942415.5,
+      535630.5
+    ],
+    "total_weight": "12000",
+    "threshold": "4000",
+    "source": "results/whcc-heavy-tail-n4-s10-honest-n4-w12000-t4000-l128-20261005-024920Z-2f606b83/whcc-0-4.json"
+  },
+  {
+    "name": "aptos-n4-s100-honest",
+    "nodes": 4,
+    "runs": 3,
+    "latency_ms": [
+      45.171,
+      42.146,
+      42.157
+    ],
+    "honest_sent_bytes": [
+      1522424.75,
+      1522618.0,
+      1522239.75
+    ],
+    "total_weight": "120000",
+    "threshold": "40000",
+    "source": "results/whcc-aptos-n4-s100-honest-n4-w120000-t40000-l128-20261005-024933Z-1070f98c/whcc-0-4.json"
+  },
+  {
+    "name": "heavy-tail-n46-s1-honest",
+    "nodes": 46,
+    "runs": 3,
+    "latency_ms": [
+      21809.387,
+      22785.277,
+      22519.775
+    ],
+    "honest_sent_bytes": [
+      392718150.65217394,
+      393714922.34782606,
+      395893540.6956522
+    ],
+    "total_weight": "13800",
+    "threshold": "4600",
+    "source": "results/whcc-heavy-tail-n46-s1-honest-n46-w13800-t4600-l128-20261005-041243Z-58d8adde/whcc-0-46.json"
+  },
+  {
+    "name": "uniform-n16-s100-stress",
+    "nodes": 16,
+    "runs": 3,
+    "latency_ms": [
+      1450.387,
+      1462.354,
+      1559.029
+    ],
+    "honest_sent_bytes": [
+      62404347.54545455,
+      62407315.0,
+      62408267.27272727
+    ],
+    "total_weight": "480000",
+    "threshold": "160000",
+    "source": "results/whcc-uniform-n16-s100-stress-n16-w480000-t160000-l128-20261005-025010Z-10fb70d0/whcc-0-16.json"
+  },
+  {
+    "name": "heavy-tail-n4-s1-stress",
+    "nodes": 4,
+    "runs": 3,
+    "latency_ms": [
+      33.678,
+      33.293,
+      40.813
+    ],
+    "honest_sent_bytes": [
+      696146.0,
+      696146.0,
+      696146.0
+    ],
+    "total_weight": "1200",
+    "threshold": "400",
+    "source": "results/whcc-heavy-tail-n4-s1-stress-n4-w1200-t400-l128-20261005-024918Z-4ab40047/whcc-0-4.json"
+  },
+  {
+    "name": "uniform-n16-s100-honest",
+    "nodes": 16,
+    "runs": 3,
+    "latency_ms": [
+      1157.012,
+      1179.874,
+      1203.646
+    ],
+    "honest_sent_bytes": [
+      62409338.6875,
+      62400651.25,
+      62406665.1875
+    ],
+    "total_weight": "480000",
+    "threshold": "160000",
+    "source": "results/whcc-uniform-n16-s100-honest-n16-w480000-t160000-l128-20261005-025003Z-224e97f7/whcc-0-16.json"
+  },
+  {
+    "name": "aptos-n31-s100-stress",
+    "nodes": 31,
+    "runs": 3,
+    "latency_ms": [
+      24147.398,
+      23912.349,
+      22832.468
+    ],
+    "honest_sent_bytes": [
+      788572166.4615384,
+      788532497.2307693,
+      788608408.3846154
+    ],
+    "total_weight": "930000",
+    "threshold": "310000",
+    "source": "results/whcc-aptos-n31-s100-stress-n31-w930000-t310000-l128-20261005-031551Z-7cf51030/whcc-0-31.json"
+  },
+  {
+    "name": "near-uniform-n31-s100-stress",
+    "nodes": 31,
+    "runs": 3,
+    "latency_ms": [
+      27009.922,
+      27150.777,
+      26732.126
+    ],
+    "honest_sent_bytes": [
+      594481753.9047619,
+      594482652.9523809,
+      594478202.7619047
+    ],
+    "total_weight": "930000",
+    "threshold": "310000",
+    "source": "results/whcc-near-uniform-n31-s100-stress-n31-w930000-t310000-l128-20261005-030352Z-95069fbb/whcc-0-31.json"
+  },
+  {
+    "name": "heavy-tail-n16-s100-stress",
+    "nodes": 16,
+    "runs": 3,
+    "latency_ms": [
+      1679.858,
+      1696.296,
+      1699.478
+    ],
+    "honest_sent_bytes": [
+      78252685.0,
+      78261280.9090909,
+      78269520.81818181
+    ],
+    "total_weight": "480000",
+    "threshold": "160000",
+    "source": "results/whcc-heavy-tail-n16-s100-stress-n16-w480000-t160000-l128-20261005-025133Z-6ec82a95/whcc-0-16.json"
+  },
+  {
+    "name": "heavy-tail-n46-s10-stress",
+    "nodes": 46,
+    "runs": 3,
+    "latency_ms": [
+      62507.366,
+      63995.445,
+      63977.27
+    ],
+    "honest_sent_bytes": [
+      952230710.5333333,
+      952237889.5333333,
+      942080233.0
+    ],
+    "total_weight": "138000",
+    "threshold": "46000",
+    "source": "results/whcc-heavy-tail-n46-s10-stress-n46-w138000-t46000-l128-20261005-042718Z-6c20aa87/whcc-0-46.json"
+  },
+  {
+    "name": "heavy-tail-n4-s100-stress",
+    "nodes": 4,
+    "runs": 3,
+    "latency_ms": [
+      43.076,
+      42.737,
+      39.717
+    ],
+    "honest_sent_bytes": [
+      1222997.0,
+      1222997.0,
+      1222933.0
+    ],
+    "total_weight": "120000",
+    "threshold": "40000",
+    "source": "results/whcc-heavy-tail-n4-s100-stress-n4-w120000-t40000-l128-20261005-024925Z-a474ec98/whcc-0-4.json"
+  },
+  {
+    "name": "aptos-n4-s10-honest",
+    "nodes": 4,
+    "runs": 3,
+    "latency_ms": [
+      32.452,
+      32.482,
+      31.914
+    ],
+    "honest_sent_bytes": [
+      785904.75,
+      785639.0,
+      785776.0
+    ],
+    "total_weight": "12000",
+    "threshold": "4000",
+    "source": "results/whcc-aptos-n4-s10-honest-n4-w12000-t4000-l128-20261005-024930Z-e2e51045/whcc-0-4.json"
+  },
+  {
+    "name": "near-uniform-n46-s10-honest",
+    "nodes": 46,
+    "runs": 3,
+    "latency_ms": [
+      85616.166,
+      87849.621,
+      86150.093
+    ],
+    "honest_sent_bytes": [
+      1709125369.9782608,
+      1682422589.8913043,
+      1690176450.0869565
+    ],
+    "total_weight": "138000",
+    "threshold": "46000",
+    "source": "results/whcc-near-uniform-n46-s10-honest-n46-w138000-t46000-l128-20261005-034859Z-2eb250db/whcc-0-46.json"
+  },
+  {
+    "name": "aptos-n4-s10-stress",
+    "nodes": 4,
+    "runs": 3,
+    "latency_ms": [
+      34.938,
+      33.892,
+      33.244
+    ],
+    "honest_sent_bytes": [
+      947580.0,
+      948483.0,
+      948499.0
+    ],
+    "total_weight": "12000",
+    "threshold": "4000",
+    "source": "results/whcc-aptos-n4-s10-stress-n4-w12000-t4000-l128-20261005-024932Z-3d92417a/whcc-0-4.json"
+  },
+  {
+    "name": "aptos-n16-s1-honest",
+    "nodes": 16,
+    "runs": 3,
+    "latency_ms": [
+      1088.153,
+      1101.034,
+      1167.723
+    ],
+    "honest_sent_bytes": [
+      58354311.125,
+      58349911.0,
+      58355490.625
+    ],
+    "total_weight": "4800",
+    "threshold": "1600",
+    "source": "results/whcc-aptos-n16-s1-honest-n16-w4800-t1600-l128-20261005-025141Z-dfbf6fe3/whcc-0-16.json"
+  },
+  {
+    "name": "uniform-n46-s10-stress",
+    "nodes": 46,
+    "runs": 3,
+    "latency_ms": [
+      101940.42,
+      100629.672,
+      99600.424
+    ],
+    "honest_sent_bytes": [
+      1555139232.8709676,
+      1555225122.2258065,
+      1555608375.516129
+    ],
+    "total_weight": "138000",
+    "threshold": "46000",
+    "source": "results/whcc-uniform-n46-s10-stress-n46-w138000-t46000-l128-20261005-032650Z-15a2ea72/whcc-0-46.json"
+  },
+  {
+    "name": "near-uniform-n16-s10-honest",
+    "nodes": 16,
+    "runs": 3,
+    "latency_ms": [
+      1477.445,
+      1228.313,
+      1239.473
+    ],
+    "honest_sent_bytes": [
+      73309701.25,
+      72348010.9375,
+      72343229.375
+    ],
+    "total_weight": "48000",
+    "threshold": "16000",
+    "source": "results/whcc-near-uniform-n16-s10-honest-n16-w48000-t16000-l128-20261005-025030Z-42102a3e/whcc-0-16.json"
+  },
+  {
+    "name": "aptos-n4-s1-honest",
+    "nodes": 4,
+    "runs": 3,
+    "latency_ms": [
+      34.863,
+      38.706,
+      36.236
+    ],
+    "honest_sent_bytes": [
+      980943.0,
+      980943.0,
+      980870.5
+    ],
+    "total_weight": "1200",
+    "threshold": "400",
+    "source": "results/whcc-aptos-n4-s1-honest-n4-w1200-t400-l128-20261005-024927Z-87269140/whcc-0-4.json"
+  },
+  {
+    "name": "near-uniform-n16-s1-stress",
+    "nodes": 16,
+    "runs": 3,
+    "latency_ms": [
+      1158.106,
+      1158.253,
+      1151.27
+    ],
+    "honest_sent_bytes": [
+      45959722.90909091,
+      45965265.0,
+      45964123.90909091
+    ],
+    "total_weight": "4800",
+    "threshold": "1600",
+    "source": "results/whcc-near-uniform-n16-s1-stress-n16-w4800-t1600-l128-20261005-025024Z-341de277/whcc-0-16.json"
+  },
+  {
+    "name": "near-uniform-n16-s1-honest",
+    "nodes": 16,
+    "runs": 3,
+    "latency_ms": [
+      1167.728,
+      940.705,
+      948.958
+    ],
+    "honest_sent_bytes": [
+      49661430.5,
+      48703658.6875,
+      48710480.625
+    ],
+    "total_weight": "4800",
+    "threshold": "1600",
+    "source": "results/whcc-near-uniform-n16-s1-honest-n16-w4800-t1600-l128-20261005-025017Z-4fe6d3d4/whcc-0-16.json"
+  },
+  {
+    "name": "uniform-n4-s10-honest",
+    "nodes": 4,
+    "runs": 3,
+    "latency_ms": [
+      39.937,
+      39.678,
+      41.963
+    ],
+    "honest_sent_bytes": [
+      1288386.0,
+      1285947.75,
+      1288000.5
+    ],
+    "total_weight": "12000",
+    "threshold": "4000",
+    "source": "results/whcc-uniform-n4-s10-honest-n4-w12000-t4000-l128-20261005-024900Z-9378ce95/whcc-0-4.json"
+  },
+  {
+    "name": "near-uniform-n4-s1-stress",
+    "nodes": 4,
+    "runs": 3,
+    "latency_ms": [
+      36.68,
+      38.626,
+      36.023
+    ],
+    "honest_sent_bytes": [
+      941247.3333333334,
+      755003.6666666666,
+      941247.3333333334
+    ],
+    "total_weight": "1200",
+    "threshold": "400",
+    "source": "results/whcc-near-uniform-n4-s1-stress-n4-w1200-t400-l128-20261005-024909Z-252af23f/whcc-0-4.json"
+  },
+  {
+    "name": "uniform-n4-s1-stress",
+    "nodes": 4,
+    "runs": 3,
+    "latency_ms": [
+      34.014,
+      35.163,
+      35.458
+    ],
+    "honest_sent_bytes": [
+      759531.3333333334,
+      759381.0,
+      759381.0
+    ],
+    "total_weight": "1200",
+    "threshold": "400",
+    "source": "results/whcc-uniform-n4-s1-stress-n4-w1200-t400-l128-20261005-024859Z-d09cb9b1/whcc-0-4.json"
+  },
+  {
+    "name": "heavy-tail-n31-s1-honest",
+    "nodes": 31,
+    "runs": 3,
+    "latency_ms": [
+      5878.505,
+      6103.035,
+      6003.83
+    ],
+    "honest_sent_bytes": [
+      168857360.51612905,
+      164840662.29032257,
+      167729390.32258064
+    ],
+    "total_weight": "9300",
+    "threshold": "3100",
+    "source": "results/whcc-heavy-tail-n31-s1-honest-n31-w9300-t3100-l128-20261005-030527Z-b258c783/whcc-0-31.json"
+  },
+  {
+    "name": "aptos-n31-s10-honest",
+    "nodes": 31,
+    "runs": 3,
+    "latency_ms": [
+      17261.12,
+      16346.056,
+      16480.394
+    ],
+    "honest_sent_bytes": [
+      529529124.16129035,
+      523181252.9354839,
+      521382330.38709676
+    ],
+    "total_weight": "93000",
+    "threshold": "31000",
+    "source": "results/whcc-aptos-n31-s10-honest-n31-w93000-t31000-l128-20261005-031216Z-20c4f020/whcc-0-31.json"
+  }
+]

@@ -6,6 +6,7 @@ impl Context {
     pub(crate) async fn flush(&mut self) -> Result<()> {
         for action in self.state.drain_actions() {
             match action {
+                Action::Avid(r) => self.avid_tx.send(r).await?,
                 Action::Rbc(r) => self.rbc_tx.send(r).await?,
                 Action::Ra(r) => self.ra_tx.send(r).await?,
                 Action::Gather(r) => self.gather_tx.send(r).await?,

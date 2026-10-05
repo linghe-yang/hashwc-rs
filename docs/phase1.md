@@ -1,3 +1,4 @@
+<!-- 历史阶段记录；本文中的完整 Public 广播状态机已移除，当前实现见 whcc.md。 -->
 # 阶段一：AX + WCSS + hash commitment 的 wiAwVSS
 
 ## 依据和范围

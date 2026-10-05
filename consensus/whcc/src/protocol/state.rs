@@ -10,13 +10,21 @@ use sdc_config::Node;
 use sdc_types::{Dyadic, InstanceId};
 use std::{collections::BTreeMap, sync::Arc};
 use wcss::Setup;
+use wiawvss::certified::{Header, Receipt};
 use wiawvss::{Context as SharingContext, Opening, PrivateShare, Public, ax};
 
 pub struct Dealer {
     pub context: SharingContext,
     pub public: Option<Public>,
+    pub header: Option<Header>,
+    pub codec: Arc<wavid::Codec>,
+    pub stored_root: Option<[u8; 32]>,
+    pub echoed: bool,
+    pub retrieving: bool,
+    pub prepared: Option<wavid::Prepared>,
+    pub storage_terminal: Option<wiawvss::certified::Certificate>,
     pub receipt: Option<PrivateShare>,
-    pub pending_receipt: Option<PrivateShare>,
+    pub pending_receipt: Option<Receipt>,
     pub complete: bool,
     pub rejected_public: bool,
     pub served: Vec<bool>,
@@ -51,6 +59,8 @@ impl State {
         let context_id = params.context_id(node, &setup);
         let sampling = recovery::Parameters::new(setup.circuit().policy(), params.coverage_bits)?;
         let assignments = recovery::Assignments::new(sampling.clone(), context_id);
+        let avid_public_id = params.bound_node(node, &setup).weighted_public_id("wavid");
+        let membership = node.weighted_membership()?;
         let dealers = (0..node.num_nodes)
             .map(|dealer| {
                 Ok(Dealer {
@@ -64,6 +74,18 @@ impl State {
                         context_id.to_vec(),
                     )?,
                     public: None,
+                    header: None,
+                    codec: Arc::new(wavid::Codec::new(
+                        &membership,
+                        sdc_types::InstanceId::new(params.epoch, Some(dealer), 0),
+                        avid_public_id,
+                        Public::encoded_len(&setup),
+                    )?),
+                    stored_root: None,
+                    echoed: false,
+                    retrieving: false,
+                    prepared: None,
+                    storage_terminal: None,
                     receipt: None,
                     pending_receipt: None,
                     complete: false,
@@ -124,13 +146,26 @@ impl State {
                 [
                     wrbc::Request::Register {
                         instance: self.instance(d, 0),
-                        file_bytes: Public::encoded_len(&self.setup),
+                        file_bytes: Header::BYTES,
                     },
                     wrbc::Request::Register {
                         instance: self.instance(d, 1),
                         file_bytes: self.sampling.encoded_len(d),
                     },
                 ]
+            })
+            .collect()
+    }
+    pub fn avid_manifest(&self) -> Vec<wavid::Request> {
+        (0..self.n)
+            .map(|d| wavid::Request::Register {
+                instance: self.instance(d, 0),
+                descriptor: wavid::Descriptor {
+                    file_bytes: Public::encoded_len(&self.setup),
+                    root: None,
+                    retrievers: vec![],
+                    completion: wavid::CompletionMode::External,
+                },
             })
             .collect()
     }
@@ -162,6 +197,9 @@ impl State {
     ) -> Result<()> {
         ensure!(!self.started, "common coin invocation already started");
         let declaration = self.sampling.encode(self.context_id, self.id, &list)?;
+        let bulk = public.encode();
+        let prepared = self.dealers[self.id].codec.prepare(&bulk)?;
+        let header = Header::new(&self.setup, &self.dealers[self.id].context, prepared.root);
         self.started = true;
         self.actions.push(Action::Gather(wgather::Request::Start {
             instance: self.global(),
@@ -172,7 +210,11 @@ impl State {
         }));
         self.actions.push(Action::Rbc(wrbc::Request::Broadcast {
             instance: self.instance(self.id, 0),
-            data: public.encode(),
+            data: header.encode(),
+        }));
+        self.actions.push(Action::Avid(wavid::Request::Disperse {
+            instance: self.instance(self.id, 0),
+            data: bulk,
         }));
         for share in shares {
             self.actions.push(Action::Private {
@@ -181,7 +223,13 @@ impl State {
                     epoch: self.params.epoch,
                     dealer: self.id,
                     kind: PRIVATE_TOKEN,
-                    payload: share.encode().to_vec(),
+                    payload: Receipt::new(
+                        &self.setup,
+                        &self.dealers[self.id].codec,
+                        &prepared,
+                        &share,
+                    )?
+                    .encode(),
                 },
             });
         }

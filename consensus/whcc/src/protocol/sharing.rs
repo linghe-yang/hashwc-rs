@@ -4,26 +4,38 @@ use crate::{
 };
 use anyhow::Result;
 use network::Packet;
-use wiawvss::{PrivateShare, Public, ax};
+use wiawvss::{
+    Public,
+    certified::{self, Certificate, Evidence, Header, Receipt},
+};
 impl State {
     pub fn rbc_event(&mut self, event: wrbc::Event) -> Result<()> {
         match event {
             wrbc::Event::Deliver { instance, data } if instance.epoch == self.params.epoch => {
                 if let Some(d) = instance.dealer.filter(|&d| d < self.n) {
-                    if instance.slot == 1 {
-                        self.assignments.deliver(d, &data);
+                    if instance.slot == 1 && self.assignments.deliver(d, &data) {
+                        for dealer in self.assignments.lists[d].as_ref().unwrap().clone() {
+                            self.actions.push(Action::Avid(wavid::Request::Authorize {
+                                instance: self.instance(dealer, 0),
+                                retrievers: vec![d],
+                            }));
+                        }
                     }
                     if instance.slot == 0
-                        && self.dealers[d].public.is_none()
+                        && self.dealers[d].header.is_none()
                         && !self.dealers[d].rejected_public
                     {
-                        match Public::decode(&self.setup, &self.dealers[d].context, &data) {
-                            Ok(public) => {
+                        match Header::decode(&self.setup, &self.dealers[d].context, &data) {
+                            Ok(header) => {
+                                self.actions.push(Action::Avid(wavid::Request::Pin {
+                                    instance,
+                                    root: header.root,
+                                }));
                                 self.actions.push(Action::Ra(wra::Request::Register {
                                     instance,
-                                    header_id: public.digest(),
+                                    header_id: header.id(),
                                 }));
-                                self.dealers[d].public = Some(public);
+                                self.dealers[d].header = Some(header);
                             }
                             Err(_) => self.dealers[d].rejected_public = true,
                         }
@@ -49,9 +61,14 @@ impl State {
                 value: true,
             } if instance.epoch == self.params.epoch && instance.slot == 0 => {
                 if let Some(d) = instance.dealer.filter(|&d| d < self.n)
-                    && self.dealers[d].public.is_some()
+                    && let Some(header) = &self.dealers[d].header
                     && !self.dealers[d].complete
                 {
+                    // Global sharing completion need not imply THIS party holds data.
+                    self.actions.push(Action::Avid(wavid::Request::Complete {
+                        instance,
+                        root: header.root,
+                    }));
                     self.dealers[d].complete = true;
                     self.events.push(Event::Shared { dealer: d });
                     self.actions.push(Action::Gather(wgather::Request::Add {
@@ -65,42 +82,127 @@ impl State {
         }
         self.advance()
     }
+    pub fn avid_event(&mut self, event: wavid::Event) -> Result<()> {
+        let bits = self.contribution_bits();
+        match event {
+            wavid::Event::Stored { instance, root }
+                if instance.epoch == self.params.epoch && instance.slot == 0 =>
+            {
+                if let Some(d) = instance.dealer.filter(|&d| d < self.n)
+                    && self.dealers[d]
+                        .header
+                        .as_ref()
+                        .is_some_and(|h| h.root == root)
+                {
+                    self.dealers[d].stored_root = Some(root);
+                }
+            }
+            wavid::Event::Result { instance, result }
+                if instance.epoch == self.params.epoch && instance.slot == 0 =>
+            {
+                if let Some(d) = instance.dealer.filter(|&d| d < self.n)
+                    && self.assignments.authorized(self.id, d)
+                {
+                    let dealer = &mut self.dealers[d];
+                    if let Some(header) = &dealer.header {
+                        match result {
+                            wavid::Retrieval::Invalid(fault) => {
+                                let cert = Certificate {
+                                    header_id: header.id(),
+                                    evidence: Evidence::Storage(fault),
+                                };
+                                anyhow::ensure!(
+                                    certified::verify(
+                                        &self.setup,
+                                        &dealer.context,
+                                        &dealer.codec,
+                                        header,
+                                        &cert,
+                                        bits
+                                    ),
+                                    "invalid local storage proof"
+                                );
+                                dealer.storage_terminal = Some(cert);
+                            }
+                            wavid::Retrieval::File(raw) => {
+                                let prepared = dealer.codec.prepare(&raw)?;
+                                anyhow::ensure!(
+                                    prepared.root == header.root,
+                                    "WAVID result root mismatch"
+                                );
+                                match Public::decode(&self.setup, &dealer.context, &raw) {
+                                    Ok(public) => dealer.public = Some(public),
+                                    Err(_) => {
+                                        dealer.storage_terminal = Some(Certificate {
+                                            header_id: header.id(),
+                                            evidence: Evidence::Format(certified::openings(
+                                                &dealer.codec,
+                                                &prepared,
+                                                &[(0, 72)],
+                                            )?),
+                                        })
+                                    }
+                                }
+                                dealer.prepared = Some(prepared);
+                            }
+                        }
+                        dealer.recovery_dirty = true;
+                    }
+                }
+            }
+            wavid::Event::Rejected { reason, .. } => anyhow::bail!("WAVID: {reason}"),
+            _ => {}
+        }
+        self.advance()
+    }
+    pub fn contribution_bits(&self) -> usize {
+        (self.params.output_bits + self.params.rounding_bits + 1) as usize
+    }
     pub fn private_packet(&mut self, sender: usize, packet: Packet) -> Result<()> {
         let d = packet.dealer;
         if sender >= self.n
-            || d != sender
+            || sender != d
             || packet.epoch != self.params.epoch
             || packet.kind != PRIVATE_TOKEN
         {
             return Ok(());
         }
-        let Ok(share) = PrivateShare::decode(&packet.payload) else {
-            return Ok(());
-        };
-        if share.party != self.id
-            || share.context_id != self.dealers[d].context.id()
-            || share.setup_id != self.setup.id()
+        if let Ok(receipt) = Receipt::decode(&self.dealers[d].codec, &packet.payload)
+            && self.dealers[d].receipt.is_none()
+            && self.dealers[d].pending_receipt.is_none()
         {
-            return Ok(());
-        }
-        if self.dealers[d].receipt.is_none() {
-            self.dealers[d].pending_receipt = Some(share);
+            self.dealers[d].pending_receipt = Some(receipt);
         }
         self.advance()
     }
     pub(super) fn receipts(&mut self) -> Result<()> {
         for d in 0..self.n {
             let dealer = &mut self.dealers[d];
-            if let Some(public) = &dealer.public
-                && let Some(share) = dealer.pending_receipt.take()
-                && ax::verify_share(&self.setup, &dealer.context, public, &share)
-                && dealer.receipt.is_none()
-            {
-                dealer.receipt = Some(share);
-                self.actions.push(Action::Ra(wra::Request::Input {
-                    instance: self.instance(d, 0),
-                    value: true,
-                }));
+            if let Some(header) = &dealer.header {
+                if let Some(raw) = dealer.pending_receipt.take()
+                    && dealer.receipt.is_none()
+                {
+                    dealer.receipt =
+                        raw.verify(&self.setup, &dealer.context, &dealer.codec, header, self.id);
+                }
+                // One ECHO for the conjunction, never for a header or fragment receipt alone.
+                if dealer.receipt.is_some()
+                    && dealer.stored_root == Some(header.root)
+                    && !dealer.echoed
+                {
+                    dealer.echoed = true;
+                    self.actions.push(Action::Ra(wra::Request::Input {
+                        instance: sdc_types::InstanceId::new(self.params.epoch, Some(d), 0),
+                        value: true,
+                    }));
+                }
+                // Public bulk retrieval may precede freeze, private tokens may not.
+                if self.assignments.authorized(self.id, d) && !dealer.retrieving {
+                    dealer.retrieving = true;
+                    self.actions.push(Action::Avid(wavid::Request::Retrieve {
+                        instance: sdc_types::InstanceId::new(self.params.epoch, Some(d), 0),
+                    }));
+                }
             }
         }
         Ok(())

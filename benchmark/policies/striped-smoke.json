@@ -1,0 +1,52 @@
+{
+  "bench_params": {
+    "protocol": "whcc",
+    "runs": 1,
+    "duration": 90,
+    "startup_timeout": 90,
+    "base_port": 40000,
+    "fault_weight_threshold": 3
+  },
+  "node_params": {
+    "output_bits": 128,
+    "rounding_bits": 64,
+    "coverage_bits": 40
+  },
+  "metadata": {
+    "experiment_id": "striped-validation-20261005",
+    "weight_profile": {
+      "id": "uniform",
+      "parameters": {}
+    },
+    "weight_scale": 1
+  },
+  "cases": [
+    {
+      "name": "striped-smoke-honest",
+      "byzantine_nodes": [],
+      "nodes": 4,
+      "weights": [
+        3,
+        3,
+        3,
+        3
+      ],
+      "threshold": 4
+    },
+    {
+      "name": "striped-smoke-stress",
+      "byzantine_nodes": [
+        3
+      ],
+      "byzantine_behavior": "recovery-stress",
+      "nodes": 4,
+      "weights": [
+        3,
+        3,
+        3,
+        3
+      ],
+      "threshold": 4
+    }
+  ]
+}

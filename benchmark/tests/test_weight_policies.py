@@ -103,7 +103,7 @@ class WeightPolicyTests(unittest.TestCase):
                 means = set()
                 for case in policy.cases:
                     n = case.nodes[0]
-                    self.assertEqual(len(case.ports(policy.node_parameters)), 6*n)
+                    self.assertEqual(len(case.ports(policy.node_parameters)), 7*n)
                     self.assertLess(case.synchronizer_port(policy.node_parameters), 65536)
                     self.assertLess(case.corrupted_weight, case.threshold)
                     self.assertEqual(case.threshold, case.total_weight//3)
@@ -116,10 +116,9 @@ class WeightPolicyTests(unittest.TestCase):
                         self.assertEqual(case.metadata['generation']['snapshot']['sha256'], manifest['sha256'])
                 if family != 'npow':
                     self.assertEqual(len(means), 1)
-            # Generated policies are checked in, byte-for-byte reproducible as JSON data.
-            for family, content in families.items():
-                saved = json.loads((PathMaker.BENCHMARK/'policies'/('weights-'+family+'.json')).read_text())
-                self.assertEqual(saved, content)
+            # Reproducibility must not depend on retained experiment artifacts.
+            repeated, _ = build_policies(manifest, validators)
+            self.assertEqual(families, repeated)
 
 
 if __name__ == '__main__':

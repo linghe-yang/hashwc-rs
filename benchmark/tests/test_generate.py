@@ -54,7 +54,7 @@ class GenerateTests(unittest.TestCase):
                 self.assertEqual(result['runs'], 1)
                 for case in policy.cases:
                     self.assertEqual(case.total_weight, 16000)
-                    self.assertEqual(len(case.ports(policy.node_parameters)), 96)
+                    self.assertEqual(len(case.ports(policy.node_parameters)), 112)
                     self.assertLess(case.corrupted_weight, case.threshold)
                 self.assertEqual(len(set(policy.cases[0].weights)) == 1, mode == 1)
                 self.assertEqual(result['gcd'], '1000' if mode == 1 else '1')

@@ -148,20 +148,20 @@ class BenchParameters:
     def ports(self, node_params):
         stride = node_params.json['port_stride'] or self.nodes[0]
         ports = {}
-        for service_id, service in enumerate(['wrbc', 'wra', 'wgather', 'wbinaa', 'private', 'recovery']):
+        for service_id, service in enumerate(['wrbc', 'wra', 'wgather', 'wbinaa', 'private', 'recovery', 'wavid']):
             for party in range(self.nodes[0]):
                 port = self.base_port + service_id * stride + party
                 if port > 65535 or port in ports:
                     raise ConfigError('Protocol ports overlap or exceed 65535')
                 ports[port] = {'service': service, 'party': party}
-        sync_port = self.sync_port or (self.base_port + 6 * stride)
+        sync_port = self.sync_port or (self.base_port + 7 * stride)
         if sync_port > 65535 or sync_port in ports:
             raise ConfigError('Synchronizer port overlaps or exceeds 65535')
         return ports
 
     def synchronizer_port(self, node_params):
         self.ports(node_params)
-        return self.sync_port or (self.base_port + 6 * (node_params.json['port_stride'] or self.nodes[0]))
+        return self.sync_port or (self.base_port + 7 * (node_params.json['port_stride'] or self.nodes[0]))
 
 
 class Policy:

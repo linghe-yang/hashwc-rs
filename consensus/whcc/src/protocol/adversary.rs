@@ -4,7 +4,10 @@ use crate::{
     msg::{Action, TERMINAL},
 };
 use network::Packet;
-use wiawvss::{Opening, Public, terminal::Terminal};
+use wiawvss::{
+    Opening, Public,
+    certified::{Certificate, Evidence},
+};
 
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
 pub enum Behavior {
@@ -34,18 +37,21 @@ impl State {
         // No secret token is used. Each authorized dealer gets one broadcast.
         for d in 0..self.n {
             let dealer = &mut self.dealers[d];
-            if dealer.public.is_none()
+            if dealer.header.is_none()
                 || dealer.terminal_sent
                 || !self.assignments.authorized(self.id, d)
             {
                 continue;
             }
-            let public = dealer.public.as_ref().expect("guarded public");
-            let raw = Terminal::Success(Opening {
-                message: [0; 32],
-                randomness: [0; 32],
-            })
-            .encode(public);
+            let header = dealer.header.as_ref().expect("guarded header");
+            let raw = Certificate {
+                header_id: header.id(),
+                evidence: Evidence::Success(Opening {
+                    message: [0; 32],
+                    randomness: [0; 32],
+                }),
+            }
+            .encode();
             dealer.terminal_sent = true;
             let mut recipients = 0;
             for recipient in 0..self.n {

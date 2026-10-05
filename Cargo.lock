@@ -1599,6 +1599,7 @@ name = "whcc"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "bincode",
  "config 0.1.0",
  "config 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
  "crypto 0.1.0",
@@ -1613,6 +1614,7 @@ dependencies = [
  "types 0.1.0",
  "types 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
  "util",
+ "wavid",
  "wbinaa",
  "wcss",
  "wgather",
@@ -1627,14 +1629,14 @@ name = "wiawvss"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "bincode",
  "crypto 0.1.0",
  "log",
  "serde",
  "types 0.1.0",
  "types 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
+ "wavid",
  "wcss",
- "wra",
- "wrbc",
  "zeroize",
 ]
 
