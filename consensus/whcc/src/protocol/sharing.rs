@@ -125,9 +125,10 @@ impl State {
                                 dealer.storage_terminal = Some(cert);
                             }
                             wavid::Retrieval::File(raw) => {
-                                let prepared = dealer.codec.prepare(&raw)?;
                                 anyhow::ensure!(
-                                    prepared.root == header.root,
+                                    raw.root() == header.root
+                                        && raw.coding_context() == dealer.codec.context
+                                        && raw.parameters() == dealer.codec.parameters(),
                                     "WAVID result root mismatch"
                                 );
                                 match Public::decode(&self.setup, &dealer.context, &raw) {
@@ -137,13 +138,13 @@ impl State {
                                             header_id: header.id(),
                                             evidence: Evidence::Format(certified::openings(
                                                 &dealer.codec,
-                                                &prepared,
+                                                &raw,
                                                 &[(0, 72)],
                                             )?),
                                         })
                                     }
                                 }
-                                dealer.prepared = Some(prepared);
+                                dealer.file = Some(raw);
                             }
                         }
                         dealer.recovery_dirty = true;

@@ -36,7 +36,18 @@ fn header_and_receipt_do_not_echo_before_matching_stored_event() {
     assert!(s.drain_actions().is_empty());
     s.rbc_event(wrbc::Event::Deliver {
         instance,
-        data: h.encode(),
+        data: wavid::Codec::with_params(
+            &node.weighted_membership().unwrap(),
+            instance,
+            s.params
+                .bound_node(&node, &s.setup)
+                .weighted_public_id("wrbc"),
+            Header::BYTES,
+            Parameters::CONTROL_CODING,
+        )
+        .unwrap()
+        .commit_file(h.encode())
+        .unwrap(),
     })
     .unwrap();
     assert!(!s.dealers[d].complete);
@@ -117,4 +128,48 @@ fn weighted_ready_thresholds_are_strict_and_do_not_require_local_echo() {
     assert!(relay.output.is_none());
     relay.receive(5, msg(wra::Kind::Ready(true)));
     assert_eq!(relay.output, Some(true));
+}
+
+#[test]
+fn bulk_coding_is_validated_separate_from_control_and_bound_to_context() {
+    let node = super::nodes(&[3; 4], 4, 20000).remove(0);
+    let default = Parameters::default();
+    let setup = default.setup(&node).unwrap();
+    for bytes in [32, 34, 128, 510, 4096] {
+        let p = Parameters {
+            bulk_block_bytes: bytes,
+            ..default.clone()
+        };
+        let state = State::new(&node, p.clone()).unwrap();
+        assert!(
+            state
+                .dealers
+                .iter()
+                .all(|d| d.codec.parameters().block_bytes == bytes)
+        );
+        assert!(state.avid_manifest().iter().all(|r|matches!(r,wavid::Request::Register{descriptor,..} if descriptor.coding.block_bytes==bytes)));
+        assert!(
+            state
+                .rbc_manifest()
+                .iter()
+                .all(|r| matches!(r,wrbc::Request::Register{coding,..} if coding.block_bytes==32))
+        );
+        if bytes != 32 {
+            assert_ne!(
+                p.context_id(&node, &setup),
+                default.context_id(&node, &setup)
+            );
+        }
+    }
+    for bytes in [0, 30, 33, 4098, usize::MAX] {
+        assert!(
+            Parameters {
+                bulk_block_bytes: bytes,
+                ..default.clone()
+            }
+            .validate(&node)
+            .is_err()
+        );
+    }
+    assert!(serde_json::from_str::<Parameters>(r#"{"bulk_block_bytes":"auto"}"#).is_err());
 }

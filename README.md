@@ -11,7 +11,6 @@ WHCC（Weighted Hash Common Coin）是基于 AX、WCSS 和 hash commitment 的�
 | consensus/whcc | context.rs 异步入口、共享完成、Gather、整向量 BinAA、恢复和聚合 |
 | recovery | 每方本地独立采样、配额计算、一次性 RBC 名单接纳 |
 | network | 私有份额及恢复消息的加密通信封装 |
-| vendor/sdc-util | 上游公共 TCP 传输层的小范围 Cargo 补丁 |
 | config | 直接重导出外部 Node，读取节点文件，检查子协议端口 |
 | types / crypto | 公开策略、实例标识、哈希及承诺 |
 | node | main.rs，配置检查、独立 synchronizer 与单次随机币运行 |
@@ -22,14 +21,14 @@ consensus 各 crate 的具体算法和状态机统一放在 src/protocol/。src/
 
 为方便科研测试，本项目自有结构体的字段统一使用 pub，便于直接构造、查看和修改状态；外部依赖保持原样。
 
-WRBC、WRA、WGather、WBinAA 直接使用 [Secure-Distributed-Computing-Protocols](https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols/tree/79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)，固定提交为 79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e。本项目未重新实现这些原语。运行时调用它们的 Context，通过 tokio channels 交互，各自拥有独立网络服务。
+WAVID、WRBC、WRA、WGather、WBinAA 直接使用 [Secure-Distributed-Computing-Protocols](https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols/tree/731e0b81166125ea756c5a047ab813ccb8af7111)，固定提交为 731e0b81166125ea756c5a047ab813ccb8af7111。本项目未重新实现这些原语。运行时调用它们的 Context，通过 tokio channels 交互，各自拥有独立网络服务。
 
-根 Cargo.toml 通过 [patch] 将上游 util 统一替换为 vendor/sdc-util：接收和发送连接（包括重连）开启 TCP_NODELAY，长度前缀与正文合并为一个缓冲帧写入，以消除小包分开写入引发的 TCP 等待。认证、ACK、重发、去重、消息格式和六类独立协议端口保持兼容；无需 LD_PRELOAD 或额外启动选项。补丁来源、范围与检查方式见 [UPSTREAM.txt](vendor/sdc-util/UPSTREAM.txt)。
+直接使用上游优化后的 util：TCP_NODELAY、持续补充的发送窗口、共享消息缓冲和有界内存队列。旧 vendor/sdc-util 补丁已移除。WAVID/WRBC 使用 v3 紧凑存储包、增量恢复和 ValidatedFile 按需证明；本项目固定 32 字节编码块。升级改变了编码上下文，所有参与方必须使用同一版本，旧承诺及证据不能复用。详见 [升级记录](docs/sdc-upgrade.md)。
 
 ## 验证与入口
 
 ~~~sh
-cargo test -p util --locked
+cargo test -p util --lib --locked
 cargo test --workspace --locked
 cargo clippy --workspace --all-targets --locked -- -D warnings
 cargo fmt --all -- --check

@@ -9,7 +9,7 @@ use bincode::Options;
 use crypto::{Block, hash, input_commitment, wire_commitment};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeSet;
-use wavid::{Codec, Prepared, SourceOpening, StorageFault};
+use wavid::{Codec, Prepared, SourceOpening, StorageFault, ValidatedFile};
 use wcss::Setup;
 
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -82,10 +82,11 @@ impl Layout {
     pub fn cipher(&self) -> usize {
         self.key() + 64
     }
-    pub fn prefix(s: &Setup, c: &Context) -> Vec<u8> {
-        let mut b = b"HWAX0001".to_vec();
-        b.extend(s.id());
-        b.extend(c.id());
+    pub fn prefix(s: &Setup, c: &Context) -> [u8; 72] {
+        let mut b = [0; 72];
+        b[..8].copy_from_slice(b"HWAX0001");
+        b[8..40].copy_from_slice(&s.id());
+        b[40..72].copy_from_slice(&c.id());
         b
     }
     pub fn receipt_ranges(&self, i: usize) -> Vec<(usize, usize)> {
@@ -138,20 +139,38 @@ impl Layout {
         Ok(r)
     }
 }
-fn blocks(ranges: &[(usize, usize)]) -> BTreeSet<usize> {
+fn blocks(block_bytes: usize, ranges: &[(usize, usize)]) -> BTreeSet<usize> {
     ranges
         .iter()
-        .flat_map(|&(offset, len)| offset / 32..(offset + len).div_ceil(32))
+        .flat_map(|&(offset, len)| offset / block_bytes..(offset + len).div_ceil(block_bytes))
         .collect()
+}
+/// Common proof interface for production lazy files and diagnostic eager encodings.
+pub trait ProofSource {
+    fn open(&self, codec: &Codec, block: usize) -> Result<SourceOpening>;
+}
+impl ProofSource for Prepared {
+    fn open(&self, codec: &Codec, block: usize) -> Result<SourceOpening> {
+        codec.source_opening(self, block)
+    }
+}
+impl ProofSource for ValidatedFile {
+    fn open(&self, codec: &Codec, block: usize) -> Result<SourceOpening> {
+        ensure!(
+            self.coding_context() == codec.context && self.parameters() == codec.parameters(),
+            "proof provider context"
+        );
+        self.open_source(block)
+    }
 }
 pub fn openings(
     codec: &Codec,
-    prepared: &Prepared,
+    prepared: &impl ProofSource,
     ranges: &[(usize, usize)],
 ) -> Result<Vec<SourceOpening>> {
-    blocks(ranges)
+    blocks(codec.parameters().block_bytes, ranges)
         .into_iter()
-        .map(|b| codec.source_opening(prepared, b))
+        .map(|b| prepared.open(codec, b))
         .collect()
 }
 fn authenticate(
@@ -160,7 +179,7 @@ fn authenticate(
     proofs: &[SourceOpening],
     ranges: &[(usize, usize)],
 ) -> bool {
-    let expected = blocks(ranges);
+    let expected = blocks(codec.parameters().block_bytes, ranges);
     proofs.len() == expected.len()
         && proofs.iter().zip(expected).all(|(p, b)| {
             p.stripe == b / codec.k
@@ -168,18 +187,23 @@ fn authenticate(
                 && codec.verify_source(h.root, p)
         })
 }
-fn field(codec: &Codec, proofs: &[SourceOpening], offset: usize, len: usize) -> Vec<u8> {
-    (offset..offset + len)
-        .map(|pos| {
-            let block = pos / 32;
-            proofs
-                .iter()
-                .find(|p| p.stripe == block / codec.k && p.fragment.index == block % codec.k)
-                .expect("authenticated field")
-                .fragment
-                .data[pos % 32]
-        })
-        .collect()
+fn field<const N: usize>(codec: &Codec, proofs: &[SourceOpening], offset: usize) -> [u8; N] {
+    let mut out = [0; N];
+    let block_bytes = codec.parameters().block_bytes;
+    let mut copied = 0;
+    while copied < N {
+        let pos = offset + copied;
+        let block = pos / block_bytes;
+        let proof = proofs
+            .iter()
+            .find(|p| p.stripe == block / codec.k && p.fragment.index == block % codec.k)
+            .expect("authenticated field");
+        let start = pos % block_bytes;
+        let take = (block_bytes - start).min(N - copied);
+        out[copied..copied + take].copy_from_slice(&proof.fragment.data[start..start + take]);
+        copied += take;
+    }
+    out
 }
 fn decode<T: serde::de::DeserializeOwned>(raw: &[u8], max: usize) -> Result<T> {
     ensure!(raw.len() <= max, "evidence size");
@@ -191,7 +215,8 @@ fn decode<T: serde::de::DeserializeOwned>(raw: &[u8], max: usize) -> Result<T> {
 }
 /// Bounds include complete Merkle paths, but never a dealer-sized vector of fields.
 pub fn max_evidence_bytes(codec: &Codec) -> usize {
-    256 * (codec.k + 32)
+    (256 + codec.parameters().block_bytes)
+        * (codec.k + 32)
         * (codec.m.next_power_of_two().trailing_zeros() as usize
             + codec.q.next_power_of_two().trailing_zeros() as usize
             + 8)
@@ -202,7 +227,12 @@ pub struct Receipt {
     pub fields: Vec<SourceOpening>,
 }
 impl Receipt {
-    pub fn new(s: &Setup, codec: &Codec, p: &Prepared, share: &PrivateShare) -> Result<Self> {
+    pub fn new(
+        s: &Setup,
+        codec: &Codec,
+        p: &impl ProofSource,
+        share: &PrivateShare,
+    ) -> Result<Self> {
         Ok(Self {
             share: share.encode().to_vec(),
             fields: openings(codec, p, &Layout::new(s).receipt_ranges(share.party))?,
@@ -232,13 +262,13 @@ impl Receipt {
         }
         let l = Layout::new(s);
         if !authenticate(codec, h, &self.fields, &l.receipt_ranges(party))
-            || field(codec, &self.fields, 0, 72) != Layout::prefix(s, c)
+            || field::<72>(codec, &self.fields, 0) != Layout::prefix(s, c)
         {
             return None;
         }
-        if field(codec, &self.fields, l.input(party), 32)
+        if field::<32>(codec, &self.fields, l.input(party))
             != input_commitment(&c.id(), party, &share.token)
-            || field(codec, &self.fields, l.wire(party + 2), 32)
+            || field::<32>(codec, &self.fields, l.wire(party + 2))
                 != wire_commitment(&c.id(), party + 2, &share.token)
         {
             return None;
@@ -285,24 +315,28 @@ pub fn verify_opening(
     }
     ax::generate(s, c, o)
         .ok()
-        .and_then(|(p, _)| codec.prepare(&p.encode()).ok())
-        .is_some_and(|p| p.root == h.root)
+        .and_then(|(p, _)| codec.commit_file(p.encode()).ok())
+        .is_some_and(|p| p.root() == h.root)
 }
-/// Rebuild only the fields needed by the local semantic predicate. RootFault
-/// is handled separately: a sparse transcript must NEVER be used for regeneration.
-fn sparse(
-    s: &Setup,
-    c: &Context,
-    codec: &Codec,
-    proofs: &[SourceOpening],
-    ranges: &[(usize, usize)],
-) -> Public {
-    let mut raw = vec![0; Public::encoded_len(s)];
-    raw[..72].copy_from_slice(&Layout::prefix(s, c));
-    for &(o, len) in ranges {
-        raw[o..o + len].copy_from_slice(&field(codec, proofs, o, len));
+/// The caller authenticates Layout::ranges before any field access.
+pub struct AuthenticatedFields<'a> {
+    pub layout: Layout,
+    pub codec: &'a Codec,
+    pub proofs: &'a [SourceOpening],
+}
+impl terminal::SemanticFields for AuthenticatedFields<'_> {
+    fn true_token(&self) -> Block {
+        field(self.codec, self.proofs, 72)
     }
-    Public::decode(s, c, &raw).expect("authenticated format")
+    fn input(&self, party: usize) -> Block {
+        field(self.codec, self.proofs, self.layout.input(party))
+    }
+    fn wire(&self, wire: usize) -> Block {
+        field(self.codec, self.proofs, self.layout.wire(wire))
+    }
+    fn gate(&self, gate: usize, branch: usize) -> Block {
+        field(self.codec, self.proofs, self.layout.gate(gate, branch))
+    }
 }
 pub fn verify(
     s: &Setup,
@@ -312,7 +346,8 @@ pub fn verify(
     cert: &Certificate,
     bits: usize,
 ) -> bool {
-    if h.setup_id != s.id()
+    if c.validate(s).is_err()
+        || h.setup_id != s.id()
         || h.context_id != c.id()
         || h.file_bytes != Public::encoded_len(s)
         || cert.header_id != h.id()
@@ -323,31 +358,43 @@ pub fn verify(
         Evidence::Success(o) => verify_opening(s, c, codec, h, o, bits),
         Evidence::Storage(f) => codec.verify_fault(h.root, f),
         Evidence::Format(p) => {
-            authenticate(codec, h, p, &[(0, 72)]) && field(codec, p, 0, 72) != Layout::prefix(s, c)
+            authenticate(codec, h, p, &[(0, 72)])
+                && field::<72>(codec, p, 0) != Layout::prefix(s, c)
         }
         Evidence::Semantic { fault, fields } => {
             let Ok(ranges) = Layout::new(s).ranges(s, fault) else {
                 return false;
             };
             if !authenticate(codec, h, fields, &ranges)
-                || field(codec, fields, 0, 72) != Layout::prefix(s, c)
+                || field::<72>(codec, fields, 0) != Layout::prefix(s, c)
             {
                 return false;
             }
-            let p = sparse(s, c, codec, fields, &ranges);
+            let p = AuthenticatedFields {
+                layout: Layout::new(s),
+                codec,
+                proofs: fields,
+            };
             if let Terminal::RootFault { token } = fault {
                 wire_commitment(&c.id(), s.circuit().output(), token)
-                    == p.base.wires[s.circuit().output()]
+                    == field::<32>(codec, fields, p.layout.wire(s.circuit().output()))
                     && !verify_opening(
                         s,
                         c,
                         codec,
                         h,
-                        &terminal::candidate(c, &p, s.circuit().output(), token),
+                        &terminal::candidate_fields(
+                            c,
+                            s.circuit().output(),
+                            token,
+                            &field(codec, fields, p.layout.key()),
+                            &field(codec, fields, p.layout.cipher()),
+                            &field(codec, fields, p.layout.cipher() + 32),
+                        ),
                         bits,
                     )
             } else {
-                terminal::verify(s, c, &p, fault)
+                terminal::verify_local_fault(s, c, &p, fault)
             }
         }
     }
@@ -356,7 +403,7 @@ pub fn certify(
     s: &Setup,
     codec: &Codec,
     h: &Header,
-    prepared: &Prepared,
+    prepared: &impl ProofSource,
     t: Terminal,
 ) -> Result<Certificate> {
     let evidence = match t {
@@ -370,4 +417,70 @@ pub fn certify(
         header_id: h.id(),
         evidence,
     })
+}
+
+/// A local recovery binds the exact decoded public bytes to the already validated
+/// WAVID file before reusing its full AX check. Remote certificates still use verify().
+pub struct RecoverySource<'a> {
+    pub setup: &'a Setup,
+    pub context: &'a Context,
+    pub codec: &'a Codec,
+    pub header: &'a Header,
+    pub public: &'a Public,
+    pub file: &'a ValidatedFile,
+}
+impl RecoverySource<'_> {
+    pub fn recover<'a>(
+        &self,
+        shares: impl IntoIterator<Item = &'a PrivateShare>,
+        bits: usize,
+    ) -> Result<Option<Certificate>> {
+        let Self {
+            setup,
+            context,
+            codec,
+            header,
+            public,
+            file,
+        } = *self;
+        ensure!(bits <= 256, "contribution bits");
+        ensure!(
+            header.setup_id == setup.id()
+                && header.context_id == context.id()
+                && header.file_bytes == Public::encoded_len(setup)
+                && file.len() == header.file_bytes
+                && file.root() == header.root
+                && file.coding_context() == codec.context
+                && file.parameters() == codec.parameters(),
+            "local recovery source binding"
+        );
+        let terminal = match terminal::recover_bounded_iter(setup, context, public, shares, bits) {
+            Ok(t) => t,
+            Err(types::Error::InsufficientShares) => return Ok(None),
+            Err(e) => return Err(e.into()),
+        };
+        ensure!(public.matches_encoded(file), "local recovery public bytes");
+        // Success was fully regenerated against the exact root-bound file.
+        // Local faults were checked against that same file; certify authenticates
+        // their fields. RootFault includes the output token and retains the full
+        // regeneration check above (or the public message-range failure).
+        Ok(Some(certify(setup, codec, header, file, terminal)?))
+    }
+}
+
+/// Safe transport budget for all file lengths accepted by WAVID, including a
+/// coding witness with k=n blocks and local semantic proofs (at most 13 openings).
+/// Includes a conservative 61-byte Packet/sealed envelope; not an optimizer.
+pub fn evidence_transport_bound(n: usize, block_bytes: usize) -> usize {
+    let proof_bytes = |leaves: usize| {
+        let depth = leaves.next_power_of_two().max(2).trailing_zeros() as usize;
+        16 + 32 * (depth + 2) + depth
+    };
+    let q = wavid::MAX_FILE_BYTES.div_ceil(n * block_bytes);
+    let pm = proof_bytes(4 * n);
+    let pq = proof_bytes(q);
+    let source = 56 + block_bytes + pm + pq;
+    let coding = 88 + pq + n * (16 + block_bytes + pm);
+    let semantic = 121 + 13 * source;
+    coding.max(semantic) + 61
 }

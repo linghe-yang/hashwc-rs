@@ -1,4 +1,4 @@
-use crypto::{Block, equal, expand, hash, random, xor};
+use crypto::{Block, equal, hash, random, xor};
 use types::{Error, Instance, Result};
 use wcss::Setup;
 use zeroize::{Zeroize, ZeroizeOnDrop, Zeroizing};
@@ -38,7 +38,13 @@ impl Context {
         &self.associated_data
     }
     pub fn validate(&self, setup: &Setup) -> Result<()> {
-        if Self::new(setup, self.instance.clone(), self.associated_data.clone())?.id != self.id {
+        if self.instance.dealer >= setup.circuit().policy().n()
+            || self.associated_data.len() > 65536
+            || hash(
+                b"context",
+                &[&setup.id(), &self.instance.encode(), &self.associated_data],
+            ) != self.id
+        {
             return Err(Error::Parameters("context/setup mismatch"));
         }
         Ok(())
@@ -61,7 +67,8 @@ impl std::fmt::Debug for PrivateShare {
 impl PrivateShare {
     pub const ENCODED_LEN: usize = 104;
     pub fn encode(&self) -> Zeroizing<Vec<u8>> {
-        let mut b = Zeroizing::new(self.setup_id.to_vec());
+        let mut b = Zeroizing::new(Vec::with_capacity(Self::ENCODED_LEN));
+        b.extend_from_slice(&self.setup_id);
         b.extend_from_slice(&self.context_id);
         b.extend_from_slice(&(self.party as u64).to_le_bytes());
         b.extend_from_slice(&self.token);
@@ -108,15 +115,53 @@ impl Public {
     pub fn encoded_len(setup: &Setup) -> usize {
         200 + wcss::Public::encoded_len(setup)
     }
+    pub fn byte_len(&self) -> usize {
+        200 + self.base.byte_len()
+    }
+    pub fn encoded_parts(&self) -> impl Iterator<Item = &[u8]> {
+        [
+            MAGIC.as_slice(),
+            self.setup_id.as_slice(),
+            self.context_id.as_slice(),
+        ]
+        .into_iter()
+        .chain(self.base.encoded_parts(&self.base.tag))
+        .chain([
+            self.ciphertext.as_slice(),
+            self.randomness_ciphertext.as_slice(),
+            self.commitment.as_slice(),
+        ])
+    }
     pub fn encode(&self) -> Vec<u8> {
-        let mut b = MAGIC.to_vec();
-        b.extend_from_slice(&self.setup_id);
-        b.extend_from_slice(&self.context_id);
-        b.extend_from_slice(&self.base.encode());
-        b.extend_from_slice(&self.ciphertext);
-        b.extend_from_slice(&self.randomness_ciphertext);
-        b.extend_from_slice(&self.commitment);
+        let mut b = Vec::with_capacity(self.byte_len());
+        for part in self.encoded_parts() {
+            b.extend_from_slice(part);
+        }
         b
+    }
+    /// Compare canonical bytes without allocating another bulk buffer.
+    pub fn matches_encoded(&self, bytes: &[u8]) -> bool {
+        if bytes.len() != self.byte_len() {
+            return false;
+        }
+        let mut offset = 0;
+        self.encoded_parts().fold(true, |same, part| {
+            let end = offset + part.len();
+            let matched = equal(part, &bytes[offset..end]);
+            offset = end;
+            same & matched
+        })
+    }
+    pub fn same_encoding(&self, other: &Self) -> bool {
+        if self.base.inputs.len() != other.base.inputs.len()
+            || self.base.wires.len() != other.base.wires.len()
+            || self.base.gates.len() != other.base.gates.len()
+        {
+            return false;
+        }
+        self.encoded_parts()
+            .zip(other.encoded_parts())
+            .fold(true, |same, (a, b)| same & equal(a, b))
     }
     pub fn decode(setup: &Setup, context: &Context, b: &[u8]) -> Result<Self> {
         if b.len() != Self::encoded_len(setup)
@@ -138,7 +183,7 @@ impl Public {
         })
     }
     pub fn digest(&self) -> Block {
-        hash(b"public", &[&self.encode()])
+        crypto::hash_with_tail(b"public", &[], self.byte_len(), self.encoded_parts())
     }
     fn validate(&self, setup: &Setup, context: &Context) -> Result<()> {
         context.validate(setup)?;
@@ -159,11 +204,12 @@ pub fn canonical_message(m: &Block) -> bool {
     m < &modulus
 }
 fn derive(context: &Context, opening: &Opening) -> ([u8; 64], Zeroizing<Block>, Zeroizing<Block>) {
-    let material = Zeroizing::new(expand(
+    let mut material = Zeroizing::new([0; 128]);
+    crypto::expand_into(
         b"AX/derive",
         &[&context.id, &opening.message, &opening.randomness],
-        128,
-    ));
+        &mut *material,
+    );
     (
         material[..64].try_into().unwrap(),
         Zeroizing::new(material[64..96].try_into().unwrap()),
@@ -243,8 +289,7 @@ pub fn verify_opening(
     if public.validate(setup, context).is_err() {
         return false;
     }
-    generate(setup, context, opening)
-        .is_ok_and(|(expected, _)| equal(&expected.encode(), &public.encode()))
+    generate(setup, context, opening).is_ok_and(|(expected, _)| expected.same_encoding(public))
 }
 pub fn reconstruct(
     setup: &Setup,

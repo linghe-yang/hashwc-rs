@@ -116,6 +116,8 @@ def policy_metadata(bench, node):
         configuration.update(byzantine_nodes=sorted(faults['byzantine_nodes']),
                              byzantine_behavior=faults['byzantine_behavior'],
                              fault_weight_threshold=faults['fault_weight_threshold'])
+    if node.get('bulk_block_bytes', 32) != 32:
+        configuration['bulk_block_bytes'] = node['bulk_block_bytes']
     shares = [w / total for w in weights]
     ordered = sorted(weights)
     n = len(weights)
@@ -133,7 +135,8 @@ def policy_metadata(bench, node):
                             coefficient_of_variation=(sum((n*s-1)**2 for s in shares)/n)**0.5,
                             gini=sum((2*i-n-1)*w for i, w in enumerate(ordered, 1)) / (n*total),
                             faulty_nodes=faulty, output_bits=node.get('output_bits', 1),
-                            rounding_bits=node['rounding_bits'], coverage_bits=node['coverage_bits']))
+                            rounding_bits=node['rounding_bits'], coverage_bits=node['coverage_bits'],
+                            bulk_block_bytes=node.get('bulk_block_bytes',32), control_block_bytes=32))
 
 
 def environment_metadata(debug):

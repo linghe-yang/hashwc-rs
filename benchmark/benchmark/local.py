@@ -27,7 +27,11 @@ class LocalBench:
                  output='console', results=None):
         try:
             self.bench_parameters = BenchParameters(bench_parameters_dict)
-            self.node_parameters = NodeParameters(node_parameters_dict)
+            from benchmark.coding import resolve_parameters
+            self.node_parameters, self.coding_report = resolve_parameters(
+                self.bench_parameters, NodeParameters(node_parameters_dict))
+            # Persist the resolved integer so later configuration generation never reselects.
+            self.bench_parameters.json['bulk_block_bytes'] = self.node_parameters.json['bulk_block_bytes']
             self.bench_parameters.ports(self.node_parameters)
             if output not in ('console', 'file'):
                 raise ConfigError('output must be console or file')
@@ -149,6 +153,15 @@ class LocalBench:
                 raise BenchError('Invalid node configuration diagnostic')
             checks.append(check)
         circuit = dict(gates=checks[0]['gates'], public_bytes=checks[0]['public_bytes'])
+        from benchmark.coding import geometry, cost
+        layout = geometry(tuple(self.weights), self.threshold, params['coverage_bits'])
+        prediction = cost(layout, params['bulk_block_bytes'])
+        if circuit != {k: layout[k] for k in circuit}:
+            raise BenchError('Python/Rust circuit geometry mismatch')
+        if any(c.get('bulk_block_bytes') != params['bulk_block_bytes'] or c.get('control_block_bytes') != 32
+               or c.get('sampling_quotas') != layout['quotas'] or c.get('storage_bundle_bytes') != prediction['bundle_bytes']
+               for c in checks):
+            raise BenchError('Python/Rust coding geometry mismatch')
         if any(c['gates'] != circuit['gates'] or c['public_bytes'] != circuit['public_bytes'] for c in checks):
             raise BenchError('Parties disagree on circuit dimensions')
         write_json(directory/'run.json', dict(schema_version=2, session=bytes(config['session_id']).hex(), epoch=params['epoch'],
@@ -222,6 +235,8 @@ class LocalBench:
         Print.info('Artifacts: {}'.format(directory))
         resolved = dict(bench_params=self.bench_parameters.json, node_params=self.node_parameters.json)
         write_json(directory/'resolved-policy.json', resolved)
+        if self.coding_report is not None:
+            write_json(directory/'coding-selection.json', self.coding_report)
         (directory/'policy.json').write_text(self.policy_source or json.dumps(resolved, indent=2)+'\n', encoding='utf8')
         try:
             Print.info('Compiling node (release, shared executable)...')
@@ -231,12 +246,23 @@ class LocalBench:
             build = dict(profile='release', rustc=subprocess.check_output(['rustc', '--version'], text=True).strip())
             build['binary_sha256'] = hashlib.sha256((PathMaker.binary_path()/'node').read_bytes()).hexdigest()
             build['cargo_lock_sha256'] = hashlib.sha256((PathMaker.ROOT/'Cargo.lock').read_bytes()).hexdigest()
-            build['implementation'] = 'compact-header-striped-wavid-v1'
-            build['transport'] = 'sdc-util-tcp-nodelay-coalesced-shared-v2'
+            build['implementation'] = 'compact-header-striped-wavid-v4-coding'
+            build['transport'] = 'sdc-util-windowed-compact-v3'
+            build['coding_block_bytes'] = self.node_parameters.json['bulk_block_bytes']
+            build['control_coding_block_bytes'] = 32
+            packages = json.loads(subprocess.check_output(
+                ['cargo', 'metadata', '--locked', '--format-version', '1'],
+                cwd=PathMaker.ROOT, text=True))['packages']
+            transport = next(p for p in packages if p['name'] == 'util' and
+                             (p.get('source') or '').startswith(
+                                 'git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git'))
+            build['sdc_source'] = transport['source']
+            build['sdc_revision'] = transport['source'].rsplit('#', 1)[1]
+            transport_root = Path(transport['manifest_path']).parent
             build['transport_source_sha256'] = fingerprint({
-                str(p.relative_to(PathMaker.ROOT)): hashlib.sha256(p.read_bytes()).hexdigest()
-                for folder in ['vendor/sdc-util/src', 'network/src']
-                for p in sorted((PathMaker.ROOT/folder).rglob('*.rs'))})
+                prefix + '/' + str(p.relative_to(folder)): hashlib.sha256(p.read_bytes()).hexdigest()
+                for prefix, folder in [('sdc-util', transport_root), ('network', PathMaker.ROOT/'network')]
+                for p in sorted((folder/'src').rglob('*.rs'))})
             build['benchmark_source_sha256'] = fingerprint({
                 str(p.relative_to(PathMaker.BENCHMARK)): hashlib.sha256(p.read_bytes()).hexdigest()
                 for p in sorted((PathMaker.BENCHMARK/'benchmark').glob('*.py'))})

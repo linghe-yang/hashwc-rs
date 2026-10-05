@@ -41,18 +41,26 @@ impl Public {
             && self.wires.len() == setup.circuit.nodes()
             && self.gates.len() == setup.circuit.gates().len()
     }
+    pub fn byte_len(&self) -> usize {
+        96 + 32 * (self.inputs.len() + self.wires.len()) + 64 * self.gates.len()
+    }
+    pub fn encoded_parts<'a>(&'a self, tag: &'a Block) -> impl Iterator<Item = &'a [u8]> {
+        std::iter::once(&self.true_token)
+            .chain(&self.inputs)
+            .chain(&self.wires)
+            .chain(self.gates.iter().flat_map(|pair| pair.iter()))
+            .chain([&self.encrypted_key, tag])
+            .map(|block| block.as_slice())
+    }
+    pub fn encode_into(&self, out: &mut Vec<u8>) {
+        out.reserve(self.byte_len());
+        for part in self.encoded_parts(&self.tag) {
+            out.extend_from_slice(part);
+        }
+    }
     pub fn encode(&self) -> Vec<u8> {
-        let mut out = self.true_token.to_vec();
-        for x in self.inputs.iter().chain(&self.wires) {
-            out.extend_from_slice(x);
-        }
-        for pair in &self.gates {
-            for x in pair {
-                out.extend_from_slice(x);
-            }
-        }
-        out.extend_from_slice(&self.encrypted_key);
-        out.extend_from_slice(&self.tag);
+        let mut out = Vec::with_capacity(self.byte_len());
+        self.encode_into(&mut out);
         out
     }
     pub fn decode(setup: &Setup, bytes: &[u8]) -> Result<Self> {
@@ -74,9 +82,12 @@ impl Public {
     }
 }
 fn transcript_tag(context: &Block, root: &Block, public: &Public) -> Block {
-    let mut p = public.clone();
-    p.tag = [0; 32];
-    hash(b"transcript", &[context, root, &p.encode()])
+    crypto::hash_with_tail(
+        b"transcript",
+        &[context, root],
+        public.byte_len(),
+        public.encoded_parts(&[0; 32]),
+    )
 }
 /// Deterministic sharing is internal to AX. The seed must stay private.
 pub fn share(
@@ -95,7 +106,7 @@ pub fn share(
         true_token: tokens[1],
         inputs: vec![],
         wires: vec![],
-        gates: vec![],
+        gates: Vec::with_capacity(c.gates().len()),
         encrypted_key: [0; 32],
         tag: [0; 32],
     };

@@ -1,6 +1,6 @@
 use crate::{
     Parameters,
-    aggregate::aggregate,
+    aggregate::aggregate_borrowed,
     msg::{Action, Event, PRIVATE_TOKEN},
 };
 use anyhow::{Result, ensure};
@@ -21,7 +21,7 @@ pub struct Dealer {
     pub stored_root: Option<[u8; 32]>,
     pub echoed: bool,
     pub retrieving: bool,
-    pub prepared: Option<wavid::Prepared>,
+    pub file: Option<wavid::ValidatedFile>,
     pub storage_terminal: Option<wiawvss::certified::Certificate>,
     pub receipt: Option<PrivateShare>,
     pub pending_receipt: Option<Receipt>,
@@ -75,16 +75,17 @@ impl State {
                     )?,
                     public: None,
                     header: None,
-                    codec: Arc::new(wavid::Codec::new(
+                    codec: Arc::new(wavid::Codec::with_params(
                         &membership,
                         sdc_types::InstanceId::new(params.epoch, Some(dealer), 0),
                         avid_public_id,
                         Public::encoded_len(&setup),
+                        params.bulk_coding(),
                     )?),
                     stored_root: None,
                     echoed: false,
                     retrieving: false,
-                    prepared: None,
+                    file: None,
                     storage_terminal: None,
                     receipt: None,
                     pending_receipt: None,
@@ -145,10 +146,12 @@ impl State {
             .flat_map(|d| {
                 [
                     wrbc::Request::Register {
+                        coding: Parameters::CONTROL_CODING,
                         instance: self.instance(d, 0),
                         file_bytes: Header::BYTES,
                     },
                     wrbc::Request::Register {
+                        coding: Parameters::CONTROL_CODING,
                         instance: self.instance(d, 1),
                         file_bytes: self.sampling.encoded_len(d),
                     },
@@ -161,6 +164,7 @@ impl State {
             .map(|d| wavid::Request::Register {
                 instance: self.instance(d, 0),
                 descriptor: wavid::Descriptor {
+                    coding: self.params.bulk_coding(),
                     file_bytes: Public::encoded_len(&self.setup),
                     root: None,
                     retrievers: vec![],
@@ -198,8 +202,8 @@ impl State {
         ensure!(!self.started, "common coin invocation already started");
         let declaration = self.sampling.encode(self.context_id, self.id, &list)?;
         let bulk = public.encode();
-        let prepared = self.dealers[self.id].codec.prepare(&bulk)?;
-        let header = Header::new(&self.setup, &self.dealers[self.id].context, prepared.root);
+        let prepared = self.dealers[self.id].codec.commit_file(bulk.clone())?;
+        let header = Header::new(&self.setup, &self.dealers[self.id].context, prepared.root());
         self.started = true;
         self.actions.push(Action::Gather(wgather::Request::Start {
             instance: self.global(),
@@ -293,24 +297,18 @@ impl State {
         self.recovery()?;
         if self.coin.is_none()
             && let Some(coefficients) = &self.coefficients
-        {
-            let values = self
-                .dealers
-                .iter()
-                .map(|d| d.value.clone())
-                .collect::<Vec<_>>();
-            if let Some(value) = aggregate(
+            && let Some(value) = aggregate_borrowed(
                 coefficients,
-                &values,
+                self.dealers.iter().map(|d| d.value.as_ref()),
                 self.params.rounding_bits,
                 self.params.output_bits,
-            )? {
-                self.coin = Some(value);
-                self.events.push(Event::Coin {
-                    epoch: self.params.epoch,
-                    value,
-                });
-            }
+            )?
+        {
+            self.coin = Some(value);
+            self.events.push(Event::Coin {
+                epoch: self.params.epoch,
+                value,
+            });
         }
         Ok(())
     }

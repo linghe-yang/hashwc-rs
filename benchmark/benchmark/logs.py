@@ -126,8 +126,14 @@ class LogParser:
                 run_path = directory/'run-{:03}'.format(index)
                 manifest = json.loads((run_path/'run.json').read_text(encoding='utf8'))
                 services = {'wrbc', 'wra', 'wgather', 'wbinaa', 'private', 'recovery'}
-                if manifest['build'].get('implementation') == 'compact-header-striped-wavid-v1':
+                if manifest['build'].get('implementation') in ('compact-header-striped-wavid-v1', 'compact-header-striped-wavid-v2', 'compact-header-striped-wavid-v3-cpu', 'compact-header-striped-wavid-v4-coding'):
                     services.add('wavid')
+                if manifest['build'].get('implementation') == 'compact-header-striped-wavid-v4-coding':
+                    block = config['node_params'].get('bulk_block_bytes', 32)
+                    if (type(block) is not int or not 32 <= block <= 4096 or block % 2
+                            or manifest['build'].get('coding_block_bytes') != block
+                            or manifest['build'].get('control_coding_block_bytes') != 32):
+                        raise ParseError('Invalid or inconsistent coding parameters')
                 session = manifest['session']
                 epoch = config['node_params']['epoch'] + index-1
                 if session in sessions or manifest['epoch'] != epoch or manifest['active_parties'] != active:

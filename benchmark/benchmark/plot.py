@@ -21,7 +21,7 @@ class PlotError(ValueError):
 
 
 FIELDS = {'total_weight', 'protocol', 'experiment_id', 'nodes', 'weight_profile', 'weight_scale', 'fault_case',
-          'output_bits', 'rounding_bits', 'coverage_bits', 'case_name'}
+          'output_bits', 'rounding_bits', 'coverage_bits', 'case_name', 'bulk_block_bytes'}
 METRICS = {
     'latency_ms': ('latency_ms', 'Coin latency (ms)', 1),
     'avg_sent_bytes_per_honest_party': ('avg_honest_sent_bytes', 'Sent per honest party / coin (MiB)', 2**20),
@@ -54,7 +54,7 @@ def dimensions(data):
                 experiment_id=meta.get('experiment_id'), nodes=bench['nodes'], total_weight=sum(bench['weights']), case_name=bench['name'],
                 weight_profile=(meta.get('weight_profile') or {}).get('id'), weight_scale=meta.get('weight_scale'),
                 fault_case=fault, output_bits=node.get('output_bits', 1),
-                rounding_bits=node['rounding_bits'], coverage_bits=node['coverage_bits'])
+                rounding_bits=node['rounding_bits'], coverage_bits=node['coverage_bits'], bulk_block_bytes=node.get('bulk_block_bytes',32))
 
 
 def matches(dims, filters):
@@ -349,7 +349,7 @@ class Ploter:
                 counts = sorted({len(p['runs']) for p in report['points']})
                 security = report['output_bits']
                 note = '{}-bit coin | {} runs/point | error bars: {}\n'.format(security, '/'.join(map(str, counts)), params['error_bar'].replace('_', '–'))
-                label = 'Header WRBC + striped WAVID' if report.get('implementation') == 'compact-header-striped-wavid-v1' else 'Full public-record WRBC'
+                label = 'Header WRBC + striped WAVID' if report.get('implementation') in ('compact-header-striped-wavid-v1', 'compact-header-striped-wavid-v2', 'compact-header-striped-wavid-v3-cpu', 'compact-header-striped-wavid-v4-coding') else 'Full public-record WRBC'
                 note += label + '; local multiprocess; quorum STOP.\n'
                 note += 'Recovery stress is bounded, not a proven global worst case.'
                 fig.text(0.1, 0.035, note, fontsize=7, color='#555555')

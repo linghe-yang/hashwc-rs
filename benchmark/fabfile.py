@@ -104,3 +104,14 @@ def matrix(ctx, nodes='4,16,31,46,64', scales='1,10,100', mean_weight=300, runs=
     except (ConfigError, OSError, ValueError, KeyError) as e:
         Print.error(e)
         raise Exit(code=1)
+
+@task(auto_shortflags=False)
+def coding(ctx, policy, output, report=None):
+    """Select bulk block sizes in pure Python and write a policy plus cost report."""
+    from benchmark.coding import optimize_policy
+    import json
+    try:
+        print(json.dumps(optimize_policy(policy, output, report), indent=2))
+    except (ConfigError, OSError, ValueError) as e:
+        Print.error(e)
+        raise Exit(code=1)

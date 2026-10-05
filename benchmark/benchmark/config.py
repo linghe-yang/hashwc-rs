@@ -49,11 +49,13 @@ def write_json(path, data):
 
 class NodeParameters:
     def __init__(self, data):
-        defaults = dict(epoch=0, coverage_bits=40, rounding_bits=64, output_bits=1, port_stride=None)
+        defaults = dict(epoch=0, coverage_bits=40, rounding_bits=64, output_bits=1, port_stride=None, bulk_block_bytes=32)
         keys(data, defaults, 'node_params')
         self.json = dict(defaults, **data)
         for key, low, high in [('epoch', 0, 2**64-1), ('coverage_bits', 1, 256), ('rounding_bits', 1, 252), ('output_bits', 1, 252)]:
             self.json[key] = integer(self.json[key], key, low, high)
+        from benchmark.coding import block_size
+        self.json['bulk_block_bytes'] = block_size(self.json['bulk_block_bytes'], allow_auto=True)
         if self.json['rounding_bits'] + self.json['output_bits'] + 1 > 254:
             raise ConfigError('AX capacity: rounding_bits + output_bits + 1 must be <= 254')
         if self.json['port_stride'] is not None:
@@ -67,13 +69,16 @@ class BenchParameters:
     def __init__(self, data):
         defaults = dict(protocol='whcc', faults=0, duration=60, runs=1,
                         base_port=20000, startup_timeout=30, settle_time=0, sync_port=None,
-                        byzantine_nodes=[], byzantine_behavior='recovery-stress', fault_weight_threshold=None)
+                        byzantine_nodes=[], byzantine_behavior='recovery-stress', fault_weight_threshold=None, bulk_block_bytes=None)
         keys(data, set(defaults) | {'name', 'nodes', 'weights', 'threshold', 'faulty_nodes', 'metadata', 'threshold_mode'}, 'bench_params/case')
         self.json = dict(defaults, **copy.deepcopy(data))
         if self.json['protocol'] == 'commoncoin':
             self.json['protocol'] = 'whcc'
         if self.json['protocol'] != 'whcc':
             raise ConfigError('Only whcc is currently supported')
+        if self.json['bulk_block_bytes'] is not None:
+            from benchmark.coding import block_size
+            self.json['bulk_block_bytes'] = block_size(self.json['bulk_block_bytes'], allow_auto=True)
         self.protocol = self.json['protocol']
         n = integer(data.get('nodes'), 'nodes', 2, 512)
         self.nodes = [n]  # Keep the legacy list-shaped attribute.
@@ -175,13 +180,13 @@ class Policy:
         keys(self.json, ['bench_params', 'node_params', 'cases', 'metadata'], 'policy')
         self.node_parameters = NodeParameters(self.json.get('node_params', {}))
         base = self.json.get('bench_params', {})
-        keys(base, ['protocol', 'faults', 'duration', 'runs', 'base_port', 'startup_timeout', 'settle_time', 'sync_port', 'byzantine_nodes', 'byzantine_behavior', 'fault_weight_threshold'], 'bench_params')
+        keys(base, ['protocol', 'faults', 'duration', 'runs', 'base_port', 'startup_timeout', 'settle_time', 'sync_port', 'byzantine_nodes', 'byzantine_behavior', 'fault_weight_threshold', 'bulk_block_bytes'], 'bench_params')
         cases = self.json.get('cases')
         if not isinstance(cases, list) or not cases:
             raise ConfigError('Policy needs at least one case')
         self.cases = []
         for case in cases:
-            keys(case, ['name', 'nodes', 'weights', 'threshold', 'faults', 'faulty_nodes', 'runs', 'metadata', 'byzantine_nodes', 'byzantine_behavior', 'fault_weight_threshold'], 'case')
+            keys(case, ['name', 'nodes', 'weights', 'threshold', 'faults', 'faulty_nodes', 'runs', 'metadata', 'byzantine_nodes', 'byzantine_behavior', 'fault_weight_threshold', 'bulk_block_bytes'], 'case')
             metadata = self.json.get('metadata', {})
             keys(metadata, ['experiment_id', 'experiment_axis', 'weight_profile', 'weight_scale', 'generation', 'fault_selection'], 'metadata')
             case_metadata = case.get('metadata', {})
@@ -203,7 +208,8 @@ class LocalCommittee:
     """Generate JSON consumed directly by external config::Node."""
     def __init__(self, bench_parameters, node_parameters):
         self.bench = bench_parameters
-        self.parameters = node_parameters
+        from benchmark.coding import resolve_parameters
+        self.parameters, self.coding_report = resolve_parameters(bench_parameters, node_parameters)
         self.ports = self.bench.ports(self.parameters)
         self.session_id = list(secrets.token_bytes(32))
 
@@ -230,6 +236,8 @@ class LocalCommittee:
         write_json(directory/'.synchronizer.json', sync_node)
         (directory/'.synchronizer.json').chmod(0o600)
         self.parameters.print(directory / PathMaker.parameters_file())
+        if self.coding_report is not None:
+            write_json(directory / "coding-selection.json", self.coding_report)
 
 
 if __name__ == '__main__':

@@ -221,30 +221,33 @@ class LogTests(unittest.TestCase):
             self.assertEqual(before, {path: path.read_bytes() for path in before})
 
     def test_striped_build_requires_wavid_and_preserves_implementation(self):
-        with tempfile.TemporaryDirectory() as directory:
-            run = self.fixture(directory)
-            path = run/'run.json'
-            manifest = json.loads(path.read_text())
-            manifest['build']['implementation'] = 'compact-header-striped-wavid-v1'
-            write_json(path, manifest)
-            with self.assertRaises(ParseError):
-                LogParser.process(directory)
-            path = run/'bandwidth.json'
-            bandwidth = json.loads(path.read_text())
-            bandwidth['per_service_sent_bytes']['wavid'] = 400
-            bandwidth['total_sent_bytes'] += 400
-            for party in bandwidth['per_party_sent_bytes'].values():
-                party['wavid'] = 100
-            write_json(path, bandwidth)
-            for path in (run/'logs').glob('primary-*.log'):
-                events = [json.loads(line) for line in path.read_text().splitlines()]
-                counter = next(e for e in events if e['kind'] == 'bandwidth')
-                counter['per_service_sent_bytes']['wavid'] = 100
-                counter['total_sent_bytes'] += 100
-                path.write_text(''.join(json.dumps(e)+'\n' for e in events))
-            parsed = LogParser.process(directory).data
-            self.assertEqual(parsed['measurement']['implementation'], 'compact-header-striped-wavid-v1')
-            self.assertEqual(parsed['summary']['total_sent_bytes']['mean'], 1000)
+        for implementation in ('compact-header-striped-wavid-v1', 'compact-header-striped-wavid-v2', 'compact-header-striped-wavid-v3-cpu', 'compact-header-striped-wavid-v4-coding'):
+            with tempfile.TemporaryDirectory() as directory:
+                run = self.fixture(directory)
+                path = run/'run.json'
+                manifest = json.loads(path.read_text())
+                manifest['build']['implementation'] = implementation
+                if implementation == 'compact-header-striped-wavid-v4-coding':
+                    manifest['build'].update(coding_block_bytes=32, control_coding_block_bytes=32)
+                write_json(path, manifest)
+                with self.assertRaises(ParseError):
+                    LogParser.process(directory)
+                path = run/'bandwidth.json'
+                bandwidth = json.loads(path.read_text())
+                bandwidth['per_service_sent_bytes']['wavid'] = 400
+                bandwidth['total_sent_bytes'] += 400
+                for party in bandwidth['per_party_sent_bytes'].values():
+                    party['wavid'] = 100
+                write_json(path, bandwidth)
+                for path in (run/'logs').glob('primary-*.log'):
+                    events = [json.loads(line) for line in path.read_text().splitlines()]
+                    counter = next(e for e in events if e['kind'] == 'bandwidth')
+                    counter['per_service_sent_bytes']['wavid'] = 100
+                    counter['total_sent_bytes'] += 100
+                    path.write_text(''.join(json.dumps(e)+'\n' for e in events))
+                parsed = LogParser.process(directory).data
+                self.assertEqual(parsed['measurement']['implementation'], implementation)
+                self.assertEqual(parsed['summary']['total_sent_bytes']['mean'], 1000)
 
     def test_summary_and_result_files_have_no_throughput(self):
         with tempfile.TemporaryDirectory() as directory:

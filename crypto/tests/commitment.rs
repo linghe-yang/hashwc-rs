@@ -32,3 +32,33 @@ fn domains_indices_lengths_and_tuple_boundaries_are_distinct() {
         expand(b"test", &[b"a"], 64)[..32]
     );
 }
+
+#[test]
+fn streamed_tail_preserves_part_boundaries_and_empty_parts() {
+    let bytes = (0..=255).collect::<Vec<u8>>();
+    for size in [1, 7, 32, 63, 256] {
+        assert_eq!(
+            hash_with_tail(
+                b"transcript",
+                &[b"context", b"root"],
+                bytes.len(),
+                bytes.chunks(size)
+            ),
+            hash(b"transcript", &[b"context", b"root", &bytes])
+        );
+    }
+    assert_eq!(
+        hash_with_tail(b"empty", &[b""], 0, std::iter::empty()),
+        hash(b"empty", &[b"", b""])
+    );
+    assert_ne!(
+        hash_with_tail(b"empty", &[], 0, std::iter::empty()),
+        hash(b"empty", &[])
+    );
+    let mut output = [0; 128];
+    expand_into(b"AX/derive", &[&[1; 32], &[2; 32], &[3; 32]], &mut output);
+    assert_eq!(
+        output.as_slice(),
+        expand(b"AX/derive", &[&[1; 32], &[2; 32], &[3; 32]], 128)
+    );
+}

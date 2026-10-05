@@ -1,6 +1,5 @@
 [workspace]
 resolver = "3"
-exclude = ["vendor/sdc-util"]
 members = ["types", "crypto", "config", "consensus/wcss", "consensus/wiawvss", "consensus/whcc", "recovery", "network", "node"]
 
 [workspace.package]
@@ -29,10 +28,10 @@ log = "0.4"
 env_logger = "0.11"
 clap = { version = "4.5", features = ["derive"] }
 # Pin the shared primitive implementation; do not copy its protocol logic here.
-sdc-types = { package = "types", git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e" }
-wavid = { git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e" }
-wrbc = { git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e" }
-wra = { git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e" }
+sdc-types = { package = "types", git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "731e0b81166125ea756c5a047ab813ccb8af7111" }
+wavid = { git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "731e0b81166125ea756c5a047ab813ccb8af7111" }
+wrbc = { git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "731e0b81166125ea756c5a047ab813ccb8af7111" }
+wra = { git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "731e0b81166125ea756c5a047ab813ccb8af7111" }
 
 whcc = { path = "consensus/whcc" }
 recovery = { path = "recovery" }
@@ -41,13 +40,9 @@ tokio = { version = "1", features = ["full"] }
 num-rational = "0.4"
 bincode = "1.3"
 aes-gcm = "0.10"
-sdc-config = { package = "config", git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e" }
-sdc-util = { package = "util", git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e" }
-wgather = { package = "wgather", git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e" }
-wbinaa = { package = "wbinaa", git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e" }
+sdc-config = { package = "config", git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "731e0b81166125ea756c5a047ab813ccb8af7111" }
+sdc-util = { package = "util", git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "731e0b81166125ea756c5a047ab813ccb8af7111" }
+wgather = { package = "wgather", git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "731e0b81166125ea756c5a047ab813ccb8af7111" }
+wbinaa = { package = "wbinaa", git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "731e0b81166125ea756c5a047ab813ccb8af7111" }
 
 crypto-bigint = { version = "0.7.5", default-features = false }
-
-# Apply the same transport fix to all upstream primitive services.
-[patch."https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git"]
-util = { path = "vendor/sdc-util" }

@@ -10,6 +10,20 @@ pub fn aggregate(
     rounding_bits: u32,
     output_bits: u32,
 ) -> Result<Option<Coin>> {
+    aggregate_borrowed(
+        coefficients,
+        values.iter().map(Option::as_ref),
+        rounding_bits,
+        output_bits,
+    )
+}
+/// Borrow dealer values in the event loop instead of cloning all large integers.
+pub fn aggregate_borrowed<'a>(
+    coefficients: &[Dyadic],
+    values: impl ExactSizeIterator<Item = Option<&'a BigUint>>,
+    rounding_bits: u32,
+    output_bits: u32,
+) -> Result<Option<Coin>> {
     ensure!(
         !coefficients.is_empty() && coefficients.len() == values.len(),
         "vector dimensions"

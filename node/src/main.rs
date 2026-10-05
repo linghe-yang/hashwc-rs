@@ -101,9 +101,19 @@ async fn main() -> anyhow::Result<()> {
                 Protocol::Whcc => "whcc",
                 Protocol::Wiawvss => "wiawvss",
             };
+            let membership = node.weighted_membership()?;
+            let codec = wavid::Codec::with_params(
+                &membership,
+                sdc_types::InstanceId::new(p.epoch, Some(0), 0),
+                p.bound_node(&node, &setup).weighted_public_id("wavid"),
+                wiawvss::Public::encoded_len(&setup),
+                p.bulk_coding(),
+            )?;
+            let sampling = recovery::Parameters::new(setup.circuit().policy(), p.coverage_bits)?;
             println!(
                 "{}",
-                serde_json::json!({"protocol":protocol,"party":node.id,"parties":node.num_nodes,"gates":setup.circuit().gates().len(),"public_bytes":wiawvss::Public::encoded_len(&setup),"port_stride":ports.stride(),"status":"valid","output_bits":p.output_bits})
+                serde_json::json!({"bulk_block_bytes":p.bulk_block_bytes,"control_block_bytes":Parameters::CONTROL_CODING.block_bytes,
+                    "sampling_quotas":sampling.quotas,"storage_bundle_bytes":(0..node.num_nodes).map(|i|codec.bundle_bytes(i)).collect::<Vec<_>>(),"protocol":protocol,"party":node.id,"parties":node.num_nodes,"gates":setup.circuit().gates().len(),"public_bytes":wiawvss::Public::encoded_len(&setup),"port_stride":ports.stride(),"status":"valid","output_bits":p.output_bits})
             );
         }
         Command::Run {

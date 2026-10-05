@@ -263,7 +263,7 @@ name = "config"
 version = "0.1.0"
 dependencies = [
  "anyhow",
- "config 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
+ "config 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111)",
  "serde",
  "serde_json",
  "types 0.1.0",
@@ -272,17 +272,17 @@ dependencies = [
 [[package]]
 name = "config"
 version = "0.1.0"
-source = "git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e#79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e"
+source = "git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111#731e0b81166125ea756c5a047ab813ccb8af7111"
 dependencies = [
  "bincode",
- "crypto 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
+ "crypto 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111)",
  "fnv",
  "log",
  "serde",
  "serde_json",
  "serde_yaml",
  "toml",
- "types 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
+ "types 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111)",
 ]
 
 [[package]]
@@ -338,7 +338,7 @@ dependencies = [
 [[package]]
 name = "crypto"
 version = "0.1.0"
-source = "git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e#79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e"
+source = "git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111#731e0b81166125ea756c5a047ab813ccb8af7111"
 dependencies = [
  "aes",
  "aes-gcm",
@@ -743,12 +743,12 @@ dependencies = [
  "aes-gcm",
  "anyhow",
  "bincode",
- "config 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
+ "config 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111)",
  "crypto 0.1.0",
  "getrandom 0.4.3",
  "serde",
  "tokio",
- "types 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
+ "types 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111)",
  "util",
  "zeroize",
 ]
@@ -764,9 +764,12 @@ dependencies = [
  "env_logger",
  "log",
  "num-bigint 0.4.8",
+ "recovery",
  "serde",
  "serde_json",
  "tokio",
+ "types 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111)",
+ "wavid",
  "wcss",
  "whcc",
  "wiawvss",
@@ -1457,12 +1460,12 @@ dependencies = [
 [[package]]
 name = "types"
 version = "0.1.0"
-source = "git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e#79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e"
+source = "git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111#731e0b81166125ea756c5a047ab813ccb8af7111"
 dependencies = [
  "base64",
  "bincode",
  "bytes",
- "crypto 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
+ "crypto 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111)",
  "fnv",
  "linked-hash-map",
  "log",
@@ -1501,12 +1504,13 @@ checksum = "06abde3611657adf66d383f00b093d7faecc7fa57071cce2578660c9f1010821"
 [[package]]
 name = "util"
 version = "0.1.0"
+source = "git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111#731e0b81166125ea756c5a047ab813ccb8af7111"
 dependencies = [
  "anyhow",
  "bincode",
  "bytes",
- "config 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
- "crypto 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
+ "config 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111)",
+ "crypto 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111)",
  "log",
  "serde",
  "serde_json",
@@ -1514,7 +1518,7 @@ dependencies = [
  "tokio",
  "tokio-util",
  "toml",
- "types 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
+ "types 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111)",
 ]
 
 [[package]]
@@ -1532,37 +1536,37 @@ checksum = "ccf3ec651a847eb01de73ccad15eb7d99f80485de043efb2f370cd654f4ea44b"
 [[package]]
 name = "wavid"
 version = "0.1.0"
-source = "git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e#79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e"
+source = "git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111#731e0b81166125ea756c5a047ab813ccb8af7111"
 dependencies = [
  "anyhow",
  "bincode",
- "config 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
- "crypto 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
+ "config 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111)",
+ "crypto 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111)",
  "log",
  "num-bigint 0.2.6",
  "num-traits",
  "reed-solomon-erasure",
  "serde",
  "tokio",
- "types 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
+ "types 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111)",
  "util",
 ]
 
 [[package]]
 name = "wbinaa"
 version = "0.1.0"
-source = "git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e#79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e"
+source = "git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111#731e0b81166125ea756c5a047ab813ccb8af7111"
 dependencies = [
  "anyhow",
  "bincode",
- "config 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
- "crypto 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
+ "config 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111)",
+ "crypto 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111)",
  "log",
  "num-bigint 0.2.6",
  "num-traits",
  "serde",
  "tokio",
- "types 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
+ "types 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111)",
  "util",
 ]
 
@@ -1579,18 +1583,18 @@ dependencies = [
 [[package]]
 name = "wgather"
 version = "0.1.0"
-source = "git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e#79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e"
+source = "git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111#731e0b81166125ea756c5a047ab813ccb8af7111"
 dependencies = [
  "anyhow",
  "bincode",
- "config 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
- "crypto 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
+ "config 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111)",
+ "crypto 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111)",
  "log",
  "num-bigint 0.2.6",
  "num-traits",
  "serde",
  "tokio",
- "types 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
+ "types 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111)",
  "util",
 ]
 
@@ -1601,7 +1605,7 @@ dependencies = [
  "anyhow",
  "bincode",
  "config 0.1.0",
- "config 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
+ "config 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111)",
  "crypto 0.1.0",
  "log",
  "network",
@@ -1612,7 +1616,7 @@ dependencies = [
  "serde_json",
  "tokio",
  "types 0.1.0",
- "types 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
+ "types 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111)",
  "util",
  "wavid",
  "wbinaa",
@@ -1633,8 +1637,9 @@ dependencies = [
  "crypto 0.1.0",
  "log",
  "serde",
+ "serde_json",
  "types 0.1.0",
- "types 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
+ "types 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111)",
  "wavid",
  "wcss",
  "zeroize",
@@ -1680,36 +1685,36 @@ dependencies = [
 [[package]]
 name = "wra"
 version = "0.1.0"
-source = "git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e#79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e"
+source = "git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111#731e0b81166125ea756c5a047ab813ccb8af7111"
 dependencies = [
  "anyhow",
  "bincode",
- "config 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
- "crypto 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
+ "config 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111)",
+ "crypto 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111)",
  "log",
  "num-bigint 0.2.6",
  "num-traits",
  "serde",
  "tokio",
- "types 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
+ "types 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111)",
  "util",
 ]
 
 [[package]]
 name = "wrbc"
 version = "0.1.0"
-source = "git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e#79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e"
+source = "git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111#731e0b81166125ea756c5a047ab813ccb8af7111"
 dependencies = [
  "anyhow",
  "bincode",
- "config 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
- "crypto 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
+ "config 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111)",
+ "crypto 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111)",
  "log",
  "num-bigint 0.2.6",
  "num-traits",
  "serde",
  "tokio",
- "types 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=79e905a8bcd6d3fc0a5423f8cfcb383ad33a919e)",
+ "types 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111)",
  "util",
  "wavid",
 ]

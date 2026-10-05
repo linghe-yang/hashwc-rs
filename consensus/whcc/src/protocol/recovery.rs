@@ -8,10 +8,9 @@ use num_bigint::BigUint;
 use wiawvss::{
     PrivateShare,
     certified::{self, Certificate, Evidence},
-    terminal,
 };
 impl State {
-    pub fn recovery_packet(&mut self, sender: usize, packet: Packet) -> Result<()> {
+    pub fn recovery_packet(&mut self, sender: usize, mut packet: Packet) -> Result<()> {
         let d = packet.dealer;
         if sender >= self.n || d >= self.n || packet.epoch != self.params.epoch {
             return Ok(());
@@ -47,7 +46,7 @@ impl State {
                 dealer.terminal_seen[sender] = true;
                 dealer
                     .pending_terminals
-                    .insert(sender, packet.payload.clone());
+                    .insert(sender, std::mem::take(&mut packet.payload));
             }
             _ => return Ok(()),
         }
@@ -130,40 +129,32 @@ impl State {
             {
                 dealer.recovery_dirty = false;
                 let cert = if let Some(cert) = &dealer.storage_terminal {
-                    Some(cert.clone())
-                } else if let (Some(public), Some(prepared)) = (&dealer.public, &dealer.prepared) {
-                    match terminal::recover_bounded(
-                        &self.setup,
-                        &dealer.context,
-                        public,
-                        &dealer.tokens.values().cloned().collect::<Vec<_>>(),
-                        bits,
-                    ) {
-                        Ok(t) => Some(certified::certify(
-                            &self.setup,
-                            &dealer.codec,
-                            header,
-                            prepared,
-                            t,
-                        )?),
-                        Err(types::Error::InsufficientShares) => None,
-                        Err(e) => return Err(e.into()),
-                    }
-                } else {
-                    None
-                };
-                if let Some(cert) = cert {
                     anyhow::ensure!(
                         certified::verify(
                             &self.setup,
                             &dealer.context,
                             &dealer.codec,
                             header,
-                            &cert,
+                            cert,
                             bits
                         ),
-                        "invalid local terminal"
+                        "invalid local storage terminal"
                     );
+                    Some(cert.clone())
+                } else if let (Some(public), Some(file)) = (&dealer.public, &dealer.file) {
+                    certified::RecoverySource {
+                        setup: &self.setup,
+                        context: &dealer.context,
+                        codec: &dealer.codec,
+                        header,
+                        public,
+                        file,
+                    }
+                    .recover(dealer.tokens.values(), bits)?
+                } else {
+                    None
+                };
+                if let Some(cert) = cert {
                     let (value, rejected) = match &cert.evidence {
                         Evidence::Success(o) => (BigUint::from_bytes_be(&o.message), false),
                         _ => (BigUint::from(0u8), true),

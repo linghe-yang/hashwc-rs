@@ -63,14 +63,16 @@ impl Sim {
                         wrbc::Request::Register {
                             instance,
                             file_bytes,
+                            coding,
                         } => (
                             instance,
-                            wrbc::State::new(
+                            wrbc::State::with_params(
                                 m.clone(),
                                 node.id,
                                 instance,
                                 bound.weighted_public_id("wrbc"),
                                 file_bytes,
+                                coding,
                             )
                             .unwrap(),
                         ),

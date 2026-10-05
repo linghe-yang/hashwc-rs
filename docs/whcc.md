@@ -108,7 +108,7 @@ Success 编码为 100 字节；拒绝证据带必要的字段 opening 或 n 个�
 
 session_id、epoch、setup_id、coverage_bits、rounding_bits 和 output_bits 一起绑定所有组件的调用上下文。Node 的成员、密钥和端口字段仍直接交给外部组件。应用不得为一次新实验复用旧会话配置。
 
-上游 transport 提供 MAC 认证与可靠 TCP，但不加密。项目通过 vendor/sdc-util 的 Cargo 补丁，为七个服务统一启用 TCP_NODELAY 并将帧长度与正文合并写入；协议消息、认证 ACK、序号及重传语义均不变。这里保留每个 peer 独立队列，不添加等待凑批的计时器。因此 network 模块在两个 token 相关服务上增加 AES-256-GCM，利用现有 Node.sk_map 的成对密钥进行组件、方向与会话域分离，并使用 OS 随机 nonce；不引入公钥基础设施。
+上游 transport 提供 MAC 认证与可靠 TCP，但不加密。项目直接使用上游 util 的 TCP_NODELAY、持续补充发送窗口、共享缓冲和按 peer 有界内存队列，不再使用本地 vendor 补丁。因此 network 模块在两个 token 相关服务上增加 AES-256-GCM，利用现有 Node.sk_map 的成对密钥进行组件、方向与会话域分离，并使用 OS 随机 nonce；不引入公钥基础设施。
 
 ## 资源、退出与验证范围
 
@@ -118,7 +118,7 @@ coin 输出不会触发协议内部的自动垃圾回收。调用方在实验结
 
 Rust 测试使用两种方式：直接组合原语状态机进行可控调度，以及单进程中启动真正的 tokio Context、channel 和 loopback TCP。后者覆盖 1 位和 128 位输出，包含六个活动节点和一个静默节点。另有固定宽度算术、规范编码、完整值计票、采样容量与精确聚合边界测试。测试中的超时仅用于检测测试失败，不参与协议决策。
 
-Python 本地多进程 benchmark 已实现，包含 policy 配置、延迟与 TCP 数据字节测量、结构化 result；用法与指标口径见 [benchmark 说明](../benchmark/README.md)。目前支持 fab plot 从 results 生成 PDF/SVG/PNG 图表，remote 尚未实现。新结果标识 compact-header-striped-wavid-v1，旧数据保持 full-public-record-wrbc-v1，不混合拟合。当前 benchmark 的 quorum STOP 仍可能截断迟到服务，不能等同论文中包含所有服务义务的通信上界测量。
+Python 本地多进程 benchmark 已实现，包含 policy 配置、延迟与 TCP 数据字节测量、结构化 result；用法与指标口径见 [benchmark 说明](../benchmark/README.md)。目前支持 fab plot 从 results 生成 PDF/SVG/PNG 图表，remote 尚未实现。新结果标识 compact-header-striped-wavid-v2，历史 compact-header-striped-wavid-v1 和 full-public-record-wrbc-v1 数据保留各自版本，不混合拟合。当前 benchmark 的 quorum STOP 仍可能截断迟到服务，不能等同论文中包含所有服务义务的通信上界测量。
 
 
 ## 拜占庭资源压力与测试边界

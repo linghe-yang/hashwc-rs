@@ -59,7 +59,7 @@ class PlotTests(unittest.TestCase):
             self.assertIn('Full public-record WRBC', (base/'plots/test/party-latency_ms.svg').read_text())
 
     def test_missing_grid_and_mixed_versions_are_rejected(self):
-        for change in ['missing_x','missing_series','build','security','profile','conflict']:
+        for change in ['missing_x','missing_series','build','implementation','security','profile','conflict']:
             with self.subTest(change=change), tempfile.TemporaryDirectory() as directory:
                 base=Path(directory)
                 first, a=self.result(base,4)
@@ -71,6 +71,10 @@ class PlotTests(unittest.TestCase):
                     params['filters']['weight_profile'].append('bimodal')
                 elif change=='build':
                     b['metadata']['build']['binary_sha256']='other'
+                elif change=='implementation':
+                    a['metadata']['build']['implementation'] = 'compact-header-striped-wavid-v1'
+                    b['metadata']['build']['implementation'] = 'compact-header-striped-wavid-v2'
+                    write_json(first, a)
                 elif change=='security':
                     b['config']['node_params']['output_bits']=128
                 elif change=='profile':

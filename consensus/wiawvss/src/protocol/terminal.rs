@@ -92,16 +92,33 @@ impl Terminal {
     }
 }
 pub fn candidate(context: &Context, p: &Public, output: usize, token: &Block) -> Opening {
-    let k = Zeroizing::new(xor(
+    candidate_fields(
+        context,
+        output,
+        token,
         &p.base.encrypted_key,
+        &p.ciphertext,
+        &p.randomness_ciphertext,
+    )
+}
+pub fn candidate_fields(
+    context: &Context,
+    output: usize,
+    token: &Block,
+    encrypted_key: &Block,
+    ciphertext: &Block,
+    randomness_ciphertext: &Block,
+) -> Opening {
+    let k = Zeroizing::new(xor(
+        encrypted_key,
         &hash(
             b"key",
             &[&context.id(), &(output as u64).to_le_bytes(), token],
         ),
     ));
     Opening {
-        message: xor(&p.ciphertext, &hash(b"AX/mask", &[&*k, b"msg"])),
-        randomness: xor(&p.randomness_ciphertext, &hash(b"AX/mask", &[&*k, b"rnd"])),
+        message: xor(ciphertext, &hash(b"AX/mask", &[&*k, b"msg"])),
+        randomness: xor(randomness_ciphertext, &hash(b"AX/mask", &[&*k, b"rnd"])),
     }
 }
 /// Verification never treats malformed evidence as bottom.
@@ -113,22 +130,61 @@ pub fn verify(setup: &Setup, c: &Context, p: &Public, t: &Terminal) -> bool {
     {
         return false;
     }
-    let circuit = setup.circuit();
     match t {
         Terminal::Success(o) => ax::verify_opening(setup, c, p, o),
+        Terminal::RootFault { token } => {
+            let output = setup.circuit().output();
+            equal(
+                &wire_commitment(&c.id(), output, token),
+                &p.base.wires[output],
+            ) && !ax::verify_opening(setup, c, p, &candidate(c, p, output, token))
+        }
+        _ => verify_local_fault(setup, c, p, t),
+    }
+}
+/// Access only the constant number of fields needed by a local fault predicate.
+/// Network callers must authenticate all requested fields before using this trait.
+pub trait SemanticFields {
+    fn true_token(&self) -> Block;
+    fn input(&self, party: usize) -> Block;
+    fn wire(&self, wire: usize) -> Block;
+    fn gate(&self, gate: usize, branch: usize) -> Block;
+}
+impl SemanticFields for Public {
+    fn true_token(&self) -> Block {
+        self.base.true_token
+    }
+    fn input(&self, party: usize) -> Block {
+        self.base.inputs[party]
+    }
+    fn wire(&self, wire: usize) -> Block {
+        self.base.wires[wire]
+    }
+    fn gate(&self, gate: usize, branch: usize) -> Block {
+        self.base.gates[gate][branch]
+    }
+}
+pub fn verify_local_fault(
+    setup: &Setup,
+    c: &Context,
+    fields: &impl SemanticFields,
+    t: &Terminal,
+) -> bool {
+    let circuit = setup.circuit();
+    match t {
         Terminal::TrueFault => !equal(
-            &wire_commitment(&c.id(), 1, &p.base.true_token),
-            &p.base.wires[1],
+            &wire_commitment(&c.id(), 1, &fields.true_token()),
+            &fields.wire(1),
         ),
         Terminal::InputFault { party, token } => {
             *party < circuit.policy().n()
                 && equal(
                     &input_commitment(&c.id(), *party, token),
-                    &p.base.inputs[*party],
+                    &fields.input(*party),
                 )
                 && !equal(
                     &wire_commitment(&c.id(), party + 2, token),
-                    &p.base.wires[party + 2],
+                    &fields.wire(party + 2),
                 )
         }
         Terminal::GateFault {
@@ -156,29 +212,24 @@ pub fn verify(setup: &Setup, c: &Context, p: &Public, t: &Terminal) -> bool {
                 }
                 if !equal(
                     &wire_commitment(&c.id(), src, &tokens[j]),
-                    &p.base.wires[src],
+                    &fields.wire(src),
                 ) {
                     return false;
                 }
                 output = xor(
                     &output,
                     &xor(
-                        &p.base.gates[wire - circuit.base()][j],
+                        &fields.gate(wire - circuit.base(), j),
                         &edge_pad(&c.id(), *wire, j, src, &tokens[j]),
                     ),
                 );
             }
             !equal(
                 &wire_commitment(&c.id(), *wire, &output),
-                &p.base.wires[*wire],
+                &fields.wire(*wire),
             )
         }
-        Terminal::RootFault { token } => {
-            equal(
-                &wire_commitment(&c.id(), circuit.output(), token),
-                &p.base.wires[circuit.output()],
-            ) && !ax::verify_opening(setup, c, p, &candidate(c, p, circuit.output(), token))
-        }
+        Terminal::Success(_) | Terminal::RootFault { .. } => false,
     }
 }
 /// Only the frozen outer protocol may publish the returned token-dependent evidence.
@@ -197,6 +248,16 @@ pub fn recover_bounded(
     shares: &[PrivateShare],
     bits: usize,
 ) -> Result<Terminal> {
+    recover_bounded_iter(setup, c, p, shares.iter(), bits)
+}
+/// Borrow recovery tokens directly; no copies of secret shares are required.
+pub fn recover_bounded_iter<'a>(
+    setup: &Setup,
+    c: &Context,
+    p: &Public,
+    shares: impl IntoIterator<Item = &'a PrivateShare>,
+    bits: usize,
+) -> Result<Terminal> {
     if c.validate(setup).is_err()
         || p.setup_id != setup.id()
         || p.context_id != c.id()
@@ -205,16 +266,13 @@ pub fn recover_bounded(
         return Err(Error::InvalidCommitment);
     }
     let circuit = setup.circuit();
-    let mut values = Zeroizing::new(vec![[0; 32]; circuit.nodes()]);
-    let mut known = vec![false; circuit.nodes()];
+    let mut accepted = vec![None; circuit.policy().n()];
     if !equal(
         &wire_commitment(&c.id(), 1, &p.base.true_token),
         &p.base.wires[1],
     ) {
         return Ok(Terminal::TrueFault);
     }
-    values[1] = p.base.true_token;
-    known[1] = true;
     for s in shares {
         if s.party >= circuit.policy().n()
             || s.context_id != c.id()
@@ -235,32 +293,31 @@ pub fn recover_bounded(
                 token: s.token,
             });
         }
-        values[s.party + 2] = s.token;
-        known[s.party + 2] = true;
+        accepted[s.party] = Some(s);
     }
     if !circuit
         .policy()
-        .authorized((0..circuit.policy().n()).filter(|i| known[i + 2]))?
+        .authorized((0..circuit.policy().n()).filter(|&i| accepted[i].is_some()))?
     {
         return Err(Error::InsufficientShares);
+    }
+    // Allocate the circuit-sized scratch only after all input fault checks and authorization.
+    let mut values = Zeroizing::new(vec![[0; 32]; circuit.nodes()]);
+    let mut known = vec![false; circuit.nodes()];
+    values[1] = p.base.true_token;
+    known[1] = true;
+    for s in accepted.into_iter().flatten() {
+        values[s.party + 2] = s.token;
+        known[s.party + 2] = true;
     }
     for (index, g) in circuit.gates().iter().enumerate() {
         let wire = circuit.base() + index;
         let available = (known[g.left] as u8) | ((known[g.right] as u8) << 1);
         let choices = match g.op {
-            Op::And => {
-                if available == 3 {
-                    vec![3]
-                } else {
-                    vec![]
-                }
-            }
-            Op::Or => (0..2)
-                .filter(|j| available & (1 << j) != 0)
-                .map(|j| 1 << j)
-                .collect(),
+            Op::And => [if available == 3 { 3 } else { 0 }, 0],
+            Op::Or => [available & 1, available & 2],
         };
-        for branches in choices {
+        for branches in choices.into_iter().filter(|&branches| branches != 0) {
             let mut output = [0; 32];
             let mut tokens = [[0; 32]; 2];
             for (j, src) in [g.left, g.right].into_iter().enumerate() {

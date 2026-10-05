@@ -12,6 +12,8 @@ pub struct Parameters {
     pub rounding_bits: u32,
     pub output_bits: u32,
     pub port_stride: Option<u16>,
+    /// Selected offline; the runtime only validates and applies this public layout.
+    pub bulk_block_bytes: usize,
 }
 impl Default for Parameters {
     fn default() -> Self {
@@ -21,12 +23,21 @@ impl Default for Parameters {
             rounding_bits: 64,
             output_bits: 1,
             port_stride: None,
+            bulk_block_bytes: 32,
         }
     }
 }
 impl Parameters {
+    /// Small WRBC headers/declarations keep their own fixed geometry.
+    pub const CONTROL_CODING: wavid::CodingParams = wavid::CodingParams { block_bytes: 32 };
+    pub fn bulk_coding(&self) -> wavid::CodingParams {
+        wavid::CodingParams {
+            block_bytes: self.bulk_block_bytes,
+        }
+    }
     pub fn validate(&self, node: &Node) -> Result<()> {
         node.validate_weighted()?;
+        self.bulk_coding().validate()?;
         ensure!(
             node.num_nodes <= sdc_util::weighted::MAX_INSTANCES / 2,
             "WRBC needs two instances per party; maximum 512 parties per invocation"
@@ -34,6 +45,11 @@ impl Parameters {
         ensure!(
             (1..=256).contains(&self.coverage_bits),
             "coverage bits must be in 1..=256"
+        );
+        ensure!(
+            wiawvss::certified::evidence_transport_bound(node.num_nodes, self.bulk_block_bytes)
+                <= sdc_util::weighted::MAX_FRAME_BYTES - 256,
+            "bulk block makes required fault evidence exceed transport frame limit"
         );
         Self::validate_widths(self.rounding_bits, self.output_bits)?;
         Ok(())
@@ -68,7 +84,7 @@ impl Parameters {
     pub fn context_id(&self, node: &Node, setup: &Setup) -> Block {
         // Bind the compact-header / striped-storage protocol version.
         hash(
-            b"whcc/striped-context/v3",
+            b"whcc/striped-context/v5",
             &[
                 &node.session_id,
                 &setup.id(),
@@ -76,6 +92,8 @@ impl Parameters {
                 &self.coverage_bits.to_le_bytes(),
                 &self.rounding_bits.to_le_bytes(),
                 &self.output_bits.to_le_bytes(),
+                &(Self::CONTROL_CODING.block_bytes as u64).to_le_bytes(),
+                &(self.bulk_block_bytes as u64).to_le_bytes(),
             ],
         )
     }

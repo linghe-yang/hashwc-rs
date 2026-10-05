@@ -91,3 +91,25 @@ fn unauthorized_shares_and_fake_or_noncanonical_evidence_do_not_reject_honest_de
     assert!(Terminal::decode(&p, &bytes).is_err());
     assert!(Terminal::decode(&p, &[]).is_err());
 }
+
+#[test]
+fn early_faults_precede_authorization_but_duplicates_never_add_weight() {
+    let (s, c, p, shares) = fixture();
+    let mut bad = p.clone();
+    bad.base.true_token[0] ^= 1;
+    assert!(matches!(
+        terminal::recover(&s, &c, &bad, &[]).unwrap(),
+        Terminal::TrueFault
+    ));
+    let mut bad = p.clone();
+    bad.base.wires[2][0] ^= 1;
+    assert!(matches!(
+        terminal::recover(&s, &c, &bad, &shares[..1]).unwrap(),
+        Terminal::InputFault { party: 0, .. }
+    ));
+    assert_eq!(
+        terminal::recover_bounded_iter(&s, &c, &p, std::iter::repeat_n(&shares[0], 7), 256)
+            .unwrap_err(),
+        Error::InsufficientShares
+    );
+}

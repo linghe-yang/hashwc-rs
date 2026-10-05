@@ -15,7 +15,7 @@ fab local --policy=policies/local-4-128.json --output=file
 fab local --policy=policies/local-4-128.json --runs=3 --output=file
 ~~~
 
-每个 case 自动编译同一个 release node、生成上游 config::Node 配置，启动一个 synchronizer 进程及各 party 进程，解析日志并输出 result。每轮使用新会话和成对密钥，不使用 feature 切换协议。正式构建自动包含 vendor/sdc-util 的低延迟 TCP 补丁，不需要临时注入或修改 Python 启动方式；原语轮数、参数和统计口径不变。
+每个 case 自动编译同一个 release node、生成上游 config::Node 配置，启动一个 synchronizer 进程及各 party 进程，解析日志并输出 result。每轮使用新会话和成对密钥，不使用 feature 切换协议。正式构建直接使用固定提交的上游优化传输，不再使用 vendor/sdc-util 补丁。结果记录 sdc_revision、上游 transport 源码指纹、实际 coding_block_bytes 及 control_coding_block_bytes=32；当前实现标识为 compact-header-striped-wavid-v4-coding，绘图不会与旧版本混合。
 
 ## 同步流程与门限
 
@@ -317,3 +317,32 @@ Rust 测试覆盖严格加权门限、去重、分歧结果分别计权、大整
 ## 命令行生成 policy
 
 使用 `fab policy --nodes=16 --total-weight=16000 --distribution=2 --output=policies/custom.json` 生成配置，随后交给原有 `fab local` 运行。分布枚举为 1 等权、2 近似等权且 gcd=1、3 少数重节点且各自不超过 F、4 固定 W=n^n 的门数搜索；也可使用与枚举互斥的 `--pool` 读取 Aptos 或自定义 JSON 权重池。默认 runs=1，仅生成 honest case。完整命令、故障参数与输出记录见 [POLICY_GENERATOR.md](POLICY_GENERATOR.md)。
+
+31 节点 CPU 优化对照策略见 `policies/cpu-optimization-n31.json`，实现说明见 `../docs/cpu-optimization.md`。这轮保持 32 B 编码块和原有安全参数，结果版本隔离。
+
+## Python 静态选择 bulk 编码块
+
+保持原有默认值 32 B。可以在 policy 的 node_params 中设置 "bulk_block_bytes": "auto"；local 会为每个 case 在 Python 中独立求解，再把整数写入 .parameters.json。case 的 bulk_block_bytes 可以覆盖全局设置（整数或 auto）。Rust 只读取、验证和使用该值，不搜索最优参数。仍然直接使用上游 config::Node；不要修改 Node.block_size，这个字段属于旧协议。
+
+也可以先生成选定整数的 policy，完全不编译或运行 Rust：
+
+~~~sh
+cd benchmark
+fab coding --policy=policies/coding-static-input.json --output=policies/my-selected.json
+# 等价的纯 Python 入口，不依赖 Fabric：
+python3 -m benchmark.coding --policy policies/coding-static-input.json --output policies/my-selected.json
+# 之后按原方式运行（大规模策略请按需自行运行）：
+fab local --policy=policies/my-selected.json --output=file
+# 本轮实际小规模验证策略，仅 4 个节点：
+fab local --policy=policies/coding-local4.json --output=file
+~~~
+
+任务同时写出 .coding.json，记录模型版本、候选集、门数、bulk 长度、存储几何、采样配额、最优值、32 B 基线及逐项成本。自动 local 另保存 coding-selection.json。预生成 policy 的情况下，选择报告位于原 policy 同目录；每次实验仍保存原 policy、解析后的参数及实际块大小。Python 与 Rust 在启动前交叉检查门数、bulk 长度、采样配额和每个 owner 的存储包字节数。
+
+优化模型 honest-full-service-sdc731e-v1 假定所有节点诚实，全部 n 个 dealer 完成，所有采样授权恢复关系均服务到底，各授权恢复者最终广播一次 Success。模型包含远程 WAVID 分散和恢复包、32 KiB 分片的协议头、可靠信道 framing/MAC/应用 ACK、加密私有收据、恢复请求、token 和 Success 消息；排除本地投递、重传、TCP/IP 头和 synchronizer。不随 bulk 参数变化的 WRBC/WRA/WGather/WBinAA 成本不进入目标，不能把 modeled_bytes 称为整币实际抓包总量。模型的百分比仅针对这些被计入的服务。
+
+对 owner i，设包（含分片 framing/ACK）大小为 P_i，采样配额为 d_i，总配额 D=sum(d_i)。所有 dealer 的长度相同，因此总分散成本为 (n-1)*sum(P_i)，总恢复成本为 sum((D-d_i)*P_i)。这些完整服务成本无需抽样模拟；具体名单不改变总和。每个 receipt 的源开口按实际块位置去重，并按 bincode 的真实长度计费。Success 大小不随块长变化；诚实模型不计故障证据，但合法候选必须能安全传送最坏形状的故障证据。
+
+枚举偶数 32..4096，并剔除故障证据可能超出 SDC 1 MiB 帧限制的尺寸；相同目标值选择更小的块。公开块参数绑定到 WHCC v5 context 和 WAVID root。控制 WRBC 仍固定 32 B，不与 bulk 一起变大。该选择保证上述有限成本模型中的最优，不保证 STOP 截断或不同调度下实际 TCP 流量最优，也不替代论文中块大小与安全参数尺度的渐近约束。
+
+静态样例 coding-static-selected.json 覆盖 4/16/31/46/64 节点、四种分布、1/100 倍权重，另含 100 节点小权重和 64 节点 W=n^n 的稠密权重分布，共 42 个配置。它们仅运行 Python 计算，没有启动对应大规模协议测试。
