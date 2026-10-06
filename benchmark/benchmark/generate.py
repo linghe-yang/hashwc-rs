@@ -132,6 +132,17 @@ def search_baselines(n, threshold):
             if len(weights) != n or sum(weights) != total:
                 raise ConfigError('Invalid saved search baseline: '+filename)
             baselines.append(case)
+    # Preserve the best previously searched distribution when regenerating policies.
+    # The production oracle evaluates it again; this file is a proposal, not a trusted count.
+    saved = PathMaker.BENCHMARK/'data/gate-search'/('n{}-best.json'.format(n))
+    if saved.exists():
+        raw = saved.read_bytes()
+        candidate = json.loads(raw)
+        weights = [integer(w, 'saved search weight', 1) for w in candidate.get('weights', [])]
+        if len(weights) == n and sum(weights) == total and threshold == total//3:
+            sources[str(saved.relative_to(PathMaker.BENCHMARK))] = hashlib.sha256(raw).hexdigest()
+            baselines.append(dict(nodes=n,weights=list(map(str,weights)),byzantine_nodes=[],
+                                 metadata=dict(weight_profile=dict(id='saved-best-search'))))
     return baselines, sources
 
 

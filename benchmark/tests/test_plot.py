@@ -180,6 +180,54 @@ class PlotTests(unittest.TestCase):
             with self.assertRaises(PlotError):
                 Ploter.validate(params)
 
+    def test_floor_third_party_curve_is_explicit_and_rejects_wrong_threshold(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base=Path(directory)
+            for n in [4,10]:
+                path,data=self.result(base,n)
+                bench=data['config']['bench_params']
+                bench.update(weights=[1]*n, threshold=n//3)
+                write_json(path,data)
+            params=Ploter.validate(self.config())
+            rows,_,_=Ploter.discover(params['results'],base)
+            with self.assertRaises(PlotError):
+                Ploter.aggregate(rows,params,params['charts'][0])
+            params['charts'][0]['threshold_control']='floor_third'
+            report=Ploter.aggregate(rows,params,params['charts'][0])
+            self.assertEqual(len(report['points']),2)
+            rows[1]['data']['config']['bench_params']['threshold']-=1
+            with self.assertRaises(PlotError):
+                Ploter.aggregate(rows,params,params['charts'][0])
+
+    def test_configuration_comparison_renders_distinct_weights_at_fixed_n(self):
+        with tempfile.TemporaryDirectory() as directory:
+            base=Path(directory)
+            for i,profile in enumerate(['unit','aptos','max-gates']):
+                _,data=self.result(base,4)
+                data['metadata']['weight_profile']['id']=profile
+                data['runs']=[dict(run,session=profile+'-'+str(j)) for j,run in enumerate(data['runs'])]
+                data['config']['bench_params']['weights']=[i+1]*4
+                data['config']['bench_params']['threshold']=4*(i+1)//3
+                write_json(base/'results'/profile/'result.json',data)
+            # Remove the helper's last copy: the comparison uses the three explicit records.
+            (base/'results/case-n4-s1/result.json').unlink()
+            params=self.config()
+            params['filters']['weight_profile']=['unit','aptos','max-gates']
+            params['charts']=[dict(name='comparison',kind='comparison',x='weight_profile',
+                                  values=['unit','aptos','max-gates'],threshold_control='floor_third')]
+            ret=Ploter.plot(params,base)
+            self.assertEqual(ret['figures'],2)
+            report=json.loads((base/'plots/test/comparison-points.json').read_text())
+            self.assertEqual(len(report['points']),3)
+            rows,_,_=Ploter.discover(params['results'],base)
+            rows[0]['dims']['nodes']=10
+            with self.assertRaises(PlotError):
+                Ploter.aggregate(rows,Ploter.validate(params),Ploter.validate(params)['charts'][0])
+            bad=copy.deepcopy(params)
+            bad['charts'][0]['x']='nodes'
+            with self.assertRaises(PlotError):
+                Ploter.validate(bad)
+
     def test_invalid_configuration_and_escape_are_rejected(self):
         for change in [dict(error_bar='ci95'),dict(min_runs=0),dict(series=['typo']),dict(formats=['exe'])]:
             params=self.config()

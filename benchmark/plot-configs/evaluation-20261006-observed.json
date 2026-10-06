@@ -1,0 +1,91 @@
+{
+  "charts": [
+    {
+      "filters": {
+        "weight_profile": [
+          "unit"
+        ]
+      },
+      "name": "party-scalability",
+      "threshold_control": "floor_third",
+      "values": [
+        4,
+        10,
+        16,
+        31,
+        46,
+        64,
+        100
+      ],
+      "x": "nodes",
+      "yscale": "log"
+    },
+    {
+      "filters": {
+        "nodes": [
+          31
+        ],
+        "weight_profile": [
+          "unit",
+          "aptos",
+          "max-gates"
+        ]
+      },
+      "kind": "comparison",
+      "name": "weight-comparison-n31",
+      "threshold_control": "floor_third",
+      "values": [
+        "unit",
+        "aptos",
+        "max-gates"
+      ],
+      "x": "weight_profile",
+      "yscale": "log"
+    }
+  ],
+  "error_bar": "min_max",
+  "filters": {
+    "coverage_bits": [
+      40
+    ],
+    "experiment_id": [
+      "whcc-evaluation-20261006-v5"
+    ],
+    "fault_case": [
+      "honest"
+    ],
+    "output_bits": [
+      128
+    ],
+    "protocol": [
+      "whcc"
+    ],
+    "rounding_bits": [
+      64
+    ],
+    "weight_profile": [
+      "unit",
+      "aptos",
+      "max-gates"
+    ]
+  },
+  "formats": [
+    "pdf",
+    "svg",
+    "png"
+  ],
+  "metrics": [
+    "latency_ms",
+    "avg_sent_bytes_per_honest_party",
+    "total_sent_bytes"
+  ],
+  "min_runs": 3,
+  "output": "plots/evaluation-20261006",
+  "results": [
+    "results/evaluation-20261006"
+  ],
+  "series": [
+    "weight_profile",
+    "fault_case"
+  ]
+}

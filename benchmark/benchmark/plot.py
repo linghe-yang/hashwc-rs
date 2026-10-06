@@ -113,16 +113,26 @@ class Ploter:
             raise PlotError('At least one chart is required')
         names = set()
         for chart in p['charts']:
-            object_keys(chart, ['name', 'x', 'values', 'filters', 'xscale', 'yscale', 'weight_control'], 'chart')
+            object_keys(chart, ['name', 'x', 'values', 'filters', 'xscale', 'yscale', 'weight_control', 'threshold_control', 'kind'], 'chart')
             name = chart.get('name')
             if not isinstance(name, str) or not re.fullmatch(r'[A-Za-z0-9_-]+', name) or name in names:
                 raise PlotError('Chart names must be unique safe filenames')
             names.add(name)
-            if chart.get('x') not in ('nodes', 'weight_scale', 'total_weight') or chart['x'] in p['series']:
+            chart.setdefault('kind', 'scalability')
+            comparison = chart['kind'] == 'comparison'
+            if chart['kind'] not in ('scalability', 'comparison'):
+                raise PlotError('Unknown chart kind')
+            if comparison and (chart.get('x') != 'weight_profile' or 'weight_profile' not in p['series']):
+                raise PlotError('Comparison requires a weight_profile axis and series')
+            if not comparison and (chart.get('x') not in ('nodes', 'weight_scale', 'total_weight') or chart['x'] in p['series']):
                 raise PlotError('x must be nodes, weight_scale, or total_weight, independent of series')
             values = chart.get('values')
-            if not isinstance(values, list) or not values or any(type(v) is not int or v < 1 for v in values) or len(set(values)) != len(values):
+            invalid = lambda v: (not isinstance(v, str) or not v.strip()) if comparison else (type(v) is not int or v < 1)
+            if not isinstance(values, list) or not values or any(invalid(v) for v in values) or len(set(values)) != len(values):
                 raise PlotError('Chart values must list distinct positive expected x values')
+            chart.setdefault('threshold_control', 'fixed_ratio')
+            if chart['threshold_control'] not in ('fixed_ratio', 'floor_third'):
+                raise PlotError('Unknown threshold control')
             chart.setdefault('weight_control', 'fixed_mean')
             if chart['weight_control'] not in ('fixed_mean', 'n_pow_n') or (chart['weight_control'] == 'n_pow_n' and chart['x'] != 'nodes'):
                 raise PlotError('n_pow_n weight control requires a nodes axis')
@@ -192,6 +202,8 @@ class Ploter:
                     and r['dims'][chart['x']] in chart['values']]
         if not selected:
             raise PlotError('No results for {}'.format(chart['name']))
+        if chart.get('kind') == 'comparison' and len({r['dims']['nodes'] for r in selected}) != 1:
+            raise PlotError('Weight comparison requires a fixed party count')
         cohorts, invariants, points, seen, duplicates = {}, {}, {}, {}, []
         common_environment = None
         for row in selected:
@@ -220,7 +232,10 @@ class Ploter:
             if npow and (sum(weights) != dims['nodes']**dims['nodes'] or threshold != sum(weights)//3
                          or dims['weight_scale'] != 1):
                 raise PlotError('n_pow_n requires W=n^n, T=floor(W/3), and weight_scale=1')
-            invariant = dict(profile=meta['weight_profile'], threshold_ratio='floor(W/3)' if npow else str(Fraction(threshold, sum(weights))),
+            floor_third = chart.get('threshold_control') == 'floor_third'
+            if floor_third and threshold != sum(weights)//3:
+                raise PlotError('floor_third requires T=floor(W/3)')
+            invariant = dict(profile=meta['weight_profile'], threshold_ratio='floor(W/3)' if npow or floor_third else str(Fraction(threshold, sum(weights))),
                              generation={k: generation.get(k) for k in ['method', 'version', 'seed', 'snapshot']},
                              protocol=dims['protocol'], fault_case=dims['fault_case'],
                              fault_selection=(meta.get('fault_selection') or {}).get('method'),
@@ -265,7 +280,9 @@ class Ploter:
         expected_filters = dict(params['filters'], **chart['filters'])
         # Explicit series filters also demand their Cartesian product, catching wholly missing curves.
         expected_series = set(itertools.product(*[expected_filters[k] for k in params['series']])) if all(k in expected_filters for k in params['series']) else set(invariants)
-        missing = [(series, x) for series in expected_series for x in chart['values'] if (series, x) not in points]
+        missing = [(series, x) for series in expected_series for x in chart['values']
+                   if (chart.get('kind') != 'comparison' or series[params['series'].index('weight_profile')] == x)
+                   and (series, x) not in points]
         if missing:
             raise PlotError('Missing points in {}: {}'.format(chart['name'], missing))
         for point in points.values():
@@ -317,28 +334,46 @@ class Ploter:
                               'recovery-stress': 'Max-weight stress' if (first.get('fault_selection') or {}).get('method') == 'max-weight-then-count-v1' else 'Recovery stress'}
                     label = ' / '.join(labels.get(str(v), str(v)) for v in first['series'].values())
                     factor = METRICS[metric][2]
-                    x = [p['x'] for p in points]
+                    comparison = chart.get('kind') == 'comparison'
+                    x = [chart['values'].index(p['x']) if comparison else p['x'] for p in points]
                     y = [p['statistics'][metric]['mean']/factor for p in points]
                     lower = [(p['statistics'][metric]['mean']-p['statistics'][metric]['lower'])/factor for p in points]
                     upper = [(p['statistics'][metric]['upper']-p['statistics'][metric]['mean'])/factor for p in points]
                     if chart['yscale'] == 'log' and any(p['statistics'][metric]['lower'] <= 0 for p in points):
                         raise PlotError('Log y axis needs positive lower bounds')
-                    ax.errorbar(x, y, yerr=[lower, upper] if params['error_bar']!='none' else None,
+                    if comparison:
+                        ax.bar(x, y, yerr=[lower, upper] if params['error_bar']!='none' else None,
+                               color=colors[profile], width=0.6, capsize=4, label=label)
+                        for xi, point in zip(x, points):
+                            w = point['total_weight']
+                            weight = str(w) if w < 10**8 else '{:.3g}'.format(w)
+                            ax.annotate('W={}\nG={}'.format(weight, point['circuit']['gates']),
+                                        (xi, 0.98), xycoords=('data','axes fraction'), ha='center', va='top', fontsize=8)
+                    else:
+                        ax.errorbar(x, y, yerr=[lower, upper] if params['error_bar']!='none' else None,
                                 color=colors[profile], linestyle='--' if 'stress' in fault else '-',
                                 marker='s' if 'stress' in fault else 'o', capsize=4, linewidth=1.6, markersize=5, label=label)
                 ax.set_xscale(chart['xscale'])
                 ax.set_yscale(chart['yscale'])
-                ax.set_xticks(sorted(chart['values']))
-                ax.set_xticklabels([str(v) for v in sorted(chart['values'])])
+                if chart.get('kind') == 'comparison':
+                    ax.set_xticks(range(len(chart['values'])))
+                    names = {'unit': 'Unit weights', 'aptos': 'Aptos', 'max-gates': 'Max gates / W=31^31'}
+                    ax.set_xticklabels([names.get(v,v) for v in chart['values']])
+                else:
+                    ax.set_xticks(sorted(chart['values']))
+                    ax.set_xticklabels([str(v) for v in sorted(chart['values'])])
                 ax.set_xlabel({'nodes': 'Number of parties', 'weight_scale': 'Weight scale (weights and threshold scaled together)',
-                               'total_weight': 'Total weight W (threshold scaled proportionally)'}[chart['x']])
+                               'total_weight': 'Total weight W (threshold scaled proportionally)', 'weight_profile': 'Weight configuration'}[chart['x']])
                 ax.set_ylabel(METRICS[metric][1])
                 title = 'Party scalability' if chart['x']=='nodes' else 'Weight scalability | {} parties'.format(report['points'][0]['nodes'])
-                if chart.get('weight_control') == 'n_pow_n':
+                if chart.get('kind') == 'comparison':
+                    title = 'Weight / distribution comparison | {} parties'.format(report['points'][0]['nodes'])
+                elif chart.get('weight_control') == 'n_pow_n':
                     title = 'Joint party / weight stress | W = n^n'
                 elif chart['x'] == 'nodes':
                     point = report['points'][0]
-                    title += ' | W = {}n'.format(Fraction(point['total_weight'], point['nodes']))
+                    mean_weight = Fraction(point['total_weight'], point['nodes'])
+                    title += ' | W = n' if mean_weight == 1 else ' | W = {}n'.format(mean_weight)
                 ax.set_title(title, loc='left', fontweight='bold', pad=12)
                 ax.grid(True, alpha=0.22)
                 if chart['yscale']=='linear':
@@ -351,7 +386,12 @@ class Ploter:
                 note = '{}-bit coin | {} runs/point | error bars: {}\n'.format(security, '/'.join(map(str, counts)), params['error_bar'].replace('_', '–'))
                 label = 'Header WRBC + striped WAVID' if report.get('implementation') in ('compact-header-striped-wavid-v1', 'compact-header-striped-wavid-v2', 'compact-header-striped-wavid-v3-cpu', 'compact-header-striped-wavid-v4-coding', 'compact-header-striped-wavid-v5-reuse') else 'Full public-record WRBC'
                 note += label + '; local multiprocess; quorum STOP.\n'
-                note += 'Recovery stress is bounded, not a proven global worst case.'
+                if chart.get('kind') == 'comparison':
+                    note += 'Distributions and total weights differ; this is a configuration comparison.'
+                elif any(p['fault_case'] != 'honest' for p in report['points']):
+                    note += 'Recovery stress is bounded, not a proven global worst case.'
+                else:
+                    note += 'All parties honest; T = floor(W/3).' if chart.get('threshold_control') == 'floor_third' else 'All parties honest.'
                 fig.text(0.1, 0.035, note, fontsize=7, color='#555555')
                 fig.tight_layout(rect=(0, 0.25, 1, 1))
                 stem = '{}-{}'.format(report['name'], metric)

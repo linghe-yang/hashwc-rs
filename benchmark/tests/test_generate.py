@@ -18,6 +18,22 @@ from benchmark.utils import PathMaker
 
 
 class GenerateTests(unittest.TestCase):
+    def test_saved_best_search_is_a_recounted_baseline_with_provenance(self):
+        from benchmark.generate import search_baselines
+        with tempfile.TemporaryDirectory() as directory:
+            base=Path(directory)
+            saved=base/'data/gate-search/n4-best.json'
+            write_json(saved,dict(weights=['64']*4,gates=999999))
+            with patch.object(PathMaker,'BENCHMARK',base):
+                baselines,sources=search_baselines(4,256//3)
+                self.assertEqual(len(baselines),2)
+                self.assertEqual(baselines[-1]['weights'],['64']*4)
+                self.assertNotIn('gates',baselines[-1])
+                self.assertEqual(sources['data/gate-search/n4-best.json'],hashlib.sha256(saved.read_bytes()).hexdigest())
+                self.assertEqual(len(search_baselines(4,80)[0]),1)
+                write_json(saved,dict(weights=['64']*3))
+                self.assertEqual(len(search_baselines(4,256//3)[0]),1)
+
     def test_near_equal_coprime_for_divisible_nondivisible_and_huge_totals(self):
         for n in [2, 3, 4, 16, 64]:
             for total in [n, n+1, n*3, n*100, 64**64]:

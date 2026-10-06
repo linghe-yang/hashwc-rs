@@ -136,7 +136,7 @@ fab logs --directory=logs/<实验目录> --output=file
 
 失败保留日志及 failure.json，不生成成功总结。只清理自己启动的进程，不终止其他实验。root/CAP_NET_RAW 权限不足会明确报错，不把不可测流量当作零。
 
-当前 coin 仍是完整公开记录 WRBC 基线，尚非论文的条带化存储优化；这些数据不能代表后者的通信复杂度。
+当前 coin 使用小 header 的 WRBC 与条带化 WAVID bulk 分发；公开记录不再通过 WRBC 广播。带宽统计包括其余子协议及可靠传输封装，不能仅凭单份 bulk 大小推算整币通信量。
 
 ## 实验元数据
 
@@ -346,3 +346,17 @@ fab local --policy=policies/coding-local4.json --output=file
 枚举偶数 32..4096，并剔除故障证据可能超出 SDC 1 MiB 帧限制的尺寸；相同目标值选择更小的块。公开块参数绑定到 WHCC v5 context 和 WAVID root。控制 WRBC 仍固定 32 B，不与 bulk 一起变大。该选择保证上述有限成本模型中的最优，不保证 STOP 截断或不同调度下实际 TCP 流量最优，也不替代论文中块大小与安全参数尺度的渐近约束。
 
 静态样例 coding-static-selected.json 覆盖 4/16/31/46/64 节点、四种分布、1/100 倍权重，另含 100 节点小权重和 64 节点 W=n^n 的稠密权重分布，共 42 个配置。它们仅运行 Python 计算，没有启动对应大规模协议测试。
+
+## 2026-10-06 全诚实评估
+
+本批次策略在 `policies/evaluation-20261006.json`：单位权重的 n=4/10/16/31/46/64/100，以及 n=31 的 Aptos 映射、W=31^31 最大门数搜索实例；各配置 3 次，输出 128 位，rounding_bits=64、coverage_bits=40，bulk 块长在 Python 中自动选择。Aptos 使用已保存快照的分位质量映射和原始平均权重尺度；最大门数实例沿用保存的候选并由实际电路重新计数，不声称全局最优。
+
+~~~sh
+cd benchmark
+fab local --policy=policies/evaluation-20261006.json --output=file --results=results/evaluation-20261006
+fab plot --config=plot-configs/evaluation-20261006.json
+~~~
+
+节点曲线显式使用 `threshold_control="floor_third"`，逐点检查 T=floor(W/3)，保留整数门限的取整差异；默认 `fixed_ratio` 检查不变。固定 n 的三种配置使用 `kind="comparison"`、`x="weight_profile"`，绘制分类柱图，因为权重分布和总权重同时改变，不应连接成一条只改变权重大小的曲线。分类比较仍校验节点数、构建、环境、安全参数及重复次数。
+
+100 节点的首次尝试因采集缓冲区丢包而作废。`tools/retry_evaluation_capture.py` 是本批次的可追溯重试入口，只提升外部 tcpdump 的调度优先级，保持协议进程优先级与通信参数不变；每轮保存 capture-tuning.json。它要求已完成的 evaluation-status.json，不能替代一般 local 入口。抓包的内核缓冲区丢包与接口级丢包计数不同，原始 capture.log 与汇总均保留后者；接口计数覆盖整个接口，并不只对应协议过滤器。

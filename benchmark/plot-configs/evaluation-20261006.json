@@ -1,0 +1,86 @@
+{
+  "results": [
+    "results/evaluation-20261006"
+  ],
+  "filters": {
+    "experiment_id": [
+      "whcc-evaluation-20261006-v5"
+    ],
+    "protocol": [
+      "whcc"
+    ],
+    "weight_profile": [
+      "unit",
+      "aptos",
+      "max-gates"
+    ],
+    "fault_case": [
+      "honest"
+    ],
+    "output_bits": [
+      128
+    ],
+    "rounding_bits": [
+      64
+    ],
+    "coverage_bits": [
+      40
+    ]
+  },
+  "series": [
+    "weight_profile",
+    "fault_case"
+  ],
+  "metrics": [
+    "latency_ms",
+    "avg_sent_bytes_per_honest_party",
+    "total_sent_bytes"
+  ],
+  "error_bar": "min_max",
+  "min_runs": 3,
+  "formats": [
+    "pdf",
+    "svg",
+    "png"
+  ],
+  "output": "plots/evaluation-20261006",
+  "charts": [
+    {
+      "name": "party-scalability",
+      "x": "nodes",
+      "values": [
+        4,
+        10,
+        16,
+        31,
+        46,
+        64,
+        100
+      ],
+      "filters": {
+        "weight_profile": [
+          "unit"
+        ]
+      },
+      "threshold_control": "floor_third",
+      "yscale": "log"
+    },
+    {
+      "name": "weight-comparison-n31",
+      "kind": "comparison",
+      "x": "weight_profile",
+      "values": [
+        "unit",
+        "aptos",
+        "max-gates"
+      ],
+      "filters": {
+        "nodes": [
+          31
+        ]
+      },
+      "threshold_control": "floor_third",
+      "yscale": "log"
+    }
+  ]
+}
