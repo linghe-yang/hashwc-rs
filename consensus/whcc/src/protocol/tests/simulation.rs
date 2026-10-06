@@ -170,6 +170,9 @@ impl Sim {
                             let instance = request.instance();
                             let st = p.avid.get_mut(&instance).unwrap();
                             match request {
+                                wavid::Request::DisperseCached { prepared, .. } => {
+                                    st.disperse_cached(prepared).unwrap()
+                                }
                                 wavid::Request::Disperse { data, .. } => {
                                     st.disperse(&data).unwrap()
                                 }
@@ -615,7 +618,7 @@ fn nonrecoverers_verify_outputs_without_downloading_public_bulk() {
             if !p.app.assignments.authorized(p.app.id, d) {
                 nonmembers += 1;
                 assert!(!p.app.dealers[d].retrieving);
-                assert!(p.app.dealers[d].public.is_none());
+                assert!(p.app.dealers[d].recovery_cache.is_none());
                 assert!(p.app.dealers[d].value.is_some());
             }
         }
@@ -633,8 +636,8 @@ fn committed_bad_codeword_completes_storage_but_yields_public_coding_rejection()
         .actions
         .iter()
         .find_map(|a| {
-            if let Action::Avid(wavid::Request::Disperse { data, .. }) = a {
-                Some(data.clone())
+            if let Action::Avid(wavid::Request::DisperseCached { prepared, .. }) = a {
+                Some(prepared.file().to_vec())
             } else {
                 None
             }
@@ -662,7 +665,7 @@ fn committed_bad_codeword_completes_storage_but_yields_public_coding_rejection()
     }
     p.app
         .actions
-        .retain(|a| !matches!(a, Action::Avid(wavid::Request::Disperse { .. })));
+        .retain(|a| !matches!(a, Action::Avid(wavid::Request::DisperseCached { .. })));
     p.avid
         .get_mut(&p.app.instance(0, 0))
         .unwrap()

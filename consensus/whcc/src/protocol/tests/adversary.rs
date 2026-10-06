@@ -20,8 +20,10 @@ fn corrupt_dealer_passes_share_checks_but_requires_verifiable_root_fault() {
     let raw = actions
         .iter()
         .find_map(|a| match a {
-            Action::Avid(wavid::Request::Disperse { instance, data }) if instance.slot == 0 => {
-                Some(data)
+            Action::Avid(wavid::Request::DisperseCached { instance, prepared })
+                if instance.slot == 0 =>
+            {
+                Some(prepared.file().as_ref())
             }
             _ => None,
         })
@@ -74,7 +76,7 @@ fn adversary_withholds_tokens_and_uses_each_authorized_terminal_slot_once() {
             &state.dealers[d].context,
             prep.root,
         ));
-        state.dealers[d].public = Some(public);
+
         state.dealers[d].receipt = Some(shares[3].clone());
         state.dealers[d].complete = false; // Forgery need not wait for the local WRA output.
     }
@@ -174,7 +176,7 @@ fn forged_opening_is_checked_once_and_cannot_block_an_honest_root_fault() {
     .unwrap()
     .encode();
     state.dealers[3].header = Some(header);
-    state.dealers[3].public = Some(public);
+    state.dealers[3].file = Some(state.dealers[3].codec.commit_file(public.encode()).unwrap());
     state.dealers[3].complete = true;
 
     for sender in [1, 3] {

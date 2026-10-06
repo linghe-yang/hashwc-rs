@@ -4,3 +4,9 @@ pub mod terminal;
 pub use ax::{Context, Opening, PrivateShare, Public, Recovery};
 
 pub mod certified;
+
+pub mod view;
+pub use view::PublicView;
+
+pub mod incremental;
+pub use incremental::IncrementalRecovery;

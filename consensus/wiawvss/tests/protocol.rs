@@ -631,3 +631,285 @@ fn python_cost_model_matches_rust_serialization() {
         );
     }
 }
+
+#[test]
+fn cached_success_checks_all_fields_and_preserves_header_only_fallback() {
+    let (s, c, codec, o) = fixture();
+    let (p, _) = ax::generate(&s, &c, &o).unwrap();
+    let raw = p.encode();
+    let file = codec.commit_file(raw.clone()).unwrap();
+    let h = Header::new(&s, &c, file.root());
+    let cert = Certificate {
+        header_id: h.id(),
+        evidence: Evidence::Success(o.clone()),
+    };
+    assert!(certified::verify_with_file(
+        &s,
+        &c,
+        &codec,
+        &h,
+        &cert,
+        8,
+        Some(&file)
+    ));
+    assert!(certified::verify_with_file(
+        &s, &c, &codec, &h, &cert, 8, None
+    ));
+    assert!(!certified::verify_with_file(
+        &s,
+        &c,
+        &codec,
+        &h,
+        &cert,
+        4,
+        Some(&file)
+    ));
+    // Every 32-byte public field, including unused inputs/branches and transcript tag.
+    for offset in std::iter::once(0).chain((8..raw.len()).step_by(32)) {
+        let mut changed = raw.clone();
+        changed[offset] ^= 1;
+        let bad_file = codec.commit_file(changed).unwrap();
+        let bad_h = Header::new(&s, &c, bad_file.root());
+        let bad_cert = Certificate {
+            header_id: bad_h.id(),
+            evidence: Evidence::Success(o.clone()),
+        };
+        assert!(
+            !certified::verify_with_file(&s, &c, &codec, &bad_h, &bad_cert, 8, Some(&bad_file)),
+            "offset {offset}"
+        );
+    }
+    let other_c = Context::new(
+        &s,
+        Instance {
+            session: [4; 32],
+            ..c.instance.clone()
+        },
+        vec![9],
+    )
+    .unwrap();
+    assert!(!certified::verify_with_file(
+        &s,
+        &other_c,
+        &codec,
+        &h,
+        &cert,
+        8,
+        Some(&file)
+    ));
+    let m = WeightedMembership::new(vec![Weight::from(3); 4], Weight::from(4)).unwrap();
+    for other in [
+        Codec::new(&m, InstanceId::new(1, Some(1), 0), [7; 32], raw.len()).unwrap(),
+        Codec::new(&m, InstanceId::new(2, Some(0), 0), [7; 32], raw.len()).unwrap(),
+        Codec::new(&m, InstanceId::new(1, Some(0), 0), [8; 32], raw.len()).unwrap(),
+        Codec::with_params(
+            &m,
+            InstanceId::new(1, Some(0), 0),
+            [7; 32],
+            raw.len(),
+            wavid::CodingParams { block_bytes: 64 },
+        )
+        .unwrap(),
+    ] {
+        assert!(!certified::verify_with_file(
+            &s,
+            &c,
+            &other,
+            &h,
+            &cert,
+            8,
+            Some(&file)
+        ));
+    }
+    let mut forged = cert.clone();
+    forged.header_id[0] ^= 1;
+    assert!(!certified::verify_with_file(
+        &s,
+        &c,
+        &codec,
+        &h,
+        &forged,
+        8,
+        Some(&file)
+    ));
+}
+
+#[test]
+fn borrowed_public_matches_owned_recovery_and_rejects_bad_layouts() {
+    use wiawvss::{PublicView, view::RecoveryPublic};
+    let (s, c, _, o) = fixture();
+    let (original, shares) = ax::generate(&s, &c, &o).unwrap();
+    for kind in 0..7 {
+        let mut p = original.clone();
+        match kind {
+            1 => p.base.true_token[0] ^= 1,
+            2 => p.base.wires[2][0] ^= 1,
+            3 => {
+                for g in &mut p.base.gates {
+                    g[0][0] ^= 1;
+                    g[1][0] ^= 1;
+                }
+            }
+            4 => p.base.tag[0] ^= 1,
+            5 => p.commitment[0] ^= 1,
+            6 => p.ciphertext[0] ^= 1,
+            _ => {}
+        }
+        let raw = p.encode();
+        let view = PublicView::decode(&s, &c, &raw).unwrap();
+        assert_eq!(view.bytes.as_ptr(), raw.as_ptr());
+        assert!(view.matches_public(&p));
+        for bits in [4, 8, 256] {
+            assert_eq!(
+                terminal::recover_bounded_iter(&s, &c, &view, &shares, bits),
+                terminal::recover_bounded(&s, &c, &p, &shares, bits)
+            );
+        }
+    }
+    let raw = original.encode();
+    for len in [0, 8, 71, raw.len() - 1] {
+        assert!(PublicView::decode(&s, &c, &raw[..len]).is_err());
+    }
+    let mut extra = raw.clone();
+    extra.push(0);
+    assert!(PublicView::decode(&s, &c, &extra).is_err());
+    for offset in [0, 8, 40] {
+        let mut changed = raw.clone();
+        changed[offset] ^= 1;
+        assert!(PublicView::decode(&s, &c, &changed).is_err());
+    }
+}
+
+#[test]
+fn incremental_tokens_count_weight_once_and_allow_invalid_then_valid_input() {
+    let (s, c, codec, o) = fixture();
+    let (p, shares) = ax::generate(&s, &c, &o).unwrap();
+    let file = codec.commit_file(p.encode()).unwrap();
+    let h = Header::new(&s, &c, file.root());
+    let mut cache = wiawvss::IncrementalRecovery::new(&s, &c, file).unwrap();
+    let mut bad = shares[1].clone();
+    bad.token[0] ^= 1;
+    for _ in 0..10 {
+        assert!(
+            cache
+                .recover(&s, &c, &codec, &h, [&shares[0], &bad, &shares[0]], 8)
+                .unwrap()
+                .is_none()
+        );
+    }
+    assert_eq!(cache.token_checks, 2);
+    assert_eq!(cache.weight, 3u8.into());
+    let mut cross = shares[1].clone();
+    cross.context_id[0] ^= 1;
+    assert!(
+        cache
+            .recover(&s, &c, &codec, &h, [&cross], 8)
+            .unwrap()
+            .is_none()
+    );
+    assert_eq!(cache.token_checks, 2);
+    let cert = cache
+        .recover(&s, &c, &codec, &h, [&shares[1]], 8)
+        .unwrap()
+        .unwrap();
+    assert_eq!(cache.token_checks, 3);
+    assert_eq!(cache.weight, 6u8.into());
+    assert!(matches!(&cert.evidence, Evidence::Success(found) if found == &o));
+    assert!(certified::verify(&s, &c, &codec, &h, &cert, 8));
+    assert!(
+        cache
+            .recover(&s, &c, &codec, &h, &shares, 8)
+            .unwrap()
+            .is_some()
+    );
+    assert_eq!(cache.token_checks, 3);
+    assert!(cache.recover(&s, &c, &codec, &h, &shares, 4).is_err());
+    let mut other = h.clone();
+    other.root[0] ^= 1;
+    assert!(cache.recover(&s, &c, &codec, &other, &shares, 8).is_err());
+}
+
+#[test]
+fn incremental_recovery_preserves_early_faults_and_full_semantic_checks() {
+    let (s, c, codec, o) = fixture();
+    let (original, shares) = ax::generate(&s, &c, &o).unwrap();
+    for kind in 0..6 {
+        let mut p = original.clone();
+        match kind {
+            0 => p.base.true_token[0] ^= 1,
+            1 => p.base.wires[2][0] ^= 1,
+            2 => {
+                for g in &mut p.base.gates {
+                    g[0][0] ^= 1;
+                    g[1][0] ^= 1;
+                }
+            }
+            3 => p.commitment[0] ^= 1,
+            4 => p.base.tag[0] ^= 1,
+            _ => {}
+        }
+        let bits = if kind == 5 { 4 } else { 8 };
+        let file = codec.commit_file(p.encode()).unwrap();
+        let h = Header::new(&s, &c, file.root());
+        let mut cache = wiawvss::IncrementalRecovery::new(&s, &c, file).unwrap();
+        let selected = &shares[..if kind == 0 {
+            0
+        } else if kind == 1 {
+            1
+        } else {
+            4
+        }];
+        let cert = cache
+            .recover(&s, &c, &codec, &h, selected, bits)
+            .unwrap()
+            .unwrap();
+        assert!(!matches!(cert.evidence, Evidence::Success(_)));
+        assert!(certified::verify(&s, &c, &codec, &h, &cert, bits));
+        assert!(certified::verify_with_file(
+            &s,
+            &c,
+            &codec,
+            &h,
+            &cert,
+            bits,
+            Some(&cache.file)
+        ));
+    }
+}
+
+#[test]
+fn single_pass_receipts_match_existing_bytes_for_unaligned_block_sizes() {
+    let (s, c, _, o) = fixture();
+    let (p, shares) = ax::generate(&s, &c, &o).unwrap();
+    let m = WeightedMembership::new(vec![Weight::from(3); 4], Weight::from(4)).unwrap();
+    for block_bytes in [32, 34, 126, 256, 1330, 4096] {
+        let codec = Codec::with_params(
+            &m,
+            InstanceId::new(1, Some(0), 0),
+            [7; 32],
+            Public::encoded_len(&s),
+            wavid::CodingParams { block_bytes },
+        )
+        .unwrap();
+        let eager = codec.prepare(&p.encode()).unwrap();
+        let prep = codec
+            .prepare_dispersal(p.encode(), &certified::receipt_blocks(&s, &codec))
+            .unwrap();
+        assert_eq!(prep.file().root(), eager.root);
+        for share in &shares {
+            let a = Receipt::new(&s, &codec, &eager, share).unwrap();
+            let b = Receipt::new(&s, &codec, &prep, share).unwrap();
+            assert_eq!(a.encode(), b.encode());
+            assert!(
+                b.verify(
+                    &s,
+                    &c,
+                    &codec,
+                    &Header::new(&s, &c, prep.file().root()),
+                    share.party
+                )
+                .is_some()
+            );
+        }
+    }
+}

@@ -1,6 +1,6 @@
 [workspace]
 resolver = "3"
-members = ["types", "crypto", "config", "consensus/wcss", "consensus/wiawvss", "consensus/whcc", "recovery", "network", "node"]
+members = ["types", "crypto", "config", "consensus/wcss", "consensus/wiawvss", "consensus/whcc", "recovery", "network", "node", "vendor/wavid"]
 
 [workspace.package]
 version = "0.1.0"
@@ -27,7 +27,7 @@ anyhow = "1"
 log = "0.4"
 env_logger = "0.11"
 clap = { version = "4.5", features = ["derive"] }
-# Pin the shared primitive implementation; do not copy its protocol logic here.
+# Pin shared primitives; the WAVID overlay below only extends local CPU reuse APIs.
 sdc-types = { package = "types", git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "731e0b81166125ea756c5a047ab813ccb8af7111" }
 wavid = { git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "731e0b81166125ea756c5a047ab813ccb8af7111" }
 wrbc = { git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "731e0b81166125ea756c5a047ab813ccb8af7111" }
@@ -46,3 +46,7 @@ wgather = { package = "wgather", git = "https://github.com/linghe-yang/Secure-Di
 wbinaa = { package = "wbinaa", git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "731e0b81166125ea756c5a047ab813ccb8af7111" }
 
 crypto-bigint = { version = "0.7.5", default-features = false }
+
+# Local, source-compatible WAVID CPU patch over the pinned upstream revision.
+[patch."https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git"]
+wavid = { path = "vendor/wavid" }

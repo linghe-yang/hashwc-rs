@@ -1,0 +1,18 @@
+[package]
+name = "wavid"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+config = { package = "config", git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "731e0b81166125ea756c5a047ab813ccb8af7111" }
+types = { package = "types", git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "731e0b81166125ea756c5a047ab813ccb8af7111" }
+crypto = { package = "crypto", git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "731e0b81166125ea756c5a047ab813ccb8af7111" }
+util = { package = "util", git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "731e0b81166125ea756c5a047ab813ccb8af7111" }
+anyhow = "1"
+serde = { version = "1", features = ["derive"] }
+bincode = "1"
+num-bigint = "0.2.6"
+num-traits = "0.2"
+tokio = { version = "1", features = ["full"] }
+log = "0.4"
+reed-solomon-erasure = "4.0"

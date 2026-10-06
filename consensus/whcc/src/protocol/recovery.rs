@@ -94,13 +94,14 @@ impl State {
                 }
                 let decoded = Certificate::decode(&dealer.codec, &raw);
                 let valid = decoded.as_ref().is_ok_and(|cert| {
-                    certified::verify(
+                    certified::verify_with_file(
                         &self.setup,
                         &dealer.context,
                         &dealer.codec,
                         header,
                         cert,
                         bits,
+                        dealer.file.as_ref(),
                     )
                 });
                 self.events.push(Event::TerminalChecked {
@@ -141,16 +142,15 @@ impl State {
                         "invalid local storage terminal"
                     );
                     Some(cert.clone())
-                } else if let (Some(public), Some(file)) = (&dealer.public, &dealer.file) {
-                    certified::RecoverySource {
-                        setup: &self.setup,
-                        context: &dealer.context,
-                        codec: &dealer.codec,
+                } else if let Some(cache) = &mut dealer.recovery_cache {
+                    cache.recover(
+                        &self.setup,
+                        &dealer.context,
+                        &dealer.codec,
                         header,
-                        public,
-                        file,
-                    }
-                    .recover(dealer.tokens.values(), bits)?
+                        dealer.tokens.values(),
+                        bits,
+                    )?
                 } else {
                     None
                 };

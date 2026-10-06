@@ -15,7 +15,7 @@ use wiawvss::{Context as SharingContext, Opening, PrivateShare, Public, ax};
 
 pub struct Dealer {
     pub context: SharingContext,
-    pub public: Option<Public>,
+    pub recovery_cache: Option<wiawvss::IncrementalRecovery>,
     pub header: Option<Header>,
     pub codec: Arc<wavid::Codec>,
     pub stored_root: Option<[u8; 32]>,
@@ -73,7 +73,7 @@ impl State {
                         },
                         context_id.to_vec(),
                     )?,
-                    public: None,
+                    recovery_cache: None,
                     header: None,
                     codec: Arc::new(wavid::Codec::with_params(
                         &membership,
@@ -201,9 +201,16 @@ impl State {
     ) -> Result<()> {
         ensure!(!self.started, "common coin invocation already started");
         let declaration = self.sampling.encode(self.context_id, self.id, &list)?;
-        let bulk = public.encode();
-        let prepared = self.dealers[self.id].codec.commit_file(bulk.clone())?;
-        let header = Header::new(&self.setup, &self.dealers[self.id].context, prepared.root());
+        let codec = &self.dealers[self.id].codec;
+        let prepared = codec.prepare_dispersal(
+            public.encode(),
+            &wiawvss::certified::receipt_blocks(&self.setup, codec),
+        )?;
+        let header = Header::new(
+            &self.setup,
+            &self.dealers[self.id].context,
+            prepared.file().root(),
+        );
         self.started = true;
         self.actions.push(Action::Gather(wgather::Request::Start {
             instance: self.global(),
@@ -216,10 +223,12 @@ impl State {
             instance: self.instance(self.id, 0),
             data: header.encode(),
         }));
-        self.actions.push(Action::Avid(wavid::Request::Disperse {
-            instance: self.instance(self.id, 0),
-            data: bulk,
-        }));
+
+        self.actions
+            .push(Action::Avid(wavid::Request::DisperseCached {
+                instance: self.instance(self.id, 0),
+                prepared: prepared.clone(),
+            }));
         for share in shares {
             self.actions.push(Action::Private {
                 recipient: share.party,

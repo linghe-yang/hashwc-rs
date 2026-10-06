@@ -1536,7 +1536,6 @@ checksum = "ccf3ec651a847eb01de73ccad15eb7d99f80485de043efb2f370cd654f4ea44b"
 [[package]]
 name = "wavid"
 version = "0.1.0"
-source = "git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111#731e0b81166125ea756c5a047ab813ccb8af7111"
 dependencies = [
  "anyhow",
  "bincode",
@@ -1636,6 +1635,7 @@ dependencies = [
  "bincode",
  "crypto 0.1.0",
  "log",
+ "num-bigint 0.4.8",
  "serde",
  "serde_json",
  "types 0.1.0",

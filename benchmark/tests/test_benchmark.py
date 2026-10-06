@@ -221,13 +221,13 @@ class LogTests(unittest.TestCase):
             self.assertEqual(before, {path: path.read_bytes() for path in before})
 
     def test_striped_build_requires_wavid_and_preserves_implementation(self):
-        for implementation in ('compact-header-striped-wavid-v1', 'compact-header-striped-wavid-v2', 'compact-header-striped-wavid-v3-cpu', 'compact-header-striped-wavid-v4-coding'):
+        for implementation in ('compact-header-striped-wavid-v1', 'compact-header-striped-wavid-v2', 'compact-header-striped-wavid-v3-cpu', 'compact-header-striped-wavid-v4-coding', 'compact-header-striped-wavid-v5-reuse'):
             with tempfile.TemporaryDirectory() as directory:
                 run = self.fixture(directory)
                 path = run/'run.json'
                 manifest = json.loads(path.read_text())
                 manifest['build']['implementation'] = implementation
-                if implementation == 'compact-header-striped-wavid-v4-coding':
+                if implementation in ('compact-header-striped-wavid-v4-coding', 'compact-header-striped-wavid-v5-reuse'):
                     manifest['build'].update(coding_block_bytes=32, control_coding_block_bytes=32)
                 write_json(path, manifest)
                 with self.assertRaises(ParseError):

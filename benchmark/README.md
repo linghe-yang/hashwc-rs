@@ -15,7 +15,7 @@ fab local --policy=policies/local-4-128.json --output=file
 fab local --policy=policies/local-4-128.json --runs=3 --output=file
 ~~~
 
-每个 case 自动编译同一个 release node、生成上游 config::Node 配置，启动一个 synchronizer 进程及各 party 进程，解析日志并输出 result。每轮使用新会话和成对密钥，不使用 feature 切换协议。正式构建直接使用固定提交的上游优化传输，不再使用 vendor/sdc-util 补丁。结果记录 sdc_revision、上游 transport 源码指纹、实际 coding_block_bytes 及 control_coding_block_bytes=32；当前实现标识为 compact-header-striped-wavid-v4-coding，绘图不会与旧版本混合。
+每个 case 自动编译同一个 release node、生成上游 config::Node 配置，启动一个 synchronizer 进程及各 party 进程，解析日志并输出 result。每轮使用新会话和成对密钥，不使用 feature 切换协议。正式构建直接使用固定提交的上游优化传输，不再使用 vendor/sdc-util 补丁。结果记录 sdc_revision、上游 transport 源码指纹、实际 coding_block_bytes 及 control_coding_block_bytes=32；WAVID 使用 `vendor/wavid` 中固定上游版本的本地 CPU 复用补丁（记录 `wavid_source_sha256`），其网络格式与完成条件不变；当前实现标识为 compact-header-striped-wavid-v5-reuse，绘图不会与旧版本混合。
 
 ## 同步流程与门限
 

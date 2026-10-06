@@ -246,7 +246,7 @@ class LocalBench:
             build = dict(profile='release', rustc=subprocess.check_output(['rustc', '--version'], text=True).strip())
             build['binary_sha256'] = hashlib.sha256((PathMaker.binary_path()/'node').read_bytes()).hexdigest()
             build['cargo_lock_sha256'] = hashlib.sha256((PathMaker.ROOT/'Cargo.lock').read_bytes()).hexdigest()
-            build['implementation'] = 'compact-header-striped-wavid-v4-coding'
+            build['implementation'] = 'compact-header-striped-wavid-v5-reuse'
             build['transport'] = 'sdc-util-windowed-compact-v3'
             build['coding_block_bytes'] = self.node_parameters.json['bulk_block_bytes']
             build['control_coding_block_bytes'] = 32
@@ -258,6 +258,12 @@ class LocalBench:
                                  'git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git'))
             build['sdc_source'] = transport['source']
             build['sdc_revision'] = transport['source'].rsplit('#', 1)[1]
+            avid = next(p for p in packages if p['name'] == 'wavid')
+            avid_root = Path(avid['manifest_path']).parent
+            build['wavid_source'] = avid.get('source') or 'local-patch:vendor/wavid'
+            build['wavid_source_sha256'] = fingerprint({
+                str(p.relative_to(avid_root)): hashlib.sha256(p.read_bytes()).hexdigest()
+                for p in [avid_root/'Cargo.toml'] + sorted((avid_root/'src').rglob('*.rs'))})
             transport_root = Path(transport['manifest_path']).parent
             build['transport_source_sha256'] = fingerprint({
                 prefix + '/' + str(p.relative_to(folder)): hashlib.sha256(p.read_bytes()).hexdigest()

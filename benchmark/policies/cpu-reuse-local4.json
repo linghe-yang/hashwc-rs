@@ -1,0 +1,70 @@
+{
+  "bench_params": {
+    "protocol": "whcc",
+    "runs": 3,
+    "duration": 60,
+    "startup_timeout": 60
+  },
+  "node_params": {
+    "coverage_bits": 40,
+    "rounding_bits": 64,
+    "output_bits": 128,
+    "bulk_block_bytes": "auto"
+  },
+  "metadata": {
+    "experiment_id": "cpu-reuse-local4-20261006",
+    "experiment_axis": "smoke"
+  },
+  "cases": [
+    {
+      "name": "cpu-reuse-equal-unit-honest",
+      "nodes": 4,
+      "weights": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "threshold": 1
+    },
+    {
+      "name": "cpu-reuse-equal-stress",
+      "nodes": 4,
+      "weights": [
+        3,
+        3,
+        3,
+        3
+      ],
+      "threshold": 4,
+      "byzantine_nodes": [
+        3
+      ]
+    },
+    {
+      "name": "cpu-reuse-skew-honest",
+      "nodes": 4,
+      "weights": [
+        301,
+        299,
+        401,
+        199
+      ],
+      "threshold": 400
+    },
+    {
+      "name": "cpu-reuse-skew-stress",
+      "nodes": 4,
+      "weights": [
+        301,
+        299,
+        401,
+        199
+      ],
+      "threshold": 400,
+      "byzantine_nodes": [
+        3
+      ]
+    }
+  ]
+}

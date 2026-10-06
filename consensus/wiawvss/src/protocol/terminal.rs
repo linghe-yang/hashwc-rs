@@ -254,23 +254,14 @@ pub fn recover_bounded(
 pub fn recover_bounded_iter<'a>(
     setup: &Setup,
     c: &Context,
-    p: &Public,
+    p: &impl super::view::RecoveryPublic,
     shares: impl IntoIterator<Item = &'a PrivateShare>,
     bits: usize,
 ) -> Result<Terminal> {
-    if c.validate(setup).is_err()
-        || p.setup_id != setup.id()
-        || p.context_id != c.id()
-        || !p.base.valid_shape(setup)
-    {
-        return Err(Error::InvalidCommitment);
-    }
+    p.validate(setup, c)?;
     let circuit = setup.circuit();
     let mut accepted = vec![None; circuit.policy().n()];
-    if !equal(
-        &wire_commitment(&c.id(), 1, &p.base.true_token),
-        &p.base.wires[1],
-    ) {
+    if !equal(&wire_commitment(&c.id(), 1, &p.true_token()), &p.wire(1)) {
         return Ok(Terminal::TrueFault);
     }
     for s in shares {
@@ -279,14 +270,14 @@ pub fn recover_bounded_iter<'a>(
             || s.setup_id != setup.id()
             || !equal(
                 &input_commitment(&c.id(), s.party, &s.token),
-                &p.base.inputs[s.party],
+                &p.input(s.party),
             )
         {
             continue;
         }
         if !equal(
             &wire_commitment(&c.id(), s.party + 2, &s.token),
-            &p.base.wires[s.party + 2],
+            &p.wire(s.party + 2),
         ) {
             return Ok(Terminal::InputFault {
                 party: s.party,
@@ -301,12 +292,23 @@ pub fn recover_bounded_iter<'a>(
     {
         return Err(Error::InsufficientShares);
     }
+    evaluate(setup, c, p, accepted.into_iter().flatten(), bits)
+}
+/// Inputs have been authenticated and their unique weight has reached T.
+pub(crate) fn evaluate<'a>(
+    setup: &Setup,
+    c: &Context,
+    p: &impl super::view::RecoveryPublic,
+    accepted: impl IntoIterator<Item = &'a PrivateShare>,
+    bits: usize,
+) -> Result<Terminal> {
+    let circuit = setup.circuit();
     // Allocate the circuit-sized scratch only after all input fault checks and authorization.
     let mut values = Zeroizing::new(vec![[0; 32]; circuit.nodes()]);
     let mut known = vec![false; circuit.nodes()];
-    values[1] = p.base.true_token;
+    values[1] = p.true_token();
     known[1] = true;
-    for s in accepted.into_iter().flatten() {
+    for s in accepted {
         values[s.party + 2] = s.token;
         known[s.party + 2] = true;
     }
@@ -326,16 +328,13 @@ pub fn recover_bounded_iter<'a>(
                     output = xor(
                         &output,
                         &xor(
-                            &p.base.gates[index][j],
+                            &p.gate(index, j),
                             &edge_pad(&c.id(), wire, j, src, &tokens[j]),
                         ),
                     );
                 }
             }
-            if !equal(
-                &wire_commitment(&c.id(), wire, &output),
-                &p.base.wires[wire],
-            ) {
+            if !equal(&wire_commitment(&c.id(), wire, &output), &p.wire(wire)) {
                 return Ok(Terminal::GateFault {
                     wire,
                     branches,
@@ -352,10 +351,8 @@ pub fn recover_bounded_iter<'a>(
     if !known[circuit.output()] {
         return Err(Error::InvalidCommitment);
     }
-    let opening = candidate(c, p, circuit.output(), &values[circuit.output()]);
-    if ax::verify_opening(setup, c, p, &opening)
-        && super::certified::in_range(&opening.message, bits)
-    {
+    let opening = p.candidate(c, circuit.output(), &values[circuit.output()]);
+    if p.verify_opening(setup, c, &opening) && super::certified::in_range(&opening.message, bits) {
         Ok(Terminal::Success(opening))
     } else {
         Ok(Terminal::RootFault {

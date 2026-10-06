@@ -185,7 +185,7 @@ impl Public {
     pub fn digest(&self) -> Block {
         crypto::hash_with_tail(b"public", &[], self.byte_len(), self.encoded_parts())
     }
-    fn validate(&self, setup: &Setup, context: &Context) -> Result<()> {
+    pub fn validate(&self, setup: &Setup, context: &Context) -> Result<()> {
         context.validate(setup)?;
         if self.setup_id != setup.id()
             || self.context_id != context.id

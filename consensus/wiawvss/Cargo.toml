@@ -16,6 +16,7 @@ serde.workspace = true
 
 wavid.workspace = true
 bincode.workspace = true
+num-bigint.workspace = true
 
 [dev-dependencies]
 serde_json.workspace = true

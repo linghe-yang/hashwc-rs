@@ -349,7 +349,7 @@ class Ploter:
                 counts = sorted({len(p['runs']) for p in report['points']})
                 security = report['output_bits']
                 note = '{}-bit coin | {} runs/point | error bars: {}\n'.format(security, '/'.join(map(str, counts)), params['error_bar'].replace('_', '–'))
-                label = 'Header WRBC + striped WAVID' if report.get('implementation') in ('compact-header-striped-wavid-v1', 'compact-header-striped-wavid-v2', 'compact-header-striped-wavid-v3-cpu', 'compact-header-striped-wavid-v4-coding') else 'Full public-record WRBC'
+                label = 'Header WRBC + striped WAVID' if report.get('implementation') in ('compact-header-striped-wavid-v1', 'compact-header-striped-wavid-v2', 'compact-header-striped-wavid-v3-cpu', 'compact-header-striped-wavid-v4-coding', 'compact-header-striped-wavid-v5-reuse') else 'Full public-record WRBC'
                 note += label + '; local multiprocess; quorum STOP.\n'
                 note += 'Recovery stress is bounded, not a proven global worst case.'
                 fig.text(0.1, 0.035, note, fontsize=7, color='#555555')

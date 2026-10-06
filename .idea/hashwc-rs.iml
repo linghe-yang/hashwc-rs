@@ -19,6 +19,8 @@
       <sourceFolder url="file://$MODULE_DIR$/types/tests" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/consensus/whcc/src" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/consensus/wcss/examples" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/vendor/wavid/src" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/vendor/wavid/tests" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />

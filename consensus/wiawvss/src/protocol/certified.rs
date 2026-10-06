@@ -163,6 +163,19 @@ impl ProofSource for ValidatedFile {
         self.open_source(block)
     }
 }
+impl ProofSource for wavid::Dispersal {
+    fn open(&self, codec: &Codec, block: usize) -> Result<SourceOpening> {
+        ensure!(self.matches(codec), "proof provider context");
+        self.open_source(block)
+    }
+}
+/// Union of receipt fields, selected before the single dealer encoding pass.
+pub fn receipt_blocks(setup: &Setup, codec: &Codec) -> BTreeSet<usize> {
+    let layout = Layout::new(setup);
+    (0..layout.n)
+        .flat_map(|i| blocks(codec.parameters().block_bytes, &layout.receipt_ranges(i)))
+        .collect()
+}
 pub fn openings(
     codec: &Codec,
     prepared: &impl ProofSource,
@@ -317,6 +330,44 @@ pub fn verify_opening(
         .ok()
         .and_then(|(p, _)| codec.commit_file(p.encode()).ok())
         .is_some_and(|p| p.root() == h.root)
+}
+/// Bind a reusable immutable file to this exact protocol invocation and geometry.
+pub fn file_binding(
+    s: &Setup,
+    c: &Context,
+    codec: &Codec,
+    h: &Header,
+    file: &ValidatedFile,
+) -> bool {
+    c.validate(s).is_ok()
+        && h.setup_id == s.id()
+        && h.context_id == c.id()
+        && h.file_bytes == Public::encoded_len(s)
+        && file.len() == h.file_bytes
+        && codec.file_bytes == h.file_bytes
+        && file.root() == h.root
+        && file.coding_context() == codec.context
+        && file.parameters() == codec.parameters()
+}
+/// A remote success still regenerates EVERY AX field. If the same root-bound
+/// file is already present, byte equality replaces a second coding/Merkle pass.
+/// Other evidence and receivers without the bulk retain the original verifier.
+pub fn verify_with_file(
+    s: &Setup,
+    c: &Context,
+    codec: &Codec,
+    h: &Header,
+    cert: &Certificate,
+    bits: usize,
+    file: Option<&ValidatedFile>,
+) -> bool {
+    if let (Evidence::Success(o), Some(file)) = (&cert.evidence, file) {
+        return cert.header_id == h.id()
+            && file_binding(s, c, codec, h, file)
+            && in_range(&o.message, bits)
+            && ax::generate(s, c, o).is_ok_and(|(p, _)| p.matches_encoded(file));
+    }
+    verify(s, c, codec, h, cert, bits)
 }
 /// The caller authenticates Layout::ranges before any field access.
 pub struct AuthenticatedFields<'a> {

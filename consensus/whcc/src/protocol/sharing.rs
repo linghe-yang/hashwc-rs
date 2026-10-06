@@ -5,7 +5,7 @@ use crate::{
 use anyhow::Result;
 use network::Packet;
 use wiawvss::{
-    Public,
+    IncrementalRecovery,
     certified::{self, Certificate, Evidence, Header, Receipt},
 };
 impl State {
@@ -131,8 +131,12 @@ impl State {
                                         && raw.parameters() == dealer.codec.parameters(),
                                     "WAVID result root mismatch"
                                 );
-                                match Public::decode(&self.setup, &dealer.context, &raw) {
-                                    Ok(public) => dealer.public = Some(public),
+                                match IncrementalRecovery::new(
+                                    &self.setup,
+                                    &dealer.context,
+                                    raw.clone(),
+                                ) {
+                                    Ok(cache) => dealer.recovery_cache = Some(cache),
                                     Err(_) => {
                                         dealer.storage_terminal = Some(Certificate {
                                             header_id: header.id(),
