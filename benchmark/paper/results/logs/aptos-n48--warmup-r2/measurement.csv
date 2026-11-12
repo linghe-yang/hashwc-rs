@@ -1,0 +1,2 @@
+job_id,family,n,protocol,repeat,outputs,status,remote_getters_per_dealer,local_reuses,remote_logical_file_bytes,data_response_body_bytes,path_bytes,shared_bytes,sent_bytes,latency_ms,mean_cpu_ms,peak_party_rss_kib
+aptos-n48--warmup-r2,aptos,48,warmup,2,48,success,47.0,48,854121600,2993177328,3157269744,76345108,3233614852,15110.222,9878.703354166666,93988

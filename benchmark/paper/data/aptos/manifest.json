@@ -1,0 +1,505 @@
+{
+  "schema_version": 1,
+  "chain": "aptos",
+  "network": "mainnet",
+  "captured_at_utc": "2026-11-03T06:38:12.799747+00:00",
+  "dataset_kind": "full_real_consensus_validator_set",
+  "fits_64_nodes": false,
+  "validators": [
+    {
+      "id": "0x1232f58b963938486a11f88c1c36d61d82738b1828625a95a1e85b4c8d1282",
+      "weight": "225064209313144",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x191076a71acffafe737f5c1ce0fe4b7fa48569b437ba795a5482860925f89133",
+      "weight": "432381888102728",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x216d47203603af013a54581844d734906a92242cf25c1d6a8f937666a9919840",
+      "weight": "106213924033132",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x23ce6b936c6c8e9114950c4bbbd454e1d4c6a4e3842a50e367b9bc0046aacf7b",
+      "weight": "1650151158651519",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x2537e9d461d311dc6f1dee690f093b4e353f472abc2493c64275a3d5572532cc",
+      "weight": "192561321913413",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x2738d91e160d9be37cd9689177546b567e28a3644b702388fd2c2be9c97682de",
+      "weight": "2572903037337150",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x2c73a85b9e98e3c009b79efc19b1c63dc3a3c752a3445623363bb6bd3eee43b5",
+      "weight": "1029761928798077",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x2ded75e99c6efbe143a9648a3e88ebf9d0cf249b2af44d510bdd0287e8adcc79",
+      "weight": "247861978872215",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x2fd1e866773ea3670cbef6dc6e952ba6fa13130a69fabc98ad234bd834c3bcaf",
+      "weight": "499242576972187",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x30e2f4236a88d2201b9bc27365d8516ab9cb3b53d82cee8c76369a3a01cef6ec",
+      "weight": "1908867459492745",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x324df1e27c4129a58d73851ae0e9366064dc666a73e747051e203694a4cb257",
+      "weight": "1443821284534944",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x32b57ba82a856bc7e2de6a9016efa4a11ec6f44c2e538dc0e51484b908a357cf",
+      "weight": "1063773557617955",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x33f0c333f6fcb9d1ef54d54093f0482b31bb0bdcd34bfa446e7416ff930453c0",
+      "weight": "719465136641153",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x346361873c235e1a300fd67a2e8b7bd1ea3744001b2e0d1942317c4c8521f5dd",
+      "weight": "794544464623960",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x35b922386bd35db0f33c732a70d7b6a2e91e463812c8d710f925f6da0e0ace07",
+      "weight": "127075272389922",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x371dfdee9fbecaa358683936c5946aa28393067fa60e1e185c4250da461e15cf",
+      "weight": "173464406972723",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x384e89330e07edf394565fcf48e63da5a378dc22a6f69ed8b2300c15223e06db",
+      "weight": "590202166417016",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x39b844cb561d2a04c800164465e2eb2c2ea520499d718c35492244346da07b5f",
+      "weight": "404413729532567",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x3c4d9be0f74cd198b88eeb087632951465045004ec67cefe6f4f170382a20a46",
+      "weight": "635107355473452",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x3e946c97ee31e856978aeecf359433298bf8801cf6540924bf51d9b86b6bfa69",
+      "weight": "1061296742538577",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x3eaf3ebc49555c705c34ec1ffe77404bdb7383b388476c36538b92b7b1b806c9",
+      "weight": "1094059341576374",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x3edbf3e6444054c2a5a391221c9023882d0b2478576c445923a39b3bd0cde0a3",
+      "weight": "999981616844512",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x4534b92f2f9c66d58b6acd7f39211f4c1a1c96b0cea3189c2dcb692440723020",
+      "weight": "1256057614618959",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x48a7c513805eb2636d420879f26ec36ce9b22f7adcf32ef8f618058f80552696",
+      "weight": "1077417787211577",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x4a693f759250c03d4a743ab52b41a3b7bdea8bff58abc568be569af56d82098e",
+      "weight": "696853611730274",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x4b187c13fa53cd3ee9a964641bf53eabd89c5e7378ea2266cfab186f066c1815",
+      "weight": "1194752794403510",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x50b27eee627c0648ff4867894e264d67de2049ee9a8b92040cb35020b74afa39",
+      "weight": "701385166343354",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x5dece2ed08c68f8730527e9b3ebb3536efc3361f4ef37ba0b16a3310db836af",
+      "weight": "586351605117551",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x6099edbe54f242bad50020dfd67646b1e46282999483e7064e70f02f7ea3c15",
+      "weight": "786656437863920",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x6183c471802b5ec52af163d4da0ae983a56908491a212985ae0bc0f204080498",
+      "weight": "420594742352491",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x61b64e39286bf11cd642f03417ab725f15a09dcbf8be23b752851c3c33e74d7b",
+      "weight": "1202120958264889",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x63b0a7343c481fe176603e4e30cc5acc521c75d4310ce1b7b657c8168df66c66",
+      "weight": "273441022653908",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x7089c39be2aaad2585f44239fc961d6a336bd0498810b3f2ad6fde91d4900c07",
+      "weight": "402885108784113",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x79e2670b72361dcbf6f48ac2638993ab67dd75feaa080b34760c917b1310880e",
+      "weight": "586796464864266",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x7afa66ac85f30c426978e9d31cd751861c9d864c1955419063f3fdbf85f50e73",
+      "weight": "1062604499893805",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x7ba7dd0aff5acdc056a2f1f7f1fb24bf1e7d3d6909c33d45f8c2333b13bd2f80",
+      "weight": "186913233159043",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x7ec963a7f9a4ee5d87e9431f5646162626c35774c799f4181d574f0ba938bf38",
+      "weight": "208986046420528",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x7eeb51ffcda6b718f87a0ce50978adbf976b921a15bba8d71ce4b05826adedf9",
+      "weight": "1063728261080102",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x877d09996086effe241b1a740d46675754c17f8620ee9be42c5c7e322ce1598c",
+      "weight": "281922182096696",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x87fb7758e343328e3a7ea86c15382eabb1a9ab3144854ad0713134a342f67f8b",
+      "weight": "1062598389379140",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x890c86c19974b98594a4e5cd7b0b3a69af1b30afc78853a0c11e882801497320",
+      "weight": "1234655658690090",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x8bf2201bf4cec31f736aacc0f44f29c014ecd8562975aecce19271ca179e8db5",
+      "weight": "897826492705843",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x8dd8b23892be142c2ec4b7e1427584c97403e570cde4e6d9a81d2b220c884af5",
+      "weight": "2572861598194123",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x95ef3b2684430f6fe0e73228ba32748e833cf3b03d9fc51f140a5b7e16a469b",
+      "weight": "1514097216569930",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x998afcba25003201aaa99ac9b8c209d90fc5bb6639f6f1638465d26e96ed7b0",
+      "weight": "727738809508895",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x9bfd93ebaa1efd65515642942a607eeca53a0188c04c21ced646d2f0b9f551e8",
+      "weight": "2140362854925553",
+      "status": "active_validators"
+    },
+    {
+      "id": "0x9c721c79ee082aafcdd99b1a71a833accdc48dba1a9a1bc5b5f8cc47ff7d49c0",
+      "weight": "1304695131717913",
+      "status": "active_validators"
+    },
+    {
+      "id": "0xa4a00989d8ecc6d116b2283503f58de94d7fc33fff9e28010868abeb70d7d051",
+      "weight": "876735292653936",
+      "status": "active_validators"
+    },
+    {
+      "id": "0xa651c7c52d64a2014379902bbc92439d196499bcc36d94ff0395aa45837c66db",
+      "weight": "614355816109496",
+      "status": "active_validators"
+    },
+    {
+      "id": "0xa793321c88361b3ed2418ef8490a59558e71b8434c2ad73e0c2f22ad06ad3e1f",
+      "weight": "321207134343208",
+      "status": "active_validators"
+    },
+    {
+      "id": "0xaa22e8f642839d2d961941c44bf65eca496a7cf7e322edcfa19aac4d21a41d96",
+      "weight": "216881577669055",
+      "status": "active_validators"
+    },
+    {
+      "id": "0xaa8b1ffbb47ed279cb04c2b6e2eece9453b453017f14c93db6b72371a31f4507",
+      "weight": "587540098544794",
+      "status": "active_validators"
+    },
+    {
+      "id": "0xaaf21bad66f3064d712e24f82819d7fb41031fc48a146aba8e271d375d177ff9",
+      "weight": "1060929304524392",
+      "status": "active_validators"
+    },
+    {
+      "id": "0xab4a80ccc772691cb03e3ee8d22b5c13acc92472dd4a19987c1aade2691404a",
+      "weight": "1550553194595233",
+      "status": "active_validators"
+    },
+    {
+      "id": "0xaca44df45038a367255d03a3f6bc6af018c73892924b52e3f4a1dd8757094b1d",
+      "weight": "699012334591571",
+      "status": "active_validators"
+    },
+    {
+      "id": "0xb3b1719eece4c1bbb074115df8886a133ea863127c77c9f0a5ed5161a4a4393",
+      "weight": "2080578841327044",
+      "status": "active_validators"
+    },
+    {
+      "id": "0xb4a4f1ef8b0702d85547dc444571a473f736e1205a86db36dad13815ad9bbbf6",
+      "weight": "824184942364826",
+      "status": "active_validators"
+    },
+    {
+      "id": "0xb6a8774f0ba2420f88091d25363cccd58712e1fae3c83608690ccb4228f51847",
+      "weight": "1062875736133917",
+      "status": "active_validators"
+    },
+    {
+      "id": "0xb87476d8877cfc324a520cef4d0cd6e42e26ec3ce613a8127220e2e444561e16",
+      "weight": "397155481880650",
+      "status": "active_validators"
+    },
+    {
+      "id": "0xbb410047e29f9cc9bd1e5b66f2b4d2f3a8cad579e45b609e357dcdc536b05ade",
+      "weight": "939358596064873",
+      "status": "active_validators"
+    },
+    {
+      "id": "0xc0a8921ae0a336626db65cb5e40e0360a49a1e73ebdf8d02ddb167f84a6c326e",
+      "weight": "1060954915925052",
+      "status": "active_validators"
+    },
+    {
+      "id": "0xc32f662cd9718f02d8a8e5628f8f642fa27cd9b5f457b406ed734901a4939e34",
+      "weight": "1222571567335731",
+      "status": "active_validators"
+    },
+    {
+      "id": "0xc448e3f4175eba677870bf0a5a438fd0b2bf3155f9cd61201ad397bfcd75ee4e",
+      "weight": "139740906506256",
+      "status": "active_validators"
+    },
+    {
+      "id": "0xc5d59dc1ea45c528fd0656088f52fbba7774495c0347f80527256317c334271b",
+      "weight": "1062515085213692",
+      "status": "active_validators"
+    },
+    {
+      "id": "0xc84eb99fa08a8dbae9cf8be48b312a946c7cb5f4d109c59b49aa3d446180034e",
+      "weight": "1283839161464404",
+      "status": "active_validators"
+    },
+    {
+      "id": "0xca97e6316d0b2063e9aee156de7ed69d9ffac315b6dd3390c27bbdd796779b78",
+      "weight": "948552874064212",
+      "status": "active_validators"
+    },
+    {
+      "id": "0xcc75dd107c69486adb1c405832709ce04ed6653cbe586a73ab36748c282629cf",
+      "weight": "1063818026871065",
+      "status": "active_validators"
+    },
+    {
+      "id": "0xcfb4330556f9e4d3283a944d4c1763113cee40143182e8d874437368bd1b33ba",
+      "weight": "1962474648609338",
+      "status": "active_validators"
+    },
+    {
+      "id": "0xd7b10a9ddee853b3585dd1efd4902ab3ad4f482b94425a3780cc39e79e6d398",
+      "weight": "1406775635229665",
+      "status": "active_validators"
+    },
+    {
+      "id": "0xda418307cff595ced2af5eb471ec11b1ad6a4907ef57d6e2eeb253bdd5bd9d0d",
+      "weight": "1613644274123251",
+      "status": "active_validators"
+    },
+    {
+      "id": "0xdb5247f859ce63dbe8940cf8773be722a60dcc594a8be9aca4b76abceb251b8e",
+      "weight": "1423261288576612",
+      "status": "active_validators"
+    },
+    {
+      "id": "0xddf23883328d39d8cbb4fad97f0e4bd45827ea999b66aa2a1cffa76615b9ef01",
+      "weight": "342802195337429",
+      "status": "active_validators"
+    },
+    {
+      "id": "0xe2789cdac410113f017fa684bf08fbacd0877612d84464ae6e8474b56e5f21da",
+      "weight": "1085154762655843",
+      "status": "active_validators"
+    },
+    {
+      "id": "0xec70d5edf8061420c10da21d416a3bca49e3352620ddd1e651086b5647f3529",
+      "weight": "409894190904794",
+      "status": "active_validators"
+    },
+    {
+      "id": "0xee36c1068076b199cf537bf652b1e586216a7dfb7c3447ff40333c971717eee6",
+      "weight": "753698836965771",
+      "status": "active_validators"
+    },
+    {
+      "id": "0xef191e643c2ed2d103de4109a506e020f5dde818cbc1ffe5e4ee36328cd22e9b",
+      "weight": "823785305272877",
+      "status": "active_validators"
+    },
+    {
+      "id": "0xf0d49cff005d03312934ce027e30f4a84143d5af53623b30036e7dac1510c218",
+      "weight": "2617880576518183",
+      "status": "active_validators"
+    },
+    {
+      "id": "0xf16cdebe221b819504c96014b81b0903fd345c3c066415a30ec75148358426dc",
+      "weight": "163631955556349",
+      "status": "active_validators"
+    },
+    {
+      "id": "0xf1f6f780321e7259d0feeef98745da7f766eace664c43325779302b2724c8692",
+      "weight": "1002603592080031",
+      "status": "active_validators"
+    },
+    {
+      "id": "0xf4a6e0753687faaff17d32f72900094019fe7d2d35e45b94b87d113faec0d9e9",
+      "weight": "275986696056882",
+      "status": "active_validators"
+    },
+    {
+      "id": "0xf747e3a6282cc0dee1c89239c529b039c64fe48e88b50e5cedd40e9c094800bb",
+      "weight": "1110220377884312",
+      "status": "active_validators"
+    },
+    {
+      "id": "0xf923e8203e8d534c7357e0761179a76d6593e21c53d5f8120044c7d2cc650679",
+      "weight": "1546364479237726",
+      "status": "active_validators"
+    },
+    {
+      "id": "0xff39ddd0944f2fd4db88cd9e0730990b7bce674c3710584719da2263cba36cdc",
+      "weight": "746011609928108",
+      "status": "active_validators"
+    }
+  ],
+  "statistics": {
+    "n": 83,
+    "total_weight": "76714069560320516",
+    "min_weight": "106213924033132",
+    "max_weight": "2617880576518183",
+    "gcd": "1",
+    "total_weight_bits": 57,
+    "sum_individual_weight_bits": 4136,
+    "exact_gcd_virtual_shares": "76714069560320516",
+    "top1_percent": 3.4125168844806693,
+    "top3_percent": 10.120236426702506,
+    "effective_n": 59.562675176501905,
+    "minimal_nodes_to_exceed_one_third": 14,
+    "minimal_nodes_to_exceed_two_thirds": 36,
+    "max_weight_below_coin_threshold": true
+  },
+  "sources": [
+    {
+      "path": "data/aptos/raw/ledger.json",
+      "url": "https://fullnode.mainnet.aptoslabs.com/v1",
+      "final_url": "https://fullnode.mainnet.aptoslabs.com/v1",
+      "method": "GET",
+      "payload": null,
+      "request_headers": {},
+      "response_headers": {
+        "content-type": "application/json; charset=utf-8",
+        "x-aptos-ledger-version": "7878756321",
+        "x-aptos-epoch": "17861",
+        "date": "Tue, 03 Nov 2026 06:38:15 GMT"
+      },
+      "retrieved_at_utc": "2026-11-03T06:38:11.432110+00:00",
+      "size_bytes": 684,
+      "sha256": "22954b439c5b2201ef7a27a95b8589a34607a20439c15078f7e08b298b18ff90"
+    },
+    {
+      "path": "data/aptos/raw/validator_set.json",
+      "url": "https://fullnode.mainnet.aptoslabs.com/v1/accounts/0x1/resource/0x1::stake::ValidatorSet?ledger_version=7878756321",
+      "final_url": "https://fullnode.mainnet.aptoslabs.com/v1/accounts/0x1/resource/0x1::stake::ValidatorSet?ledger_version=7878756321",
+      "method": "GET",
+      "payload": null,
+      "request_headers": {},
+      "response_headers": {
+        "content-type": "application/json; charset=utf-8",
+        "x-aptos-ledger-version": "7878756372",
+        "x-aptos-epoch": "17861",
+        "date": "Tue, 03 Nov 2026 06:38:15 GMT"
+      },
+      "retrieved_at_utc": "2026-11-03T06:38:12.178146+00:00",
+      "size_bytes": 49521,
+      "sha256": "9174886f4cac62f22279d9e2421e300f161801fc80f51580bcdf84ca78eb4529"
+    },
+    {
+      "path": "data/aptos/raw/reconfiguration.json",
+      "url": "https://fullnode.mainnet.aptoslabs.com/v1/accounts/0x1/resource/0x1::reconfiguration::Configuration?ledger_version=7878756321",
+      "final_url": "https://fullnode.mainnet.aptoslabs.com/v1/accounts/0x1/resource/0x1::reconfiguration::Configuration?ledger_version=7878756321",
+      "method": "GET",
+      "payload": null,
+      "request_headers": {},
+      "response_headers": {
+        "content-type": "application/json; charset=utf-8",
+        "x-aptos-ledger-version": "7878756417",
+        "x-aptos-epoch": "17861",
+        "date": "Tue, 03 Nov 2026 06:38:15 GMT"
+      },
+      "retrieved_at_utc": "2026-11-03T06:38:12.568904+00:00",
+      "size_bytes": 195,
+      "sha256": "08697986cecd38bbd38f822c4e20b750aebe95c73e92bf5c8fa8b532341c3461"
+    }
+  ],
+  "ledger_version": "7878756321",
+  "epoch": "17861",
+  "ledger_timestamp_us": "1793687894934114",
+  "excluded_pending_active": 0,
+  "weight_semantics": "Exact stake::ValidatorSet.voting_power; active plus pending_inactive; pending_active excluded",
+  "party_semantics": "One consensus validator account, not operator-aggregated",
+  "validation": {
+    "fixed_ledger_version": true,
+    "total_voting_power_matches_resource": true,
+    "cryptographic_light_client_verification": false
+  }
+}

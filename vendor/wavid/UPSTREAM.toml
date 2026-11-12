@@ -1,0 +1,11 @@
+repository = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git"
+revision = "731e0b81166125ea756c5a047ab813ccb8af7111"
+subdirectory = "dissemination/wavid"
+patch = "single-pass canonical dispersal and selected receipt proofs"
+wire_format_changed = false
+completion_predicate_changed = false
+# Cargo.toml replaces sibling paths with dependencies pinned to the same revision.
+# Local API: Codec::prepare_dispersal, Dispersal, Request::DisperseCached,
+# State::disperse_cached. Receiver validation and protocol handlers are unchanged.
+# Dispersal is immutable like upstream ValidatedFile: unchecked caller-owned
+# packets must never masquerade as a previously verified encoding.

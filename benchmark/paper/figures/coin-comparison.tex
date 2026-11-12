@@ -1,0 +1,121 @@
+% Standalone figure. Compile with pdflatex coin-comparison.tex.
+% The embedded tables make this file portable. Rebuild them with refresh_data.py.
+% Suggested caption:
+% Single-coin experiments across five AWS regions. Points and paired bars show two-run means;
+% whiskers span the two observations. Traffic is averaged over physical parties.
+% The Aptos path counts distribution and recovery service traffic, including
+% framing and ACKs. In the rightmost latency panel, for each run the
+% node with the longest START-to-output interval supplies both intervals.
+% The split at Freeze describes elapsed phases; work may overlap.
+% Sui HashRand reached the 180 s deadline twice at n=48 (triangle) and was
+% skipped at n=64. Its incomplete runs contribute no full-run traffic value.
+\documentclass[tikz,border=2pt]{standalone}
+\usepackage[T1]{fontenc}
+\usepackage{mathptmx}
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+\usepgfplotslibrary{groupplots}
+\usetikzlibrary{calc,shapes.geometric}
+\pgfplotsset{compat=1.18}
+\definecolor{whcc}{HTML}{005DA8}
+\definecolor{warm}{HTML}{BD2026}
+\definecolor{hr}{HTML}{171717}
+\definecolor{basefill}{HTML}{EBA51A}
+\definecolor{gridline}{HTML}{D9D9D9}
+\pgfplotsset{
+  whcc line/.style={color=whcc,solid,mark=*,mark options={fill=whcc}},
+  warm line/.style={color=warm,dashed,mark=square*,mark options={solid,fill=white}},
+  hr line/.style={color=hr,dashdotted,mark=diamond*,mark options={solid,fill=white}},
+  run pair/.style={line width=.95pt,mark size=2pt,error bars/.cd,
+     y dir=both,y explicit,error bar style={line width=.5pt,solid},
+     error mark options={mark size=1.65pt,line width=.5pt,solid},/pgfplots/.cd},
+}
+% BEGIN MEASUREMENTS
+\pgfplotstableread{
+n sent senterr lat laterr
+16 2.45850384 0.00019044 14.60547400 0.05035600
+32 9.97771406 0.00000000 109.90588050 2.20779050
+}\suihr
+\pgfplotstableread{
+n sent senterr lat laterr
+16 1.15695947 0.00258398 3.43382250 0.07193950
+32 4.70802477 0.01224017 6.93348100 0.00305800
+48 10.07409588 0.00000127 7.86128050 0.00590950
+64 16.21073923 0.01739177 8.99715150 0.00725350
+}\suiwhcc
+\pgfplotstableread{
+n sent senterr lat laterr shared sharederr pre preerr
+16 1.27298355 0.00000000 6.56875200 0.03234200 0.27859211 0.00000000 6.37074750 0.03345250
+32 24.61957741 0.00000000 9.47503400 0.02720000 0.76762676 0.00000000 7.21671300 0.00268400
+48 64.21522907 0.03092579 14.73290800 0.37731400 1.48591522 0.03092579 8.37886500 0.05245900
+64 136.25355781 0.31823894 25.03203450 2.10443850 2.64021266 0.31823894 10.68324650 0.06138850
+}\aptoswarm
+\pgfplotstableread{
+n sent senterr lat laterr shared sharederr pre preerr
+16 1.44823593 0.00401330 6.50289750 0.04575850 0.27859211 0.00000000 6.34683650 0.04334650
+32 19.59650026 0.01305421 8.75967150 0.18843650 0.76762676 0.00000000 6.68429950 0.03474250
+48 42.90679512 0.02802024 12.30889400 0.06355700 1.45485497 0.00013447 7.06393850 0.04190050
+64 76.27701677 0.44434486 19.10947900 0.87841400 2.75029555 0.42664424 7.48309800 0.11105900
+}\aptoswhcc
+% END MEASUREMENTS
+\newcommand{\series}[3]{%
+  \addplot+[run pair,#1,forget plot] table[x=n,y=#2,y error=#2err]{#3};}
+% Paint the total, then its lower component; apply the observed range at the total.
+\newcommand{\stackpairbar}[7]{%
+  \addplot[ybar,bar width=2.7mm,bar shift=0pt,draw=#1,fill=#5,line width=.4pt,forget plot]
+    table[x expr={\thisrow{n}+(#2)},y=#3]{#7};
+  \addplot[ybar,bar width=2.7mm,bar shift=0pt,draw=#1,fill=#6,line width=.4pt,forget plot]
+    table[x expr={\thisrow{n}+(#2)},y=#4]{#7};
+  \addplot[no marks,draw=none,forget plot,error bars/.cd,y dir=both,y explicit,
+    error mark=none,error bar style={draw=black,line width=.6pt}]
+    table[x expr={\thisrow{n}+(#2)},y=#3,y error=#3err]{#7};}
+\newcommand{\basekey}[1]{\node[anchor=north west,inner sep=2pt,fill=white]
+  at (rel axis cs:.02,.98) {\textcolor{basefill}{\rule{2.3mm}{1.7mm}}\, #1};}
+\begin{document}
+\begin{tikzpicture}[font=\rmfamily\fontsize{8}{9}\selectfont]
+\begin{groupplot}[
+ group style={group size=2 by 2,horizontal sep=13mm,vertical sep=7.2mm},
+ scale only axis,width=57mm,height=26mm,
+ xmin=12,xmax=68,xtick={16,32,48,64},tick align=outside,
+ axis lines=box,axis line style={black,line width=.55pt},tick pos=left,tick style={black},
+ ymajorgrids,grid style={gridline,densely dotted,line width=.35pt},major tick length=2pt,
+ scaled ticks=false,minor tick num=0,
+ tick label style={font=\rmfamily\fontsize{8}{9}\selectfont},
+ title style={font=\rmfamily\bfseries\fontsize{9}{10}\selectfont,yshift=-1pt},
+ ylabel style={font=\rmfamily\fontsize{8}{9}\selectfont},
+ /pgf/number format/1000 sep={},
+]
+\nextgroupplot[title={Sui coin},ylabel={MiB / party},xticklabels=\empty,
+               ymin=0,ymax=18,ytick={0,4,8,12,16}]
+  \series{hr line}{sent}{\suihr}
+  \series{whcc line}{sent}{\suiwhcc}
+\nextgroupplot[title={Aptos coin breakdown},xticklabels=\empty,
+               ymin=0,ymax=150,ytick={0,40,80,120}]
+  \stackpairbar{whcc}{-1.6}{sent}{shared}{whcc!65}{basefill}{\aptoswhcc}
+  \stackpairbar{warm}{1.6}{sent}{shared}{warm!65}{basefill}{\aptoswarm}
+  \basekey{Shared control}
+\nextgroupplot[ylabel={Latency (s)},ymode=log,ymin=2,ymax=240,
+               ytick={3,10,30,100,180},yticklabels={3,10,30,100,180},minor y tick num=0]
+  \series{hr line}{lat}{\suihr}
+  \series{whcc line}{lat}{\suiwhcc}
+  \addplot[only marks,mark=triangle,mark size=2.7pt,thick,color=hr] coordinates {(48,180)};
+  \node[anchor=east,fill=white,inner sep=1pt,font=\rmfamily\fontsize{7.5}{8}\selectfont,text=hr]
+       at (axis cs:47,180) {timeout};
+\nextgroupplot[ymin=0,ymax=30,ytick={0,10,20,30}]
+  \stackpairbar{whcc}{-1.6}{lat}{pre}{whcc!65}{basefill}{\aptoswhcc}
+  \stackpairbar{warm}{1.6}{lat}{pre}{warm!65}{basefill}{\aptoswarm}
+  \basekey{Start to Freeze}
+  \node[anchor=north west,inner sep=2pt,fill=white] at (rel axis cs:.02,.84)
+       {Blue/red: recovery and aggregation};
+\end{groupplot}
+\node[anchor=north] at ($ (group c1r2.south)!.5!(group c2r2.south)+(0,-4.6mm) $) {Parties};
+\foreach \pos/\style/\label in {.15/whcc line/{WHCC (PVR + sampling)},
+  .50/warm line/{CSS-HashCoin (RBC)},.84/hr line/{HashRand (virtual shares)}}{
+  \node (entry) at ($ (group c1r1.north west)!\pos!(group c2r1.north east)+(3mm,12mm) $) {\label};
+  \begin{scope}[shift={(entry.west)}]
+    \draw[/pgfplots/\style,line width=.95pt]
+      plot[mark indices={2},mark size=2pt] coordinates {(-6mm,0) (-3.5mm,0) (-1mm,0)};
+  \end{scope}
+}
+\end{tikzpicture}
+\end{document}

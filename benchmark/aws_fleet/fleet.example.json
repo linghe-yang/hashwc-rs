@@ -1,0 +1,31 @@
+{
+  "instance_type": "t3a.medium",
+  "key_name": "whcc-benchmark",
+  "regions": {
+    "us-east-1": {
+      "ami": "ami-REPLACE",
+      "subnet": "subnet-REPLACE",
+      "security_group": "sg-REPLACE"
+    },
+    "us-east-2": {
+      "ami": "ami-REPLACE",
+      "subnet": "subnet-REPLACE",
+      "security_group": "sg-REPLACE"
+    },
+    "us-west-2": {
+      "ami": "ami-REPLACE",
+      "subnet": "subnet-REPLACE",
+      "security_group": "sg-REPLACE"
+    },
+    "ap-northeast-1": {
+      "ami": "ami-REPLACE",
+      "subnet": "subnet-REPLACE",
+      "security_group": "sg-REPLACE"
+    },
+    "eu-west-3": {
+      "ami": "ami-REPLACE",
+      "subnet": "subnet-REPLACE",
+      "security_group": "sg-REPLACE"
+    }
+  }
+}

@@ -1,0 +1,2 @@
+job_id,family,n,protocol,repeat,outputs,status
+sui-n48--hashrand-r2,sui,48,hashrand,2,0,online_timeout

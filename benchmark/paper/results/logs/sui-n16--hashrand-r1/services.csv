@@ -1,0 +1,7 @@
+job_id,family,n,protocol,repeat,service,sent_bytes
+sui-n16--hashrand-r1,sui,16,hashrand,1,hashrand-vs/private,2083290
+sui-n16--hashrand-r1,sui,16,hashrand,1,hashrand-vs/recovery,32957325
+sui-n16--hashrand-r1,sui,16,hashrand,1,wbinaa,3075990
+sui-n16--hashrand-r1,sui,16,hashrand,1,wgather,114960
+sui-n16--hashrand-r1,sui,16,hashrand,1,wra,1489920
+sui-n16--hashrand-r1,sui,16,hashrand,1,wrbc,1528560

@@ -1,0 +1,17 @@
+job_id,family,n,protocol,repeat,dealer,selected,retrieve_started,remote_getters,local_reuses,data_response_body_bytes,remote_logical_file_bytes,bulk_bytes
+sui-n16--whcc-r2,sui,16,whcc,2,0,14,13,13,1,453191,134056,10312
+sui-n16--whcc-r2,sui,16,whcc,2,1,15,14,14,1,492902,144368,10312
+sui-n16--whcc-r2,sui,16,whcc,2,2,13,13,13,0,453159,134056,10312
+sui-n16--whcc-r2,sui,16,whcc,2,3,14,14,14,0,489026,144368,10312
+sui-n16--whcc-r2,sui,16,whcc,2,4,15,14,14,1,488412,144368,10312
+sui-n16--whcc-r2,sui,16,whcc,2,5,16,15,15,1,524279,154680,10312
+sui-n16--whcc-r2,sui,16,whcc,2,6,14,13,13,1,455743,134056,10312
+sui-n16--whcc-r2,sui,16,whcc,2,7,14,14,14,0,488412,144368,10312
+sui-n16--whcc-r2,sui,16,whcc,2,8,16,15,15,1,526185,154680,10312
+sui-n16--whcc-r2,sui,16,whcc,2,9,14,13,13,1,454579,134056,10312
+sui-n16--whcc-r2,sui,16,whcc,2,10,16,15,15,1,525571,154680,10312
+sui-n16--whcc-r2,sui,16,whcc,2,11,12,11,11,1,380811,113432,10312
+sui-n16--whcc-r2,sui,16,whcc,2,12,13,13,13,0,453159,134056,10312
+sui-n16--whcc-r2,sui,16,whcc,2,13,15,14,14,1,489026,144368,10312
+sui-n16--whcc-r2,sui,16,whcc,2,14,15,14,14,1,489672,144368,10312
+sui-n16--whcc-r2,sui,16,whcc,2,15,13,12,12,1,419294,123744,10312

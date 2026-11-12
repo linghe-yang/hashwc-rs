@@ -1,0 +1,32 @@
+[package]
+name = "hashrand"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+
+[dependencies]
+anyhow.workspace = true
+bincode.workspace = true
+clap.workspace = true
+config.workspace = true
+crypto.workspace = true
+env_logger.workspace = true
+getrandom.workspace = true
+log.workspace = true
+network.workspace = true
+num-bigint.workspace = true
+num-traits.workspace = true
+sdc-crypto.workspace = true
+sdc-types.workspace = true
+sdc-util.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+tokio.workspace = true
+types.workspace = true
+whcc.workspace = true
+wrbc.workspace = true
+wra.workspace = true
+wgather.workspace = true
+wbinaa.workspace = true
+wavid.workspace = true

@@ -1,0 +1,17 @@
+job_id,family,n,protocol,repeat,dealer,selected,retrieve_started,remote_getters,local_reuses,data_response_body_bytes,remote_logical_file_bytes,bulk_bytes
+aptos-n16--warmup-r1,aptos,16,warmup,1,0,,,15,1,772769,210840,14056
+aptos-n16--warmup-r1,aptos,16,warmup,1,1,,,15,1,773681,210840,14056
+aptos-n16--warmup-r1,aptos,16,warmup,1,2,,,15,1,773649,210840,14056
+aptos-n16--warmup-r1,aptos,16,warmup,1,3,,,15,1,774497,210840,14056
+aptos-n16--warmup-r1,aptos,16,warmup,1,4,,,15,1,773649,210840,14056
+aptos-n16--warmup-r1,aptos,16,warmup,1,5,,,15,1,773745,210840,14056
+aptos-n16--warmup-r1,aptos,16,warmup,1,6,,,15,1,774529,210840,14056
+aptos-n16--warmup-r1,aptos,16,warmup,1,7,,,15,1,777201,210840,14056
+aptos-n16--warmup-r1,aptos,16,warmup,1,8,,,15,1,777233,210840,14056
+aptos-n16--warmup-r1,aptos,16,warmup,1,9,,,15,1,771921,210840,14056
+aptos-n16--warmup-r1,aptos,16,warmup,1,10,,,15,1,774593,210840,14056
+aptos-n16--warmup-r1,aptos,16,warmup,1,11,,,15,1,771921,210840,14056
+aptos-n16--warmup-r1,aptos,16,warmup,1,12,,,15,1,775409,210840,14056
+aptos-n16--warmup-r1,aptos,16,warmup,1,13,,,15,1,774625,210840,14056
+aptos-n16--warmup-r1,aptos,16,warmup,1,14,,,15,1,775409,210840,14056
+aptos-n16--warmup-r1,aptos,16,warmup,1,15,,,15,1,772769,210840,14056

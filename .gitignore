@@ -1,0 +1,11 @@
+/target/
+/results/
+/.venv/
+/.venv-bench/
+__pycache__/
+*.py[cod]
+/benchmark/aws_fleet/fleet.json
+/benchmark/paper/figures/*.aux
+/benchmark/paper/figures/*.log
+/benchmark/paper/figures/*.fls
+/benchmark/paper/figures/*.fdb_latexmk

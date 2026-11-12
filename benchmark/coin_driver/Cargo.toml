@@ -1,0 +1,27 @@
+[package]
+name = "coin-benchmark-driver"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[[bin]]
+name = "coin-benchmark-driver"
+path = "src/main.rs"
+
+[dependencies]
+anyhow.workspace = true
+clap.workspace = true
+serde_json.workspace = true
+tokio.workspace = true
+config.workspace = true
+types.workspace = true
+whcc.workspace = true
+csshashcoin.workspace = true
+hashrand.workspace = true
+wiawvss.workspace = true
+wcss.workspace = true
+env_logger.workspace = true
+libc = "0.2"
+sdc-util.workspace = true
+
+recovery.workspace = true

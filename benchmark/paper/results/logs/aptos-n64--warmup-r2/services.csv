@@ -1,0 +1,7 @@
+job_id,family,n,protocol,repeat,service,sent_bytes
+aptos-n64--warmup-r2,aptos,64,warmup,2,csshashcoin/private,1197504
+aptos-n64--warmup-r2,aptos,64,warmup,2,csshashcoin/recovery,35098560
+aptos-n64--warmup-r2,aptos,64,warmup,2,wbinaa,96435990
+aptos-n64--warmup-r2,aptos,64,warmup,2,wgather,1979712
+aptos-n64--warmup-r2,aptos,64,warmup,2,wra,100122624
+aptos-n64--warmup-r2,aptos,64,warmup,2,wrbc,8930343744

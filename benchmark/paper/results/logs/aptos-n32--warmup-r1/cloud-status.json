@@ -1,0 +1,11 @@
+{
+  "finished": true,
+  "error": null,
+  "archive_sha256": "5dbbd62a34d9379dd240ecc900675612b694705e21df7996e1a9b2f65ab5639d",
+  "controller_user_s": 1.156344,
+  "controller_system_s": 0.21021199999999998,
+  "controller_max_rss_kib": 32296,
+  "controller_subprocess_user_s": 68.51997,
+  "controller_subprocess_system_s": 2.903404,
+  "ssh_subprocess_cpu_included": false
+}

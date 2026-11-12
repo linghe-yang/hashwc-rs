@@ -1,0 +1,8 @@
+job_id,family,n,protocol,repeat,service,sent_bytes
+aptos-n48--whcc-r2,aptos,48,whcc,2,wavid,1958541285
+aptos-n48--whcc-r2,aptos,48,whcc,2,wbinaa,30117600
+aptos-n48--whcc-r2,aptos,48,whcc,2,wgather,1098672
+aptos-n48--whcc-r2,aptos,48,whcc,2,whcc/private,10566258
+aptos-n48--whcc-r2,aptos,48,whcc,2,whcc/recovery,27168679
+aptos-n48--whcc-r2,aptos,48,whcc,2,wra,42015744
+aptos-n48--whcc-r2,aptos,48,whcc,2,wrbc,91471776

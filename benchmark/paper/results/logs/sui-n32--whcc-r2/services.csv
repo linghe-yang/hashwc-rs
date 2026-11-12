@@ -1,0 +1,8 @@
+job_id,family,n,protocol,repeat,service,sent_bytes
+sui-n32--whcc-r2,sui,32,whcc,2,wavid,92825552
+sui-n32--whcc-r2,sui,32,whcc,2,wbinaa,12961472
+sui-n32--whcc-r2,sui,32,whcc,2,wgather,479136
+sui-n32--whcc-r2,sui,32,whcc,2,whcc/private,3506224
+sui-n32--whcc-r2,sui,32,whcc,2,whcc/recovery,9344113
+sui-n32--whcc-r2,sui,32,whcc,2,wra,12316672
+sui-n32--whcc-r2,sui,32,whcc,2,wrbc,26952640

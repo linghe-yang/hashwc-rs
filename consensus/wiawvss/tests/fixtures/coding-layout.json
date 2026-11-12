@@ -1,0 +1,734 @@
+[
+  {
+    "weights": [
+      3,
+      3,
+      3,
+      3
+    ],
+    "threshold": 4,
+    "geometry": {
+      "gates": 27,
+      "nodes": 33,
+      "public_bytes": 3208,
+      "parties": 4,
+      "counts": [
+        3,
+        3,
+        3,
+        3
+      ],
+      "coded_coordinates": 12,
+      "frontier": [
+        3,
+        4,
+        5,
+        3
+      ],
+      "sampling_a": 44,
+      "quotas": [
+        4,
+        4,
+        4,
+        4
+      ]
+    },
+    "cost": {
+      "block_bytes": 32,
+      "stripes": 26,
+      "bundle_bytes": [
+        6257,
+        7089,
+        7921,
+        6257
+      ],
+      "receipt_bytes": [
+        3935,
+        3935,
+        3935,
+        3935
+      ],
+      "source_opening_bytes": 545,
+      "components": {
+        "bulk_disperse": 84648,
+        "bulk_retrieve": 338592,
+        "private_receipts": 49536,
+        "retrieve_requests": 9264,
+        "recovery_tokens": 12528,
+        "success_terminals": 12336
+      },
+      "modeled_bytes": 506904
+    }
+  },
+  {
+    "weights": [
+      3,
+      3,
+      3,
+      3
+    ],
+    "threshold": 4,
+    "geometry": {
+      "gates": 27,
+      "nodes": 33,
+      "public_bytes": 3208,
+      "parties": 4,
+      "counts": [
+        3,
+        3,
+        3,
+        3
+      ],
+      "coded_coordinates": 12,
+      "frontier": [
+        3,
+        4,
+        5,
+        3
+      ],
+      "sampling_a": 44,
+      "quotas": [
+        4,
+        4,
+        4,
+        4
+      ]
+    },
+    "cost": {
+      "block_bytes": 34,
+      "stripes": 24,
+      "bundle_bytes": [
+        5921,
+        6689,
+        7457,
+        5921
+      ],
+      "receipt_bytes": [
+        3402,
+        3402,
+        3949,
+        3949
+      ],
+      "source_opening_bytes": 547,
+      "components": {
+        "bulk_disperse": 80040,
+        "bulk_retrieve": 320160,
+        "private_receipts": 46422,
+        "retrieve_requests": 9264,
+        "recovery_tokens": 12528,
+        "success_terminals": 12336
+      },
+      "modeled_bytes": 480750
+    }
+  },
+  {
+    "weights": [
+      3,
+      3,
+      3,
+      3
+    ],
+    "threshold": 4,
+    "geometry": {
+      "gates": 27,
+      "nodes": 33,
+      "public_bytes": 3208,
+      "parties": 4,
+      "counts": [
+        3,
+        3,
+        3,
+        3
+      ],
+      "coded_coordinates": 12,
+      "frontier": [
+        3,
+        4,
+        5,
+        3
+      ],
+      "sampling_a": 44,
+      "quotas": [
+        4,
+        4,
+        4,
+        4
+      ]
+    },
+    "cost": {
+      "block_bytes": 126,
+      "stripes": 7,
+      "bundle_bytes": [
+        3671,
+        3895,
+        4119,
+        3671
+      ],
+      "receipt_bytes": [
+        1839,
+        1839,
+        2412,
+        1839
+      ],
+      "source_opening_bytes": 573,
+      "components": {
+        "bulk_disperse": 48144,
+        "bulk_retrieve": 192576,
+        "private_receipts": 26103,
+        "retrieve_requests": 9264,
+        "recovery_tokens": 12528,
+        "success_terminals": 12336
+      },
+      "modeled_bytes": 300951
+    }
+  },
+  {
+    "weights": [
+      3,
+      3,
+      3,
+      3
+    ],
+    "threshold": 4,
+    "geometry": {
+      "gates": 27,
+      "nodes": 33,
+      "public_bytes": 3208,
+      "parties": 4,
+      "counts": [
+        3,
+        3,
+        3,
+        3
+      ],
+      "coded_coordinates": 12,
+      "frontier": [
+        3,
+        4,
+        5,
+        3
+      ],
+      "sampling_a": 44,
+      "quotas": [
+        4,
+        4,
+        4,
+        4
+      ]
+    },
+    "cost": {
+      "block_bytes": 510,
+      "stripes": 2,
+      "bundle_bytes": [
+        3365,
+        3429,
+        3493,
+        3365
+      ],
+      "receipt_bytes": [
+        1011,
+        1011,
+        1011,
+        1011
+      ],
+      "source_opening_bytes": 891,
+      "components": {
+        "bulk_disperse": 43032,
+        "bulk_retrieve": 172128,
+        "private_receipts": 14448,
+        "retrieve_requests": 9264,
+        "recovery_tokens": 12528,
+        "success_terminals": 12336
+      },
+      "modeled_bytes": 263736
+    }
+  },
+  {
+    "weights": [
+      3,
+      3,
+      3,
+      3
+    ],
+    "threshold": 4,
+    "geometry": {
+      "gates": 27,
+      "nodes": 33,
+      "public_bytes": 3208,
+      "parties": 4,
+      "counts": [
+        3,
+        3,
+        3,
+        3
+      ],
+      "coded_coordinates": 12,
+      "frontier": [
+        3,
+        4,
+        5,
+        3
+      ],
+      "sampling_a": 44,
+      "quotas": [
+        4,
+        4,
+        4,
+        4
+      ]
+    },
+    "cost": {
+      "block_bytes": 1024,
+      "stripes": 1,
+      "bundle_bytes": [
+        3233,
+        3265,
+        3297,
+        3233
+      ],
+      "receipt_bytes": [
+        1525,
+        1525,
+        1525,
+        1525
+      ],
+      "source_opening_bytes": 1405,
+      "components": {
+        "bulk_disperse": 41160,
+        "bulk_retrieve": 164640,
+        "private_receipts": 20616,
+        "retrieve_requests": 9264,
+        "recovery_tokens": 12528,
+        "success_terminals": 12336
+      },
+      "modeled_bytes": 260544
+    }
+  },
+  {
+    "weights": [
+      3,
+      3,
+      3,
+      3
+    ],
+    "threshold": 4,
+    "geometry": {
+      "gates": 27,
+      "nodes": 33,
+      "public_bytes": 3208,
+      "parties": 4,
+      "counts": [
+        3,
+        3,
+        3,
+        3
+      ],
+      "coded_coordinates": 12,
+      "frontier": [
+        3,
+        4,
+        5,
+        3
+      ],
+      "sampling_a": 44,
+      "quotas": [
+        4,
+        4,
+        4,
+        4
+      ]
+    },
+    "cost": {
+      "block_bytes": 4096,
+      "stripes": 1,
+      "bundle_bytes": [
+        12449,
+        12481,
+        12513,
+        12449
+      ],
+      "receipt_bytes": [
+        4597,
+        4597,
+        4597,
+        4597
+      ],
+      "source_opening_bytes": 4477,
+      "components": {
+        "bulk_disperse": 151752,
+        "bulk_retrieve": 607008,
+        "private_receipts": 57480,
+        "retrieve_requests": 9264,
+        "recovery_tokens": 12528,
+        "success_terminals": 12336
+      },
+      "modeled_bytes": 850368
+    }
+  },
+  {
+    "weights": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "threshold": 3,
+    "geometry": {
+      "gates": 6,
+      "nodes": 12,
+      "public_bytes": 1192,
+      "parties": 4,
+      "counts": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "coded_coordinates": 14,
+      "frontier": [
+        3,
+        4,
+        5,
+        3
+      ],
+      "sampling_a": 44,
+      "quotas": [
+        4,
+        4,
+        4,
+        4
+      ]
+    },
+    "cost": {
+      "block_bytes": 32,
+      "stripes": 10,
+      "bundle_bytes": [
+        2097,
+        2737,
+        3377,
+        3057
+      ],
+      "receipt_bytes": [
+        3704,
+        3704,
+        3704,
+        3704
+      ],
+      "source_opening_bytes": 512,
+      "components": {
+        "bulk_disperse": 35880,
+        "bulk_retrieve": 143520,
+        "private_receipts": 46764,
+        "retrieve_requests": 9264,
+        "recovery_tokens": 12528,
+        "success_terminals": 12336
+      },
+      "modeled_bytes": 260292
+    }
+  },
+  {
+    "weights": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "threshold": 3,
+    "geometry": {
+      "gates": 6,
+      "nodes": 12,
+      "public_bytes": 1192,
+      "parties": 4,
+      "counts": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "coded_coordinates": 14,
+      "frontier": [
+        3,
+        4,
+        5,
+        3
+      ],
+      "sampling_a": 44,
+      "quotas": [
+        4,
+        4,
+        4,
+        4
+      ]
+    },
+    "cost": {
+      "block_bytes": 34,
+      "stripes": 9,
+      "bundle_bytes": [
+        1925,
+        2519,
+        3113,
+        2843
+      ],
+      "receipt_bytes": [
+        3204,
+        3204,
+        3718,
+        3718
+      ],
+      "source_opening_bytes": 514,
+      "components": {
+        "bulk_disperse": 33276,
+        "bulk_retrieve": 133104,
+        "private_receipts": 43848,
+        "retrieve_requests": 9264,
+        "recovery_tokens": 12528,
+        "success_terminals": 12336
+      },
+      "modeled_bytes": 244356
+    }
+  },
+  {
+    "weights": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "threshold": 3,
+    "geometry": {
+      "gates": 6,
+      "nodes": 12,
+      "public_bytes": 1192,
+      "parties": 4,
+      "counts": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "coded_coordinates": 14,
+      "frontier": [
+        3,
+        4,
+        5,
+        3
+      ],
+      "sampling_a": 44,
+      "quotas": [
+        4,
+        4,
+        4,
+        4
+      ]
+    },
+    "cost": {
+      "block_bytes": 126,
+      "stripes": 3,
+      "bundle_bytes": [
+        1205,
+        1679,
+        2153,
+        2339
+      ],
+      "receipt_bytes": [
+        1740,
+        1740,
+        2280,
+        1740
+      ],
+      "source_opening_bytes": 540,
+      "components": {
+        "bulk_disperse": 24204,
+        "bulk_retrieve": 96816,
+        "private_receipts": 24816,
+        "retrieve_requests": 9264,
+        "recovery_tokens": 12528,
+        "success_terminals": 12336
+      },
+      "modeled_bytes": 179964
+    }
+  },
+  {
+    "weights": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "threshold": 3,
+    "geometry": {
+      "gates": 6,
+      "nodes": 12,
+      "public_bytes": 1192,
+      "parties": 4,
+      "counts": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "coded_coordinates": 14,
+      "frontier": [
+        3,
+        4,
+        5,
+        3
+      ],
+      "sampling_a": 44,
+      "quotas": [
+        4,
+        4,
+        4,
+        4
+      ]
+    },
+    "cost": {
+      "block_bytes": 510,
+      "stripes": 1,
+      "bundle_bytes": [
+        1181,
+        1723,
+        2265,
+        2711
+      ],
+      "receipt_bytes": [
+        1011,
+        1011,
+        1011,
+        1011
+      ],
+      "source_opening_bytes": 891,
+      "components": {
+        "bulk_disperse": 25716,
+        "bulk_retrieve": 102864,
+        "private_receipts": 14448,
+        "retrieve_requests": 9264,
+        "recovery_tokens": 12528,
+        "success_terminals": 12336
+      },
+      "modeled_bytes": 177156
+    }
+  },
+  {
+    "weights": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "threshold": 3,
+    "geometry": {
+      "gates": 6,
+      "nodes": 12,
+      "public_bytes": 1192,
+      "parties": 4,
+      "counts": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "coded_coordinates": 14,
+      "frontier": [
+        3,
+        4,
+        5,
+        3
+      ],
+      "sampling_a": 44,
+      "quotas": [
+        4,
+        4,
+        4,
+        4
+      ]
+    },
+    "cost": {
+      "block_bytes": 1024,
+      "stripes": 1,
+      "bundle_bytes": [
+        2209,
+        3265,
+        4321,
+        5281
+      ],
+      "receipt_bytes": [
+        1525,
+        1525,
+        1525,
+        1525
+      ],
+      "source_opening_bytes": 1405,
+      "components": {
+        "bulk_disperse": 47304,
+        "bulk_retrieve": 189216,
+        "private_receipts": 20616,
+        "retrieve_requests": 9264,
+        "recovery_tokens": 12528,
+        "success_terminals": 12336
+      },
+      "modeled_bytes": 291264
+    }
+  },
+  {
+    "weights": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "threshold": 3,
+    "geometry": {
+      "gates": 6,
+      "nodes": 12,
+      "public_bytes": 1192,
+      "parties": 4,
+      "counts": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "coded_coordinates": 14,
+      "frontier": [
+        3,
+        4,
+        5,
+        3
+      ],
+      "sampling_a": 44,
+      "quotas": [
+        4,
+        4,
+        4,
+        4
+      ]
+    },
+    "cost": {
+      "block_bytes": 4096,
+      "stripes": 1,
+      "bundle_bytes": [
+        8353,
+        12481,
+        16609,
+        20641
+      ],
+      "receipt_bytes": [
+        4597,
+        4597,
+        4597,
+        4597
+      ],
+      "source_opening_bytes": 4477,
+      "components": {
+        "bulk_disperse": 176328,
+        "bulk_retrieve": 705312,
+        "private_receipts": 57480,
+        "retrieve_requests": 9264,
+        "recovery_tokens": 12528,
+        "success_terminals": 12336
+      },
+      "modeled_bytes": 973248
+    }
+  }
+]

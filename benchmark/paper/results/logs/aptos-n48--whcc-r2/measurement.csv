@@ -1,0 +1,2 @@
+job_id,family,n,protocol,repeat,outputs,status,remote_getters_per_dealer,local_reuses,remote_logical_file_bytes,data_response_body_bytes,selected_per_dealer,path_bytes,shared_bytes,sent_bytes,latency_ms,mean_cpu_ms,peak_party_rss_kib
+aptos-n48--whcc-r2,aptos,48,whcc,2,48,success,27.458333333333332,25,528222768,1861471066,27.979166666666668,2087747998,73232016,2160980014,12372.451,8272.046479166667,94752

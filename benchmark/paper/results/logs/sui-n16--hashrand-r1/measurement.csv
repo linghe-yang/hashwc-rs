@@ -1,0 +1,2 @@
+job_id,family,n,protocol,repeat,outputs,status,sent_bytes,latency_ms,mean_cpu_ms,peak_party_rss_kib
+sui-n16--hashrand-r1,sui,16,hashrand,1,16,success,41250045,14655.83,10732.1953125,24744

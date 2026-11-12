@@ -1,0 +1,11 @@
+{
+  "finished": true,
+  "error": "TimeoutError()",
+  "archive_sha256": "8913ccbf76278089d0d346c6ce09917b68af01467f5d5c96b1fd322cb268e80f",
+  "controller_user_s": 1.820926,
+  "controller_system_s": 0.29540099999999997,
+  "controller_max_rss_kib": 27752,
+  "controller_subprocess_user_s": 93.076709,
+  "controller_subprocess_system_s": 4.2305019999999995,
+  "ssh_subprocess_cpu_included": false
+}

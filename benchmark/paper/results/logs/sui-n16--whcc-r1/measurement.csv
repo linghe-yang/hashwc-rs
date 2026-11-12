@@ -1,0 +1,2 @@
+job_id,family,n,protocol,repeat,outputs,status,remote_getters_per_dealer,local_reuses,remote_logical_file_bytes,data_response_body_bytes,selected_per_dealer,path_bytes,shared_bytes,sent_bytes,latency_ms,mean_cpu_ms,peak_party_rss_kib
+sui-n16--whcc-r1,sui,16,whcc,1,16,success,13.4375,14,2217080,7511687,14.3125,14686337,4680870,19367207,3361.883,538.8124375,16436

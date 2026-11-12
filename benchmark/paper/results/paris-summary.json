@@ -1,0 +1,242 @@
+[
+  {
+    "n": 16,
+    "family": "aptos",
+    "warmup": {
+      "status": [
+        "success",
+        "success"
+      ],
+      "remote_getters_per_dealer": 15.0,
+      "sent_mib_per_party": 1.2729835510253906,
+      "path_mib_per_party": 0.9943914413452148,
+      "shared_mib_per_party": 0.2785921096801758,
+      "response_body_mib_per_party": 0.7383584976196289,
+      "mean_cpu_s": 0.574751,
+      "latency_s": 6.568752
+    },
+    "whcc": {
+      "status": [
+        "success",
+        "success"
+      ],
+      "remote_getters_per_dealer": 13.3125,
+      "sent_mib_per_party": 1.4482359290122986,
+      "path_mib_per_party": 1.1696438193321228,
+      "shared_mib_per_party": 0.2785921096801758,
+      "response_body_mib_per_party": 0.7238070368766785,
+      "mean_cpu_s": 0.6071480625,
+      "latency_s": 6.5028974999999996
+    },
+    "saved_percent": -13.767057543339178,
+    "delta_sent_mib_per_party": -0.17525237798690796,
+    "delta_path_mib_per_party": -0.17525237798690796,
+    "delta_shared_mib_per_party": 0.0,
+    "delta_response_body_mib_per_party": 0.01455146074295044
+  },
+  {
+    "n": 16,
+    "family": "sui",
+    "hashrand": {
+      "status": [
+        "success",
+        "success"
+      ],
+      "sent_mib_per_party": 2.458503842353821,
+      "mean_cpu_s": 10.6800060625,
+      "latency_s": 14.605474000000001
+    },
+    "whcc": {
+      "status": [
+        "success",
+        "success"
+      ],
+      "remote_getters_per_dealer": 13.5,
+      "sent_mib_per_party": 1.1569594740867615,
+      "path_mib_per_party": 0.8779578804969788,
+      "shared_mib_per_party": 0.2790015935897827,
+      "response_body_mib_per_party": 0.4498692750930786,
+      "mean_cpu_s": 0.554348375,
+      "latency_s": 3.4338224999999998
+    },
+    "saved_percent": 52.940505759833776
+  },
+  {
+    "n": 32,
+    "family": "aptos",
+    "warmup": {
+      "status": [
+        "success",
+        "success"
+      ],
+      "remote_getters_per_dealer": 31.0,
+      "sent_mib_per_party": 24.619577407836914,
+      "path_mib_per_party": 23.851950645446777,
+      "shared_mib_per_party": 0.7676267623901367,
+      "response_body_mib_per_party": 22.247347593307495,
+      "mean_cpu_s": 4.074280265625,
+      "latency_s": 9.475034
+    },
+    "whcc": {
+      "status": [
+        "success",
+        "success"
+      ],
+      "remote_getters_per_dealer": 21.703125,
+      "sent_mib_per_party": 19.596500262618065,
+      "path_mib_per_party": 18.828873500227928,
+      "shared_mib_per_party": 0.7676267623901367,
+      "response_body_mib_per_party": 16.574774131178856,
+      "mean_cpu_s": 3.6292749375,
+      "latency_s": 8.7596715
+    },
+    "saved_percent": 20.402775652923676,
+    "delta_sent_mib_per_party": 5.023077145218849,
+    "delta_path_mib_per_party": 5.023077145218849,
+    "delta_shared_mib_per_party": 0.0,
+    "delta_response_body_mib_per_party": 5.672573462128639
+  },
+  {
+    "n": 32,
+    "family": "sui",
+    "hashrand": {
+      "status": [
+        "success",
+        "success"
+      ],
+      "sent_mib_per_party": 9.97771406173706,
+      "mean_cpu_s": 91.88678509375,
+      "latency_s": 109.9058805
+    },
+    "whcc": {
+      "status": [
+        "success",
+        "success"
+      ],
+      "remote_getters_per_dealer": 21.15625,
+      "sent_mib_per_party": 4.708024770021439,
+      "path_mib_per_party": 3.940398007631302,
+      "shared_mib_per_party": 0.7676267623901367,
+      "response_body_mib_per_party": 2.406169980764389,
+      "mean_cpu_s": 1.5980156875,
+      "latency_s": 6.933481
+    },
+    "saved_percent": 52.8145951979526
+  },
+  {
+    "n": 48,
+    "family": "aptos",
+    "warmup": {
+      "status": [
+        "success",
+        "success"
+      ],
+      "remote_getters_per_dealer": 47.0,
+      "sent_mib_per_party": 64.21522907416025,
+      "path_mib_per_party": 62.72931385040283,
+      "shared_mib_per_party": 1.4859152237574258,
+      "response_body_mib_per_party": 59.46909046173096,
+      "mean_cpu_s": 9.852732322916665,
+      "latency_s": 14.732908
+    },
+    "whcc": {
+      "status": [
+        "success",
+        "success"
+      ],
+      "remote_getters_per_dealer": 27.4375,
+      "sent_mib_per_party": 42.906795124212906,
+      "path_mib_per_party": 41.451940159002945,
+      "shared_mib_per_party": 1.454854965209961,
+      "response_body_mib_per_party": 36.95677334070206,
+      "mean_cpu_s": 8.255614520833333,
+      "latency_s": 12.308893999999999
+    },
+    "saved_percent": 33.18283568737078,
+    "delta_sent_mib_per_party": 21.308433949947343,
+    "delta_path_mib_per_party": 21.277373691399887,
+    "delta_shared_mib_per_party": 0.03106025854746486,
+    "delta_response_body_mib_per_party": 22.5123171210289
+  },
+  {
+    "n": 48,
+    "family": "sui",
+    "hashrand": {
+      "status": [
+        "online_timeout",
+        "online_timeout"
+      ]
+    },
+    "whcc": {
+      "status": [
+        "success",
+        "success"
+      ],
+      "remote_getters_per_dealer": 27.041666666666668,
+      "sent_mib_per_party": 10.074095884958904,
+      "path_mib_per_party": 8.619375387827557,
+      "shared_mib_per_party": 1.4547204971313477,
+      "response_body_mib_per_party": 5.423631310462952,
+      "mean_cpu_s": 3.158107895833333,
+      "latency_s": 7.8612804999999994
+    }
+  },
+  {
+    "n": 64,
+    "family": "aptos",
+    "warmup": {
+      "status": [
+        "success",
+        "success"
+      ],
+      "remote_getters_per_dealer": 63.0,
+      "sent_mib_per_party": 136.25355780869722,
+      "path_mib_per_party": 133.6133451461792,
+      "shared_mib_per_party": 2.6402126625180244,
+      "response_body_mib_per_party": 127.78988742828369,
+      "mean_cpu_s": 20.382436031250002,
+      "latency_s": 25.0320345
+    },
+    "whcc": {
+      "status": [
+        "success",
+        "success"
+      ],
+      "remote_getters_per_dealer": 31.1328125,
+      "sent_mib_per_party": 76.27701676636934,
+      "path_mib_per_party": 73.52672121673822,
+      "shared_mib_per_party": 2.7502955496311188,
+      "response_body_mib_per_party": 66.0974996611476,
+      "mean_cpu_s": 16.062241718750002,
+      "latency_s": 19.109479
+    },
+    "saved_percent": 44.01833024172196,
+    "delta_sent_mib_per_party": 59.97654104232788,
+    "delta_path_mib_per_party": 60.086623929440975,
+    "delta_shared_mib_per_party": -0.11008288711309433,
+    "delta_response_body_mib_per_party": 61.6923877671361
+  },
+  {
+    "n": 64,
+    "family": "sui",
+    "hashrand": {
+      "status": [
+        "not_run_after_two_timeouts",
+        "not_run_after_two_timeouts"
+      ]
+    },
+    "whcc": {
+      "status": [
+        "success",
+        "success"
+      ],
+      "remote_getters_per_dealer": 29.9609375,
+      "sent_mib_per_party": 16.210739225149155,
+      "path_mib_per_party": 13.887087911367416,
+      "shared_mib_per_party": 2.3236513137817383,
+      "response_body_mib_per_party": 8.617798782885075,
+      "mean_cpu_s": 5.2213071640625,
+      "latency_s": 8.9971515
+    }
+  }
+]

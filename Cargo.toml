@@ -1,0 +1,62 @@
+[workspace]
+resolver = "3"
+exclude = ["vendor/sdc-types", "vendor/sdc-config"]
+members = ["types", "crypto", "config", "consensus/wcss", "consensus/wiawvss", "consensus/whcc", "consensus/hashrand", "consensus/csshashcoin", "recovery", "network", "node", "vendor/wavid", "vendor/wrbc", "vendor/wbinaa", "benchmark/coin_driver", "vendor/sdc-util"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.99"
+license = "Apache-2.0"
+
+[workspace.dependencies]
+csshashcoin = { path = "consensus/csshashcoin" }
+hashrand = { path = "consensus/hashrand" }
+sdc-crypto = { package = "crypto", git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "731e0b81166125ea756c5a047ab813ccb8af7111" }
+types = { path = "types" }
+crypto = { path = "crypto" }
+config = { path = "config" }
+wcss = { path = "consensus/wcss" }
+wiawvss = { path = "consensus/wiawvss" }
+num-bigint = "0.4"
+num-traits = "0.2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha3 = "0.10"
+getrandom = "0.4"
+subtle = "2.6"
+zeroize = { version = "1.8", features = ["derive"] }
+thiserror = "2"
+anyhow = "1"
+log = "0.4"
+env_logger = "0.11"
+clap = { version = "4.5", features = ["derive"] }
+# Pin shared primitives; WAVID also offers opt-in bounded stripe retrieval.
+sdc-types = { package = "types", git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "731e0b81166125ea756c5a047ab813ccb8af7111" }
+wavid = { git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "731e0b81166125ea756c5a047ab813ccb8af7111" }
+wrbc = { git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "731e0b81166125ea756c5a047ab813ccb8af7111" }
+wra = { git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "731e0b81166125ea756c5a047ab813ccb8af7111" }
+
+whcc = { path = "consensus/whcc" }
+recovery = { path = "recovery" }
+network = { path = "network" }
+tokio = { version = "1", features = ["full"] }
+num-rational = "0.4"
+bincode = "1.3"
+aes-gcm = "0.10"
+sdc-config = { package = "config", git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "731e0b81166125ea756c5a047ab813ccb8af7111" }
+sdc-util = { package = "util", git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "731e0b81166125ea756c5a047ab813ccb8af7111" }
+wgather = { package = "wgather", git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "731e0b81166125ea756c5a047ab813ccb8af7111" }
+wbinaa = { package = "wbinaa", git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "731e0b81166125ea756c5a047ab813ccb8af7111" }
+
+crypto-bigint = { version = "0.7.5", default-features = false }
+
+# Local WAVID (including optional selective retrieval) and BinAA overlays.
+[patch."https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git"]
+types = { path = "vendor/sdc-types" }
+config = { path = "vendor/sdc-config" }
+wavid = { path = "vendor/wavid" }
+wrbc = { path = "vendor/wrbc" }
+wbinaa = { path = "vendor/wbinaa" }
+
+util = { path = "vendor/sdc-util" }

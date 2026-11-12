@@ -1,0 +1,44 @@
+{
+  "cases": [
+    {
+      "input": "inputs/aptos-n16.json",
+      "sha256": "33b51e1263b809160a57c60e61e3ec439a22aa4645fe9d1576a714ef0cfdb5d8",
+      "group": "real_source_scalability"
+    },
+    {
+      "input": "inputs/aptos-n32.json",
+      "sha256": "857fb22f5a6a9daaf46bb2c5093b22ddbe7c49cb94e10f01bf2a67d00228d965",
+      "group": "real_source_scalability"
+    },
+    {
+      "input": "inputs/aptos-n48.json",
+      "sha256": "b7e4bbcacf4555027910450ce3411aa271a9f576f1d84953334ace29e1a6a9a2",
+      "group": "real_source_scalability"
+    },
+    {
+      "input": "inputs/aptos-n64.json",
+      "sha256": "a97177e9d44f194581b17ffdd68358af6c9571fbcc04224f1363c910f16c3530",
+      "group": "real_source_scalability"
+    },
+    {
+      "input": "inputs/sui-n16.json",
+      "sha256": "0dfa3e1a8da8c10a7ced196f48d8f6da9cf7eb75e03f544277bde30cda2b58a4",
+      "group": "real_source_scalability"
+    },
+    {
+      "input": "inputs/sui-n32.json",
+      "sha256": "469990b3f28759e996dff0e3003f6bb08a479eb7e1f24647e3dfa3d80c5e93f8",
+      "group": "real_source_scalability"
+    },
+    {
+      "input": "inputs/sui-n48.json",
+      "sha256": "0a9be4e57d028ab1009b48d62cd487add5c99ec5a993f519dd3c28f53539e2b7",
+      "group": "real_source_scalability"
+    },
+    {
+      "input": "inputs/sui-n64.json",
+      "sha256": "38c7933b6284f4d0b6ce4aec4a3052ce8d3ccbeb6f85cbbe1af499b3c55bd5c7",
+      "group": "real_source_scalability"
+    }
+  ]
+}
