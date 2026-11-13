@@ -56,7 +56,21 @@
     </cargoProject>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6529c925-dcb5-4232-b31b-2202f78b18d4" name="更改" comment="" />
+    <list default="true" id="6529c925-dcb5-4232-b31b-2202f78b18d4" name="更改" comment="whcc">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/benchmark/clean_comparison/analyze.py" beforeDir="false" afterPath="$PROJECT_DIR$/benchmark/clean_comparison/analyze.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/benchmark/paper/figures/aptos-paired.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/benchmark/paper/figures/aptos-paired.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/benchmark/paper/figures/aptos-paired.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/benchmark/paper/figures/coin-comparison.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/benchmark/paper/figures/sui-paired.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/benchmark/paper/figures/sui-paired.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/benchmark/paper/figures/sui-paired.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/sdc-util/src/weighted.rs" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/sdc-util/src/weighted.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/sdc-util/src/weighted_queue.rs" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/sdc-util/src/weighted_queue.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/sdc-util/src/weighted_sender.rs" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/sdc-util/src/weighted_sender.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/sdc-util/src/weighted_tests.rs" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/sdc-util/src/weighted_tests.rs" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -81,6 +95,9 @@
   <component name="MacroExpansionManager">
     <option name="directoryName" value="udHaH4ap" />
   </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 8
@@ -99,7 +116,11 @@
     &quot;RunOnceActivity.rust.reset.selective.auto.import&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
     &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;&lt;未知&gt;&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;org.rust.cargo.project.model.PROJECT_DISCOVERY&quot;: &quot;true&quot;,
     &quot;org.rust.first.attach.projects&quot;: &quot;true&quot;
@@ -218,5 +239,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="whcc" />
+    <option name="LAST_COMMIT_MESSAGE" value="whcc" />
   </component>
 </project>

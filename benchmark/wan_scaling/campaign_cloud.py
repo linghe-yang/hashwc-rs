@@ -36,7 +36,7 @@ class Cloud:
             sg,=p.ec2(r,"describe-security-groups","--group-ids",opt["security_group"])["SecurityGroups"]
             if sg["VpcId"]!=sub["VpcId"] or sg["GroupName"]!="whcc-benchmark":
                 raise ValueError(f"{r}: expected dedicated fixed group")
-            count=len(p.fleet.placement(MAX_N)[r])
+            count=len(p.fleet.placement(self.state.get("max_nodes", MAX_N))[r])
             if sub["AvailableIpAddressCount"]<count:
                 raise RuntimeError(f"{r}: insufficient free subnet addresses")
             offer=p.ec2(r,"describe-instance-type-offerings","--location-type","availability-zone",
@@ -106,7 +106,8 @@ class Cloud:
     def sync_rules(self,rows):
         for r,entry in self.state["regions"].items():
             for bucket,gid in enumerate([entry["fixed"],entry["aux"]]):
-                desired={i["public_ip"]+"/32" for i in rows if i["slot"]//32==bucket}
+                split = (self.state.get("max_nodes", MAX_N) + 1) // 2
+                desired={i["public_ip"]+"/32" for i in rows if i["slot"]//split==bucket}
                 owned=p.ec2(r,"describe-security-group-rules","--filters",f"Name=group-id,Values={gid}",
                     f"Name=tag:Pilot,Values={self.name}")["SecurityGroupRules"]
                 old={x["CidrIpv4"]:x["SecurityGroupRuleId"] for x in owned if not x["IsEgress"] and x.get("FromPort")==BASE}
@@ -115,7 +116,7 @@ class Cloud:
                     p.ec2(r,"revoke-security-group-ingress","--group-id",gid,"--security-group-rule-ids",*stale)
                 missing=sorted(desired-old.keys())
                 if missing:
-                    perm=dict(IpProtocol="tcp",FromPort=BASE,ToPort=BASE+7*MAX_N-1,IpRanges=[dict(CidrIp=x) for x in missing])
+                    perm=dict(IpProtocol="tcp",FromPort=BASE,ToPort=BASE+7*self.state.get("max_nodes", MAX_N)-1,IpRanges=[dict(CidrIp=x) for x in missing])
                     p.ec2(r,"authorize-security-group-ingress","--group-id",gid,"--ip-permissions",json.dumps([perm]),
                           "--tag-specifications",f"ResourceType=security-group-rule,Tags=[{{Key=Pilot,Value={self.name}}}]")
 
@@ -136,6 +137,20 @@ class Cloud:
                       '--tag-specifications',f'ResourceType=security-group-rule,Tags=[{{Key=Pilot,Value={self.name}}}]')
 
     def grow(self,n,previous,stage):
+        async def upload(hosts):
+            # Keep startup file copies from saturating the local SSH proxy.
+            slots=asyncio.Semaphore(8)
+            async def one(i,h):
+                async with slots:
+                    try:
+                        await p.remote.deploy(h,self.args.driver,self.state["driver_sha256"])
+                    except p.remote.SSHTransportError as exc:
+                        print(f"Startup upload SSH failure on slot {i}: {exc}",flush=True)
+                        return i
+                return None
+            results=await p.remote.parallel(one(i,h) for i,h in enumerate(hosts))
+            return [i for i in results if i is not None]
+
         for slot in range(previous,n):
             self.launch(REGIONS[slot%len(REGIONS)],slot)
         while True:
@@ -144,22 +159,17 @@ class Cloud:
             hosts=p.connections(self.args,rows,self.out)
             failures=asyncio.run(p.remote.ssh_failures(hosts,self.args.boot_ssh_seconds))
             if not failures:
-                failures=asyncio.run(p.remote.ssh_failures(hosts,45))
-            if not failures:
-                break
+                failures=asyncio.run(upload(hosts))
+                if not failures:
+                    break
             for s in failures:
                 req=next(q for q in self.state["requests"] if q.get("id")==rows[s]["id"])
-                if req["generation"]>=self.args.max_replacements:
-                    raise RuntimeError(f"slot {s} unreachable after replacement budget")
+                print(f"Replacing SSH-unreachable slot {s} ({rows[s]['id']})",flush=True)
                 p.retire(rows[s])
                 req["retired"]=True
                 self.write()
                 self.launch(rows[s]["region"],s,req["generation"]+1)
         self.sync_rules(rows)
-        # Existing nodes only hash the cached executable; new/replaced nodes receive it.
-        async def upload():
-            await p.remote.parallel(p.remote.deploy(h,self.args.driver,self.state["driver_sha256"]) for h in hosts)
-        asyncio.run(upload())
         return rows
 
     def cleanup_region(self,r):

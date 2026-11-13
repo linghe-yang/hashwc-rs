@@ -13,6 +13,7 @@ pub enum Behavior {
     Honest,
     /// Keep input authentication valid but corrupt the full AX commitment.
     InvalidAx,
+    InvalidCorrections,
     WithholdRecovery,
     InvalidRecovery,
 }

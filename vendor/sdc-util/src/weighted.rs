@@ -365,7 +365,7 @@ impl<T: Clone + Debug + Serialize + DeserializeOwned + Send + Sync + 'static> En
             tasks.push(tokio::spawn(async move {
                 if peer == id {
                     // Local delivery still follows this peer's FIFO and backpressure.
-                    while let Ok(message) = queue.pop().await {
+                    while let Ok(Some(message)) = queue.pop().await {
                         let Ok(message) = decode::<T>(&message) else {
                             return;
                         };

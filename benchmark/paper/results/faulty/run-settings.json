@@ -1,0 +1,119 @@
+{
+  "32": {
+    "settings": {
+      "tokio_workers": 2,
+      "execution": {
+        "actor_inbox": 4096,
+        "compute_jobs": 1,
+        "transport_receive_capacity": 1024,
+        "transport_stall_ms": 30000
+      },
+      "prepare_timeout_s": 900,
+      "coin_timeout_s": 180,
+      "drain_timeout_s": 300,
+      "shutdown_timeout_s": 60,
+      "quiet_seconds": 2.0,
+      "drain_sample_seconds": 0.2,
+      "resource_sample_seconds": 0.2,
+      "minimum_free_memory_mib": 512,
+      "profile": false,
+      "runs_per_configuration": 1,
+      "bulk_audit": true,
+      "log_mode": "formal"
+    },
+    "binaries": {
+      "driver": "d256d9f5dd51712332f5d7d8edbed60a82e96124db41cd2caf427ab6d9d5d1f5",
+      "generator": "bff788b357128b41c6f0635efa3cfb68f1ae302c22293e6d402734850622744a"
+    },
+    "instance_type": "t3a.medium",
+    "cpu_credits": "unlimited"
+  },
+  "48": {
+    "settings": {
+      "tokio_workers": 2,
+      "execution": {
+        "actor_inbox": 4096,
+        "compute_jobs": 1,
+        "transport_receive_capacity": 1024,
+        "transport_stall_ms": 30000
+      },
+      "prepare_timeout_s": 900,
+      "coin_timeout_s": 180,
+      "drain_timeout_s": 300,
+      "shutdown_timeout_s": 60,
+      "quiet_seconds": 2.0,
+      "drain_sample_seconds": 0.2,
+      "resource_sample_seconds": 0.2,
+      "minimum_free_memory_mib": 512,
+      "profile": false,
+      "runs_per_configuration": 1,
+      "bulk_audit": true,
+      "log_mode": "formal"
+    },
+    "binaries": {
+      "driver": "d256d9f5dd51712332f5d7d8edbed60a82e96124db41cd2caf427ab6d9d5d1f5",
+      "generator": "bff788b357128b41c6f0635efa3cfb68f1ae302c22293e6d402734850622744a"
+    },
+    "instance_type": "t3a.medium",
+    "cpu_credits": "unlimited"
+  },
+  "64": {
+    "settings": {
+      "tokio_workers": 2,
+      "execution": {
+        "actor_inbox": 4096,
+        "compute_jobs": 1,
+        "transport_receive_capacity": 1024,
+        "transport_stall_ms": 30000
+      },
+      "prepare_timeout_s": 900,
+      "coin_timeout_s": 180,
+      "drain_timeout_s": 300,
+      "shutdown_timeout_s": 60,
+      "quiet_seconds": 2.0,
+      "drain_sample_seconds": 0.2,
+      "resource_sample_seconds": 0.2,
+      "minimum_free_memory_mib": 512,
+      "profile": false,
+      "runs_per_configuration": 1,
+      "bulk_audit": true,
+      "log_mode": "formal"
+    },
+    "binaries": {
+      "driver": "d256d9f5dd51712332f5d7d8edbed60a82e96124db41cd2caf427ab6d9d5d1f5",
+      "generator": "bff788b357128b41c6f0635efa3cfb68f1ae302c22293e6d402734850622744a"
+    },
+    "instance_type": "t3a.medium",
+    "cpu_credits": "unlimited"
+  },
+  "80": {
+    "settings": {
+      "tokio_workers": 2,
+      "execution": {
+        "actor_inbox": 4096,
+        "compute_jobs": 1,
+        "transport_receive_capacity": 1024,
+        "transport_stall_ms": 30000
+      },
+      "prepare_timeout_s": 900,
+      "coin_timeout_s": 180,
+      "drain_timeout_s": 300,
+      "shutdown_timeout_s": 60,
+      "quiet_seconds": 2.0,
+      "drain_sample_seconds": 0.2,
+      "resource_sample_seconds": 0.2,
+      "minimum_free_memory_mib": 512,
+      "profile": false,
+      "runs_per_configuration": 1,
+      "bulk_audit": true,
+      "log_mode": "formal",
+      "worker_nofile_soft": 65536
+    },
+    "binaries": {
+      "driver": "d256d9f5dd51712332f5d7d8edbed60a82e96124db41cd2caf427ab6d9d5d1f5",
+      "generator": "bff788b357128b41c6f0635efa3cfb68f1ae302c22293e6d402734850622744a"
+    },
+    "instance_type": "t3a.medium",
+    "cpu_credits": "unlimited"
+  }
+}

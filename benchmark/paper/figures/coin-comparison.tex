@@ -1,14 +1,6 @@
 % Standalone figure. Compile with pdflatex coin-comparison.tex.
-% The embedded tables make this file portable. Rebuild them with refresh_data.py.
-% Suggested caption:
-% Single-coin experiments across five AWS regions. Points and paired bars show two-run means;
-% whiskers span the two observations. Traffic is averaged over physical parties.
-% The Aptos path counts distribution and recovery service traffic, including
-% framing and ACKs. In the rightmost latency panel, for each run the
-% node with the longest START-to-output interval supplies both intervals.
-% The split at Freeze describes elapsed phases; work may overlap.
-% Sui HashRand reached the 180 s deadline twice at n=48 (triangle) and was
-% skipped at n=64. Its incomplete runs contribute no full-run traffic value.
+% Honest-dealer data: ../results/measurements.csv.
+% Faulty-dealer path data: ../results/faulty/path-summary.csv.
 \documentclass[tikz,border=2pt]{standalone}
 \usepackage[T1]{fontenc}
 \usepackage{mathptmx}
@@ -58,6 +50,17 @@ n sent senterr lat laterr shared sharederr pre preerr
 64 76.27701677 0.44434486 19.10947900 0.87841400 2.75029555 0.42664424 7.48309800 0.11105900
 }\aptoswhcc
 % END MEASUREMENTS
+\pgfplotstableread{
+n  pvrMiB       rbcMiB       pvrSec     rbcSec
+32  37.84649277  33.77744416  1.140296   1.044773
+48  92.30470783  87.00739384  3.424742   2.668959
+64 177.78046499 187.26282682  6.321030   5.573200
+80 301.38298618 334.18086170 14.799653   8.839413
+}\faultypaths
+\pgfplotsset{
+  faulty axis/.style={xmin=28,xmax=84,xtick={32,48,64,80}},
+  path line/.style={line width=.95pt,mark size=2pt},
+}
 \newcommand{\series}[3]{%
   \addplot+[run pair,#1,forget plot] table[x=n,y=#2,y error=#2err]{#3};}
 % Paint the total, then its lower component; apply the observed range at the total.
@@ -74,8 +77,8 @@ n sent senterr lat laterr shared sharederr pre preerr
 \begin{document}
 \begin{tikzpicture}[font=\rmfamily\fontsize{8}{9}\selectfont]
 \begin{groupplot}[
- group style={group size=2 by 2,horizontal sep=13mm,vertical sep=7.2mm},
- scale only axis,width=57mm,height=26mm,
+ group style={group size=3 by 2,horizontal sep=13mm,vertical sep=7.2mm},
+ scale only axis,width=48mm,height=28mm,
  xmin=12,xmax=68,xtick={16,32,48,64},tick align=outside,
  axis lines=box,axis line style={black,line width=.55pt},tick pos=left,tick style={black},
  ymajorgrids,grid style={gridline,densely dotted,line width=.35pt},major tick length=2pt,
@@ -85,15 +88,19 @@ n sent senterr lat laterr shared sharederr pre preerr
  ylabel style={font=\rmfamily\fontsize{8}{9}\selectfont},
  /pgf/number format/1000 sep={},
 ]
-\nextgroupplot[title={Sui coin},ylabel={MiB / party},xticklabels=\empty,
+\nextgroupplot[title={Sui coin (honest dealers)},ylabel={MiB / party},xticklabels=\empty,
                ymin=0,ymax=18,ytick={0,4,8,12,16}]
   \series{hr line}{sent}{\suihr}
   \series{whcc line}{sent}{\suiwhcc}
-\nextgroupplot[title={Aptos coin breakdown},xticklabels=\empty,
+\nextgroupplot[title={Aptos coin (honest dealers)},xticklabels=\empty,
                ymin=0,ymax=150,ytick={0,40,80,120}]
   \stackpairbar{whcc}{-1.6}{sent}{shared}{whcc!65}{basefill}{\aptoswhcc}
   \stackpairbar{warm}{1.6}{sent}{shared}{warm!65}{basefill}{\aptoswarm}
   \basekey{Shared control}
+\nextgroupplot[faulty axis,title={Aptos recovery (faulty dealers)},xticklabels=\empty,
+               ylabel={MiB / honest party},ymin=0,ymax=360,ytick={0,100,200,300}]
+  \addplot[path line,whcc line] table[x=n,y=pvrMiB]{\faultypaths};
+  \addplot[path line,warm line] table[x=n,y=rbcMiB]{\faultypaths};
 \nextgroupplot[ylabel={Latency (s)},ymode=log,ymin=2,ymax=240,
                ytick={3,10,30,100,180},yticklabels={3,10,30,100,180},minor y tick num=0]
   \series{hr line}{lat}{\suihr}
@@ -105,13 +112,14 @@ n sent senterr lat laterr shared sharederr pre preerr
   \stackpairbar{whcc}{-1.6}{lat}{pre}{whcc!65}{basefill}{\aptoswhcc}
   \stackpairbar{warm}{1.6}{lat}{pre}{warm!65}{basefill}{\aptoswarm}
   \basekey{Start to Freeze}
-  \node[anchor=north west,inner sep=2pt,fill=white] at (rel axis cs:.02,.84)
-       {Blue/red: recovery and aggregation};
+\nextgroupplot[faulty axis,ylabel={Recovery time (s)},ymin=0,ymax=16,ytick={0,4,8,12,16}]
+  \addplot[path line,whcc line] table[x=n,y=pvrSec]{\faultypaths};
+  \addplot[path line,warm line] table[x=n,y=rbcSec]{\faultypaths};
 \end{groupplot}
-\node[anchor=north] at ($ (group c1r2.south)!.5!(group c2r2.south)+(0,-4.6mm) $) {Parties};
+\node[anchor=north] at ($(group c2r2.south)+(0,-4.6mm)$) {Parties};
 \foreach \pos/\style/\label in {.15/whcc line/{WHCC (PVR + sampling)},
-  .50/warm line/{CSS-HashCoin (RBC)},.84/hr line/{HashRand (virtual shares)}}{
-  \node (entry) at ($ (group c1r1.north west)!\pos!(group c2r1.north east)+(3mm,12mm) $) {\label};
+  .50/warm line/{CSS-HashCoin (RBC full retrieval)},.84/hr line/{HashRand (virtual shares)}}{
+  \node (entry) at ($ (group c1r1.north west)!\pos!(group c3r1.north east)+(3mm,10mm) $) {\label};
   \begin{scope}[shift={(entry.west)}]
     \draw[/pgfplots/\style,line width=.95pt]
       plot[mark indices={2},mark size=2pt] coordinates {(-6mm,0) (-3.5mm,0) (-1mm,0)};

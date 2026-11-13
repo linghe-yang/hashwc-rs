@@ -2,10 +2,12 @@
 import asyncio
 import io
 import json
+import re
 from pathlib import Path
 import shlex
 import subprocess
 import tarfile
+import time
 import uuid
 
 from campaign_cloud import p
@@ -48,14 +50,60 @@ async def retry(op):
             if attempt==4:raise
             await asyncio.sleep(2**attempt)
 
-async def verified_get(host,src,dest):
-    async def one():
-        sha=(await host.shell('sha256sum '+shlex.quote(src))).split()[0]
-        temp=dest.with_suffix('.partial')
-        await host.get(src,temp)
-        if digest(temp)!=sha:raise ValueError('download checksum mismatch')
-        temp.replace(dest)
-    await retry(one)
+async def reboot_for_download(host,row):
+    # A changed Linux boot ID distinguishes the reboot from a successful
+    # connection to the old boot while EC2 is still processing the request.
+    try:
+        before=await host.shell('cat /proc/sys/kernel/random/boot_id')
+    except p.remote.SSHTransportError:
+        before=None
+    requested=time.monotonic()
+    print(f"Rebooting {row['id']} for log download on slot {row['slot']}",flush=True)
+    await asyncio.to_thread(p.ec2,row['region'],'reboot-instances','--instance-ids',row['id'])
+    while True:
+        try:
+            result=await host.shell("cat /proc/sys/kernel/random/boot_id /proc/uptime")
+            boot,uptime=result.splitlines()
+            if (before is not None and boot!=before) or (
+                    before is None and float(uptime.split()[0]) < time.monotonic()-requested):
+                return
+        except p.remote.SSHTransportError:
+            pass
+        await asyncio.sleep(3)
+
+
+async def verified_get(host,src,dest,row):
+    temp=dest.with_suffix('.partial')
+    while True:
+        try:
+            sha=(await host.shell('sha256sum '+shlex.quote(src))).split()[0]
+            if not re.fullmatch('[a-f0-9]{64}',sha):
+                raise ValueError('invalid remote checksum')
+            if dest.is_file() and digest(dest)==sha:
+                return
+            await host.get(src,temp)
+            if digest(temp)!=sha:
+                raise ValueError(f'download checksum mismatch: {src}')
+            temp.replace(dest)
+            return
+        except p.remote.SSHTransportError:
+            await reboot_for_download(host,row)
+
+
+async def download_workers(directory,hosts,rows,status,settings):
+    deployment=json.loads((directory/'deployment.json').read_bytes())
+    folder=deployment['remote']
+    if (not re.fullmatch(r'\.hashwc/runs/[0-9a-f]{32}',folder) or
+            deployment['peers']!=[h.ip for h in hosts]):
+        raise ValueError('worker log deployment mismatch')
+    names=['stderr.log']
+    if status['error'] or settings.get('log_mode')=='debug':
+        names.append('stdout.jsonl')
+    async def worker(i):
+        for name in names:
+            await verified_get(hosts[i],f'{folder}/{name}',directory/f'remote-{i}-{name}',rows[i])
+    await p.remote.parallel(worker(i) for i in range(len(hosts)))
+    return folder
 
 async def experiment(args,hosts,case,plan,sha,directory,rows):
     directory.mkdir(mode=0o700,parents=True,exist_ok=False)
@@ -110,12 +158,15 @@ async def experiment(args,hosts,case,plan,sha,directory,rows):
                     if status:break
                 except (RuntimeError,TimeoutError):pass
                 await asyncio.sleep(3)
-        await verified_get(controller,remote+'/status.json',directory/'cloud-status.json')
-        await verified_get(controller,remote+'/logs.tar.gz',directory/'cloud-logs.tar.gz')
-        await verified_get(controller,remote+'/controller.log',directory/'cloud-controller.log')
+        for source,dest in (('status.json','cloud-status.json'),('logs.tar.gz','cloud-logs.tar.gz'),
+                            ('controller.log','cloud-controller.log')):
+            await verified_get(controller,f'{remote}/{source}',directory/dest,rows[0])
         status=json.loads((directory/'cloud-status.json').read_text())
         if digest(directory/'cloud-logs.tar.gz')!=status['archive_sha256']:raise ValueError('archive differs from completed run')
         unpack(directory/'cloud-logs.tar.gz',directory);downloaded=True
+        worker_folder=None
+        if (directory/'control.json').is_file():
+            worker_folder=await download_workers(directory,hosts,rows,status,plan['settings'])
         if status['error']:raise RuntimeError('AWS controller failed: '+status['error'])
         result=analyze_run(directory,case)
         outputs=[]
@@ -125,6 +176,7 @@ async def experiment(args,hosts,case,plan,sha,directory,rows):
         result.update(max_node_elapsed_to_output_ms=max(outputs)/1000,controller_placement='AWS party 0',
                       latency_scope='AWS controller START to observation; local VPN excluded',controller_resources=status)
         save(directory/'result.json',result)
+        await p.remote.cleanup(hosts,worker_folder)
     finally:
         failures=[]
         if launched and not downloaded:

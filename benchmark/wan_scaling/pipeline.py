@@ -19,8 +19,10 @@ async def measure(args,cloud,hosts,case,plan,policy,stage):
             path.rename(raw/path.name)
         if (work/"result.json").exists():
             (work/"result.json").rename(analysis/"result.json")
+    control = json.loads((work/"control.json").read_text())
+    names = ("stderr.log",) if control.get("log_mode") == "formal" else ("stdout.jsonl", "stderr.log")
     for i in range(case["n"]):
-        for name in ("stdout.jsonl","stderr.log"):
+        for name in names:
             if not (raw/f"remote-{i}-{name}").is_file():
                 raise RuntimeError(f"missing verified {key} slot {i} {name}")
     result=json.loads((analysis/"result.json").read_text())

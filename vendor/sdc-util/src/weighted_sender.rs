@@ -72,7 +72,9 @@ pub(super) async fn send_peer(
     let mut sequence = 0;
     loop {
         if pending.is_empty() {
-            let message = queue.pop().await?;
+            let Some(message) = queue.pop().await? else {
+                return Ok(());
+            };
             enqueue(
                 &mut pending,
                 &mut bytes,
@@ -109,8 +111,10 @@ pub(super) async fn send_peer(
                 // Drain currently available work before yielding to I/O, but never
                 // wait for the queue when there is an outstanding write or ACK.
                 while room(&pending, bytes) {
-                    let Some(message) = queue.try_pop()? else {
-                        break;
+                    let message = match queue.try_pop()? {
+                        queue::QueueRead::Message(message) => message,
+                        queue::QueueRead::Empty => break,
+                        queue::QueueRead::Closed => return Ok(()),
                     };
                     enqueue(
                         &mut pending,
@@ -159,7 +163,7 @@ pub(super) async fn send_peer(
                     },
                     message = queue.pop(), if room(&pending, bytes) => {
                         let was_idle = pending.is_empty();
-                        let message = message?;
+                        let Some(message) = message? else { return Ok(()); };
                         enqueue(&mut pending, &mut bytes, &mut sequence, &message, context, id, peer, &key, &metrics)?;
                         if was_idle { deadline = Instant::now() + stall; }
                     },

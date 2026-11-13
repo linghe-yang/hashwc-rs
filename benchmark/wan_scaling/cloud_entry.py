@@ -15,6 +15,7 @@ from common import digest,save
 async def main():
     job=json.loads((HERE/'job.json').read_text())
     args=SimpleNamespace(user=job['user'],key=HERE/'key',port=job['port'],generator=Path(job['generator']))
+    args.local_log_collection=True
     hosts=[]
     for row in job['peers']:
         h=remote.Host(row['public_ip'],args)

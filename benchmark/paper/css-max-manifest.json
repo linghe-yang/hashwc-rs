@@ -1,0 +1,24 @@
+{
+  "cases": [
+    {
+      "input": "inputs/aptos-n32.json",
+      "sha256": "857fb22f5a6a9daaf46bb2c5093b22ddbe7c49cb94e10f01bf2a67d00228d965",
+      "group": "real_source_scalability"
+    },
+    {
+      "input": "inputs/aptos-n48.json",
+      "sha256": "b7e4bbcacf4555027910450ce3411aa271a9f576f1d84953334ace29e1a6a9a2",
+      "group": "real_source_scalability"
+    },
+    {
+      "input": "inputs/aptos-n64.json",
+      "sha256": "a97177e9d44f194581b17ffdd68358af6c9571fbcc04224f1363c910f16c3530",
+      "group": "real_source_scalability"
+    },
+    {
+      "input": "inputs/aptos-n80.json",
+      "sha256": "7375ad5fc1d20e9ec5145266866adeb778bf4075fc2bdf825dfdd9d1a5912777",
+      "group": "real_source_scalability"
+    }
+  ]
+}

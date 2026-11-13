@@ -9,6 +9,20 @@ use wiawvss::{
     PrivateShare,
     certified::{self, Certificate, Evidence},
 };
+// Count the first accepted outcome per local dealer instance. Joining this with
+// terminal_broadcasts records the actual outgoing kind, including relayed proofs.
+fn audit_rejection(d: usize, cert: &Certificate, generated: bool) {
+    use wiawvss::terminal::Terminal;
+    let field = match (&cert.evidence, generated) {
+        (Evidence::Semantic { fault: Terminal::RootFault { .. }, .. }, true) => "root_generated",
+        (Evidence::Semantic { fault: Terminal::RootFault { .. }, .. }, false) => "root_received",
+        (Evidence::Semantic { fault: Terminal::ModuleFault { .. }, .. }, true) => "module_generated",
+        (Evidence::Semantic { fault: Terminal::ModuleFault { .. }, .. }, false) => "module_received",
+        _ => return,
+    };
+    sdc_util::observation::bulk_audit::add(d, field, 1);
+}
+
 impl State {
     pub fn recovery_packet(&mut self, sender: usize, mut packet: Packet) -> Result<()> {
         let d = packet.dealer;
@@ -149,10 +163,15 @@ impl State {
                 b"coin/recovery-verification/v1",
                 &[&header.id(), &bits.to_le_bytes()],
             );
+            let audit_start = sdc_util::observation::bulk_audit::enabled().then(std::time::Instant::now);
             let (decoded, accepted) = dealer.rejected_terminals.check(scope, &raw, self.n, || {
                 let decoded = Certificate::decode_for_setup(&self.setup, &dealer.codec, &raw);
                 let verified = decoded.as_ref().ok().and_then(|cert| {
-                    if let Some(material) = &dealer.material {
+                    let start = (matches!(&cert.evidence, Evidence::Semantic {
+                        fault: wiawvss::terminal::Terminal::ModuleFault { .. }, ..
+                    }) && sdc_util::observation::bulk_audit::enabled())
+                        .then(std::time::Instant::now);
+                    let verified = if let Some(material) = &dealer.material {
                         certified::verify_with_material(
                             &self.setup,
                             &dealer.context,
@@ -177,7 +196,13 @@ impl State {
                             dealer.file.as_ref(),
                         )
                         .then_some(None)
+                    };
+                    if let Some(start) = start && verified.is_some() {
+                        sdc_util::observation::bulk_audit::add(
+                            d, "module_verify_ns", start.elapsed().as_nanos() as usize,
+                        );
                     }
+                    verified
                 });
                 (decoded.is_ok(), decoded.ok().zip(verified))
             });
@@ -188,6 +213,12 @@ impl State {
                 accepted: accepted.is_some(),
             });
             if let Some((cert, file)) = accepted {
+                if let Some(t) = audit_start && matches!(&cert.evidence, Evidence::Semantic { fault: wiawvss::terminal::Terminal::RootFault { .. }, .. }) {
+                    let ns = t.elapsed().as_nanos() as usize;
+                    sdc_util::observation::bulk_audit::add(d, "root_checks", 1);
+                    sdc_util::observation::bulk_audit::add(d, "root_check_ns", ns);
+                }
+                audit_rejection(d, &cert, false);
                 if let Some(file) = file {
                     dealer.file = Some(file);
                     self.actions
@@ -218,6 +249,7 @@ impl State {
         }
         if remote && dealer.value.is_none() && dealer.recovery_dirty {
             dealer.recovery_dirty = false;
+            let audit_start = sdc_util::observation::bulk_audit::enabled().then(std::time::Instant::now);
             let cert = if let Some(cert) = &dealer.storage_terminal {
                 anyhow::ensure!(
                     certified::verify(
@@ -244,6 +276,12 @@ impl State {
                 None
             };
             if let Some(cert) = cert {
+                if let Some(t) = audit_start && matches!(&cert.evidence, Evidence::Semantic { fault: wiawvss::terminal::Terminal::RootFault { .. }, .. }) {
+                    let ns = t.elapsed().as_nanos() as usize;
+                    sdc_util::observation::bulk_audit::add(d, "local_root_certificates", 1);
+                    sdc_util::observation::bulk_audit::add(d, "local_root_final_step_ns", ns);
+                }
+                audit_rejection(d, &cert, true);
                 let (value, rejected) = match &cert.evidence {
                     Evidence::Success(o) => (BigUint::from_bytes_be(&o.message), false),
                     _ => (BigUint::from(0u8), true),
@@ -261,6 +299,8 @@ impl State {
             && let Some(raw) = &dealer.terminal
         {
             dealer.terminal_sent = true;
+            sdc_util::observation::bulk_audit::add(d, "terminal_broadcasts", 1);
+            sdc_util::observation::bulk_audit::add(d, "certificate_bytes_before_fanout", raw.len());
             for recipient in 0..self.n {
                 self.actions.push(Action::Recovery {
                     recipient,

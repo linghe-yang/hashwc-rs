@@ -18,6 +18,15 @@ struct Args {
     parameters: PathBuf,
     #[arg(long)]
     describe: bool,
+    /// Use the existing invalid-AX dealer fixture on loopback only.
+    #[arg(long)]
+    local_invalid_ax: bool,
+    /// Dealer-only CSS fixture, restricted to the loopback benchmark.
+    #[arg(long, conflicts_with = "local_invalid_ax")]
+    local_invalid_corrections: bool,
+    /// Use the fixed CSS dealer input in a provisioned benchmark committee.
+    #[arg(long, conflicts_with_all = ["local_invalid_ax", "local_invalid_corrections"])]
+    css_benchmark_dealer: bool,
 }
 
 fn resources() -> Value {
@@ -155,7 +164,7 @@ async fn hashrand_progress(input: &mpsc::Sender<hashrand::Request>) -> Result<Va
 }
 
 macro_rules! run_protocol {
-    ($module:ident,$node:expr,$raw:expr,$inspect:ident)=>{{
+    ($module:ident,$node:expr,$raw:expr,$inspect:ident,$behavior:expr)=>{{
         use $module as protocol;
         let node=$node;
         let p:protocol::Parameters=serde_json::from_slice($raw)?;
@@ -164,7 +173,7 @@ macro_rules! run_protocol {
         let preparation=Instant::now();
         let (input,rx)=mpsc::channel(16);
         let (tx,mut output)=mpsc::channel(4096);
-        let handle=protocol::Context::spawn(node,p,rx,tx)?;
+        let handle=protocol::Context::spawn_with_behavior(node,p,$behavior,rx,tx)?;
         // All processes reach this barrier before START is sent by the controller.
         emit(json!({"kind":"ready","party":id,"prepare_us":preparation.elapsed().as_micros(),"resources":resources(),"execution":sdc_util::execution::Settings::from_env()?}))?;
         let mut lines=BufReader::new(tokio::io::stdin()).lines();
@@ -173,6 +182,7 @@ macro_rules! run_protocol {
         emit(json!({"kind":"started","party":id,"resources":resources()}))?;
         input.send(protocol::Request::Start).await?;
         let audit = sdc_util::observation::bulk_audit::enabled();
+        let log_mode = std::env::var("COIN_LOG_MODE").unwrap_or_default();
         let mut heartbeat = tokio::time::interval(std::time::Duration::from_secs(5));
         heartbeat.set_missed_tick_behavior(tokio::time::MissedTickBehavior::Skip);
         loop {
@@ -192,7 +202,16 @@ macro_rules! run_protocol {
                     let event=event.ok_or_else(||anyhow::anyhow!("protocol event stream ended"))?;
                     let value=serde_json::to_value(&event)?;
                     let kind=value["kind"].as_str().unwrap_or("");
-                    if !matches!(kind,"token_released"|"terminal_checked"|"adversarial_terminal") {
+                    let routine = matches!(kind, "token_released" | "terminal_checked" | "adversarial_terminal");
+                    let check_failed = kind == "terminal_checked" && value["accepted"] == false;
+                    let intermediate = matches!(kind, "shared" | "gathered" | "public_delivered"
+                        | "seed_release" | "seed_opened" | "committee");
+                    let keep = match log_mode.as_str() {
+                        "debug" => true,
+                        "formal" => (!routine && !intermediate) || check_failed || kind == "adversarial_terminal",
+                        _ => !routine,
+                    };
+                    if keep {
                         let r=if matches!(kind,"coin"|"beacon"|"complete"){resources()}else{Value::Null};
                         emit(json!({"kind":"event","party":id,"elapsed_us":started.elapsed().as_micros(),"resources":r,"event":value}))?;
                     }
@@ -216,13 +235,31 @@ async fn main() -> Result<()> {
     let args = Args::parse();
     let node = config::load(&args.config)?;
     let raw = std::fs::read(&args.parameters)?;
+    if args.css_benchmark_dealer {
+        ensure!(matches!(args.protocol.as_str(), "whcc" | "csshashcoin"), "CSS dealer requires a CSS protocol");
+    }
+    if args.local_invalid_ax || args.local_invalid_corrections {
+        ensure!(matches!(args.protocol.as_str(), "whcc" | "csshashcoin") && node.net_map.values().all(|a| a.parse::<std::net::SocketAddr>().is_ok_and(|v| v.ip().is_loopback())), "dealer fixtures require a loopback WHCC or warm-up run");
+    }
     if args.describe {
         return emit(describe(&args, &node, &raw)?);
     }
     match args.protocol.as_str() {
-        "whcc" => run_protocol!(whcc, node, &raw, whcc_progress),
-        "csshashcoin" => run_protocol!(csshashcoin, node, &raw, csshashcoin_progress),
-        "hashrand" => run_protocol!(hashrand, node, &raw, hashrand_progress),
+        "whcc" => run_protocol!(whcc, node, &raw, whcc_progress, if args.local_invalid_corrections || args.css_benchmark_dealer {
+            whcc::Behavior::InvalidCorrections
+        } else if args.local_invalid_ax {
+            whcc::Behavior::InvalidAx
+        } else {
+            whcc::Behavior::Honest
+        }),
+        "csshashcoin" => run_protocol!(csshashcoin, node, &raw, csshashcoin_progress, if args.local_invalid_corrections || args.css_benchmark_dealer {
+            csshashcoin::Behavior::InvalidCorrections
+        } else if args.local_invalid_ax {
+            csshashcoin::Behavior::InvalidAx
+        } else {
+            csshashcoin::Behavior::Honest
+        }),
+        "hashrand" => run_protocol!(hashrand, node, &raw, hashrand_progress, hashrand::Behavior::Honest),
         _ => anyhow::bail!("unknown protocol"),
     }
     Ok(())

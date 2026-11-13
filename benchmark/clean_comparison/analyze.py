@@ -26,20 +26,24 @@ def validate_coin(value, bits):
     require(0 <= int(encoded, 16) < 1 << bits, "coin out of range")
 
 
-def service_complete(sample):
+def service_complete(sample, invalid_ax=False):
     p = sample.get("service_progress")
     require(isinstance(p, dict) and p.get("schema_version") == 1, "missing service observation")
     pending = p.get("pending")
     require(isinstance(pending, dict) and pending, "missing pending obligations")
     require(all(type(v) is int and v >= 0 for v in pending.values()), "invalid pending count")
+    if invalid_ax:
+        # This fixture changes only the dealer record. Every actual service obligation still drains.
+        return (p.get("output_observed") is True and pending.get("nonhonest_behavior") == 1
+                and all(v == 0 for k, v in pending.items() if k != "nonhonest_behavior"))
     return (p.get("output_observed") is True and p.get("all_honest_services_complete") is True
             and all(v == 0 for v in pending.values()))
 
 
-def network_signature(samples):
+def network_signature(samples, invalid_ax_dealers=()):
     signature, complete = [], True
     for party, sample in sorted(samples.items()):
-        complete &= service_complete(sample)
+        complete &= service_complete(sample, party in invalid_ax_dealers)
         network = sample["resources"]["network"]
         require(bool(network), "missing network counters")
         for name, v in sorted(network.items()):
@@ -114,6 +118,7 @@ def analyze_run(directory, case):
     require(control["quiet_observed_s"] >= control["quiet_required_s"], "short quiet observation")
     execution_file = directory / "execution.json"
     execution = json.loads(execution_file.read_text()) if execution_file.exists() else None
+    fixture_dealers = case.get("faulty_dealers", case.get("invalid_ax_dealers", ()))
     parties, coins, sent, received, end_samples, transport = {}, [], {}, {}, {}, {}
     for i in range(case["n"]):
         rows = [json.loads(line) for line in (directory / f"party-{i}.jsonl").read_text().splitlines()]
@@ -141,9 +146,9 @@ def analyze_run(directory, case):
         validate_coin(value, case["parameters"]["output_bits"])
         coins.append(value)
         boundary = rows[control["service_start_sequences"][str(i)]]
-        require(boundary["kind"] == "sample" and service_complete(boundary), "invalid service boundary")
+        require(boundary["kind"] == "sample" and service_complete(boundary, i in fixture_dealers), "invalid service boundary")
         last_sample = [r for r in rows if r["kind"] == "sample"][-1]
-        require(service_complete(last_sample), "remaining application work")
+        require(service_complete(last_sample, i in fixture_dealers), "remaining application work")
         require(preparing["observer_ns"] <= ready["observer_ns"] <= start["observer_ns"]
                 <= output["observer_ns"] <= boundary["observer_ns"] <= stopping["observer_ns"]
                 <= stopped["observer_ns"], "phase order violation")
@@ -183,7 +188,7 @@ def analyze_run(directory, case):
                                resources_at_output=output["resources"], resources_at_service_boundary=boundary["resources"],
                                resources_at_exit=stopped["resources"])
     require(all(v == coins[0] for v in coins), "honest output disagreement")
-    _, complete = network_signature(end_samples)
+    _, complete = network_signature(end_samples, fixture_dealers)
     require(complete, "incomplete final observation")
     require(sum(sent.values()) > 0, "missing socket traffic")
     ledgers = audit_transport(transport)
@@ -210,5 +215,7 @@ def analyze_run(directory, case):
                 socket_write_read_gap_bytes=sum(v["socket_write_read_gap_bytes"] for v in ledgers.values()),
                 socket_send_overhead_bytes=sum(v["socket_send_overhead_bytes"] for v in ledgers.values()),
                 replayed_frames=sum(v["replayed_frames"] for v in ledgers.values()),
-                scope="all-honest single coin; complete service observation; not asynchronous termination detection",
+                scope=("CSS dealer benchmark; complete service observation" if case.get("campaign") == "css-max" else
+                       "loopback dealer-only rejection; complete service observation" if "faulty_dealers" in case or "invalid_ax_dealers" in case else
+                       "all-honest single coin; complete service observation; not asynchronous termination detection"),
                 network_metric="successful socket payload writes incl. protocol framing, MAC, ACK, application retries; excludes TCP/IP headers and kernel retransmissions")

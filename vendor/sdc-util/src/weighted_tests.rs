@@ -263,7 +263,18 @@ async fn closing_queue_releases_storage_and_rejects_late_send() {
     q.push(Arc::new(vec![1; 32])).unwrap();
     q.close();
     assert!(q.push(Arc::new(vec![2; 32])).is_err());
-    assert!(q.pop().await.is_err());
+    assert!(q.pop().await.unwrap().is_none());
+}
+
+#[tokio::test]
+async fn active_sender_reports_frame_encoding_error() {
+    let q = Arc::new(queue::Queue::default());
+    q.push(Arc::new(vec![0; MAX_FRAME_BYTES])).unwrap();
+    let error = sender::send_peer(
+        q, "127.0.0.1:1".parse().unwrap(), [9; 32], 0, 1, vec![7; 32],
+        metrics::counter("sender-error-test"),
+    ).await.unwrap_err();
+    assert_eq!(error.to_string(), "weighted frame exceeds limit");
 }
 
 #[tokio::test]
@@ -336,7 +347,7 @@ async fn sliding_window_refills_after_one_ack_and_replays_only_unacknowledged_fr
             socket.write_all(&ack_mac(&f, &[7; 32])).await.unwrap();
         }
         queue.close();
-        let _ = task.await;
+        task.await.unwrap().unwrap();
         let snapshot = metrics::snapshot();
         let counts = &snapshot["sender-replay-test"];
         assert_eq!(counts.logical_frames, 64);

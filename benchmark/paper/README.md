@@ -1,37 +1,40 @@
-# Reproducing the single-coin evaluation
+# Reproducing the WHCC paper figures
 
-The archived experiment used one AWS `t3a.medium` per physical party, unlimited CPU credits, and five regions (Northern Virginia, Ohio, Oregon, Tokyo, Paris). The controller shared slot 0 with a party. Each committee size (16, 32, 48, 64) used the same frozen weights for both protocols in a pair. Sui compares WHCC with HashRand; Aptos compares WHCC with the CSS-HashCoin warm-up. Each pair ran twice in opposite protocol order, with one output bit, 40-bit statistical parameters and a 180-second online deadline after START.
+Run commands from the Rust repository root. The six-panel WAN figure is [coin-comparison.pdf](figures/coin-comparison.pdf). The recovery-quota figure is [sampling_compact.pdf](figures/sampling_compact.pdf). All published observations can be checked offline.
 
-## Published data
+## What to reproduce
 
-| Location | Contents |
-|---|---|
-| [measurements.csv](results/measurements.csv) | One row per scheduled run. Of 32 rows, 28 are successes, two are Sui HashRand timeouts at 48 parties, and two are skips at 64. |
-| [paired-summary.csv](results/paired-summary.csv) | Means over completed pairs; timed-out or skipped jobs do not contribute success metrics. |
-| [logs](results/logs), [verified.json](results/verified.json) | The 30 actual cloud log archives, original checksums, controller status, per-run CSVs, CPU/RSS samples and component counters. |
-| [inputs](inputs), [manifest.json](manifest.json), [data](data), [reduction_checks](reduction_checks) | Eight exact committee inputs, snapshot provenance and lossless reduction certificates. |
-| [original plan](results/original-plan.json), [original environment](results/original-environment.json) | Historical settings, binary hashes and source fingerprints at measurement time. New preparations record their own fingerprints. |
-| [figures](figures) | The paper's four-panel figure and the supplementary per-chain plots. |
+| Paper result | Frozen evidence | Measurement |
+| --- | --- | --- |
+| §7 recovery quotas | [Aptos snapshot](data/aptos/manifest.json), [825 plotted values](results/sampling-quota.csv) | Exact mean quota E/n for nested synthetic committees sampled with replacement. These are calculations, independent of network timing. |
+| §9.2 honest dealers, left and middle columns | [30 original log archives and per-run tables](results/logs), [run measurements](results/measurements.csv), [paired means](results/paired-summary.csv), [published breakdown](results/paris-summary.json) | Full-coin sent bytes per party and longest local START-to-output. The Aptos latency breakdown uses Freeze and output on the same slowest party. Two runs per protocol/size in opposite orders. |
+| §9.3 faulty dealers, right column | [8 original controller archives, per-run tables and digests](results/faulty), [four path comparisons](results/faulty/path-summary.csv) | Mean **honest sender** bytes for PVR+Sampling or RBC full retrieval (MiB, divided by 2²⁰), including protocol framing and acknowledgments. Maximum honest local Freeze-to-last-required-outcome latency in seconds. Both exclude shared agreement. One run per protocol/size. |
 
-Traffic is measured over the complete service lifetime, including protocol acknowledgments and application retries. Published latency is the maximum party-local START-to-output interval. The Aptos latency breakdown uses Freeze and output from the same party in each run. The traffic breakdown separates common control (WRA, WGather, WBinAA) from distribution and recovery. The timeout concerns the online phase; preparation and post-output service have separate limits.
+Sui epoch 1300 compares WHCC and virtual-share HashRand. Aptos epoch 17861 compares WHCC and the CSS-HashCoin warm-up. The honest matrix has 28 successes, two certified HashRand timeouts at 48 parties, and two skipped HashRand jobs at 64. Both 48-party timeout archives are retained. The [honest matrix](manifest.json), [faulty matrix](css-max-manifest.json), [committee inputs](inputs), [source snapshots](data), and [weight reduction certificates](reduction_checks) fix the samples. The honest campaign's [plan](results/original-plan.json) and [environment](results/original-environment.json) preserve the measured build fingerprints. Every faulty-run archive includes its own case, protocol parameters, execution settings, controller record, and party event streams.
 
-## Verify and replot
+For the faulty runs, dealers were chosen in increasing stake order up to the largest prefix strictly below one third (18, 26, 35 and 46 dealers at 32, 48, 64 and 80 parties). They flipped one bit in each OR correction before committing. The 32–64 observations come from the first successful runs at those sizes. The 80-party observations come from the later successful pair, with the worker soft file-descriptor limit set to 65,536. See [per-size settings and binary hashes](results/faulty/run-settings.json) and the [observed worker limits](results/faulty/worker-nofile.csv).
 
-Run commands from the repository root. Log verification needs Python 3.11 or later. For plotting and running the experiment, the tested environment used Linux, Python 3.12, and Rust 1.99.0. Install TeX Live with PGFPlots and the standalone class for the paper figure.
+## Offline verification and figures
+
+Use Python 3.11+; the log verifiers use only the standard library. For the figures, use Python 3.12, the dependencies below, and a TeX installation with PGFPlots and the standalone class. The commands write regenerated figures under a separate output directory.
 
 ```sh
 python3 -m venv .venv
 . .venv/bin/activate
 python -m pip install -r benchmark/paper/requirements.txt
 python benchmark/paper/verify_results.py
-python benchmark/paper/plot_paired.py --out results/replot
-python benchmark/paper/figures/refresh_data.py
-(cd benchmark/paper/figures && pdflatex -halt-on-error coin-comparison.tex)
+python benchmark/paper/verify_faulty.py
+mkdir -p results/replot
+python benchmark/paper/figures/refresh_data.py --out results/replot/coin-comparison.tex
+(cd results/replot && pdflatex -halt-on-error coin-comparison.tex)
+python benchmark/paper/figures/sampling_quota.py --out results/replot
 ```
 
-Verification checks the archives against their SHA-256 digests, reconstructs the observations and CSV breakdowns, and compares them with the published tables. The last two commands regenerate the paper's embedded PGFPlots data and PDF. The supplementary plotting script also accepts a fresh run directory containing `measurements.csv`.
+The first verifier checks SHA-256, reconstructs the honest-dealer measurements from the party logs, and compares the per-run CSVs. The second checks all eight faulty runs, recomputes the path metrics and compares them against the published recovery, measurement and four-size summary tables. The WAN plot uses the verified tables and the raw slowest-party Freeze events. The quota script regenerates the committee stream from the snapshot with seed 20261055 and checks every plotted value. PDF metadata can differ between TeX or plotting-tool versions.
 
-## Local run
+## Build and local smoke test
+
+Use Linux, Rust with Cargo (the archived honest runs used rustc 1.99.0), and the committed Cargo.lock. Build release binaries for the same architecture as the AWS hosts (x86-64). Use a fresh directory for each preparation and run. On WSL, use a native Linux directory (for example under ~/) for prepared plans. Generating the 64-party configuration on a Windows-mounted directory can exceed the generator timeout.
 
 ```sh
 cargo build --release --locked --bin coin-benchmark-driver --bin csshashcoin-node
@@ -39,35 +42,30 @@ python benchmark/paper/prepare.py --smoke --directory results/prepared-smoke
 python benchmark/paper/local.py --prepared results/prepared-smoke --out results/local-smoke
 ```
 
-The smoke plan runs all three protocols on an equal and a near-equal four-party committee. Each party is a separate process. For the complete local matrix, run the following commands. All local parties share the host's CPU and memory; local timing should be reported separately from WAN timing.
+The smoke plan runs all three protocols on two four-party inputs. Local timing reflects a shared machine. For the full honest loopback matrix, replace the smoke preparation with the honest plan below and use it with `local.py`.
+
+## Re-run the five-region WAN experiments
+
+One EC2 t3a.medium (2 vCPUs, 4 GiB, unlimited CPU credits) hosts each physical party. Regions are Northern Virginia, Ohio, Oregon, Tokyo and Paris; slot 0 also hosts the controller. Each run requests one bit, 40-bit rounding and a 180-second online timeout. WHCC uses 40-bit sampling coverage and four-column modules.
+
+Prepare and validate both plans offline:
 
 ```sh
-python benchmark/paper/prepare.py
-python benchmark/paper/local.py --out results/local-paper
-python benchmark/paper/plot_paired.py results/local-paper --out results/local-plots
+python benchmark/paper/prepare.py --directory results/prepared-honest
+python benchmark/paper/campaign.py --prepared results/prepared-honest
+python benchmark/paper/prepare.py --css-max --directory results/prepared-faulty
+python benchmark/paper/campaign.py --prepared results/prepared-faulty
 ```
 
-Preparation validates the weight certificates, builds each protocol description, and freezes copies of the release binaries, inputs, parameters and hashes under `results/prepared-paper`. Specify `--directory` and then `--prepared` to use a different location. Local and cloud runners require a new output directory for each campaign and preserve the logs of failed runs.
-
-## AWS run
-
-Install AWS CLI v2 and OpenSSH on the control machine. Configure AWS CLI credentials and an SSH key pair imported in all five regions. Copy [fleet.example.json](../aws_fleet/fleet.example.json) to a private local fleet file. In each region supply an x86-64 Ubuntu AMI with Python 3.11+ and SSH, a public subnet supporting t3a.medium, and a dedicated security group named `whcc-benchmark` allowing SSH from the control machine. The key name in the file must match the AWS key pair. Set `--key` to the corresponding local private key. The fleet controller checks resources, allocates round-robin, tests SSH, and manages experiment-scoped peer rules and instance cleanup.
+For a paid rerun, install and configure AWS CLI v2 and OpenSSH. Fill a private copy of [fleet.example.json](../aws_fleet/fleet.example.json) with the Ubuntu x86-64 AMI, subnet, security group, and imported SSH key name for each region. The Ubuntu hosts need Python 3.11+. Supply the matching local private key. For example:
 
 ```sh
-# Prepare once unless the same frozen full plan already exists.
-python benchmark/paper/prepare.py
-
-# Offline matrix and binary checks (no AWS calls).
-python benchmark/paper/campaign.py
-
-# Launch the paid campaign and download each stage's logs.
-python benchmark/paper/campaign.py --apply --config /path/to/fleet.json --key ~/.ssh/whcc-aws --out results/aws-paper
+python benchmark/paper/campaign.py --apply --prepared results/prepared-honest --config /path/to/fleet.json --key ~/.ssh/whcc-aws --out results/aws-honest
+python benchmark/paper/campaign.py --apply --prepared results/prepared-faulty --config /path/to/fleet.json --key ~/.ssh/whcc-aws --out results/aws-faulty
 ```
 
-The default SSH route is direct. The original control machine's local HTTP proxy can be selected with `--ssh-proxy` (netcat at 127.0.0.1:7890). Cloud jobs use the AWS-hosted controller for the measured interval. Each completed stage is audited before expansion. Two verified HashRand online timeouts at one size skip larger HashRand cases. Other failures abort the campaign and trigger cleanup. If the local launcher is interrupted before cleanup completes, use the same output directory and fleet configuration:
+The launcher expands from the smallest committee, checks SSH readiness, deploys the measured binary and configurations, checks worker errors, downloads and verifies logs, and cleans up the fleet. Formal logs are the default. Each completed job writes raw events and per-run CSVs in its size directory; faulty jobs additionally write `recovery.csv`. Fresh WAN timings and randomized assignments may differ. If interrupted, use the corresponding campaign directory for cleanup:
 
 ```sh
-python benchmark/paper/campaign.py --apply --cleanup --config /path/to/fleet.json --out results/aws-paper
+python benchmark/paper/campaign.py --apply --cleanup --config /path/to/fleet.json --out results/aws-faulty
 ```
-
-Fresh cloud output contains per-stage controller and worker logs, per-job analysis, `measurements.csv`, `paired-summary.csv`, plots and the cleanup record. Account-specific fleet settings, SSH keys and generated node credentials belong outside the published evidence.

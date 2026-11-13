@@ -14,19 +14,28 @@ pub enum Behavior {
     #[default]
     Honest,
     RecoveryStress,
+    /// Noncanonical dealer record; all recovery and control roles follow the protocol.
+    InvalidAx,
+    InvalidCorrections,
 }
 impl Behavior {
     pub fn name(self) -> &'static str {
         match self {
             Self::Honest => "honest",
             Self::RecoveryStress => "recovery-stress",
+            Self::InvalidAx => "invalid-ax",
+            Self::InvalidCorrections => "invalid-corrections",
         }
     }
     pub fn corrupt_public(self, public: &mut Public) {
-        if self == Self::RecoveryStress {
+        if matches!(self, Self::RecoveryStress | Self::InvalidAx) {
             // Inputs/wires remain authentic: completion succeeds. The opening is
             // canonical, but full AX regeneration detects the altered commitment.
             public.commitment[0] ^= 1;
+        } else if self == Self::InvalidCorrections {
+            for block in &mut public.base.corrections {
+                block[0] ^= 1;
+            }
         }
     }
 }

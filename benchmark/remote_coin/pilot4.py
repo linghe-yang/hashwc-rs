@@ -55,11 +55,6 @@ def retire(row):
     def status():
         found=ec2(region,"describe-instances","--instance-ids",iid)
         return found["Reservations"][0]["Instances"][0]["State"]["Name"]
-    try:
-        ec2(region,"stop-instances","--instance-ids",iid)
-        wait_for(lambda: status()=="stopped",90,f"stop {iid}")
-    except (RuntimeError, TimeoutError, subprocess.TimeoutExpired) as exc:
-        print(f"Stop failed for {iid}, proceeding to terminate: {exc}",file=sys.stderr)
     ec2(region,"terminate-instances","--instance-ids",iid)
     wait_for(lambda: status()=="terminated",300,f"terminate {iid}")
 

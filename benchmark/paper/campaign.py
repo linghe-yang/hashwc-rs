@@ -4,7 +4,6 @@ import asyncio
 import signal
 import sys
 import uuid
-import shutil
 import shlex
 from pathlib import Path
 from prepare import HERE,ROOT,WAN,FROZEN,PAIRS,read,run,digest,save
@@ -26,12 +25,31 @@ class PairedCloud(pl.Cloud):
         save(stage/'cpu-credit-modes.json',verified)
         return rows
 
-def check(plan):
+def check(plan, prepared=FROZEN):
     assert (plan['instance_type'],plan['cpu_credits'])==('t3a.medium','unlimited')
-    assert len(plan['configurations'])==32 and plan['settings']['coin_timeout_s']==180 and plan['settings']['bulk_audit']
+    assert plan['settings']['coin_timeout_s']==180 and plan['settings']['bulk_audit']
     for name,h in plan['wan_sources'].items():
         assert digest(WAN/name)==h
     cases=plan['configurations']
+    if plan.get('campaign') == 'css-max':
+        from local_rejection import maximum_coalition
+        from common import parameters
+        sizes=plan.get('committee_sizes',[32,48,64,80])
+        assert sizes and sizes==sorted(set(sizes)) and set(sizes)<= {32,48,64,80}
+        assert len(cases)==len({c['job_id'] for c in cases})==2*len(sizes)
+        assert plan['settings']['runs_per_configuration']==1 and plan['settings']['log_mode']=='formal'
+        for n in sizes:
+            pair=[c for c in cases if c['n']==n]
+            assert len(pair)==2 and {c['protocol'] for c in pair}=={'warmup','whcc'}
+            assert len({c['input_sha256'] for c in pair})==1
+            for c in pair:
+                source=read(prepared/c['input'])
+                assert source['case_id']==f'aptos-n{n}' and c['weights']==source['weights']
+                assert int(c['threshold'])==int(source['threshold']) and c['faulty_dealers']==maximum_coalition(source)
+                assert c['repeat']==1 and c['preflight_status']=='ready' and c['parameters']==parameters(c['protocol'])
+                assert c['family']=='aptos' and c['campaign']=='css-max' and c['dealer_fault']=='css-corrections'
+        return
+    assert len(cases)==32
     for n in (16,32,48,64):
         for family,pair in PAIRS.items():
             for rep in (1,2):
@@ -75,7 +93,7 @@ def certified_timeout(work,raw,case):
 
 def stages(args,cloud,plan,policy):
     history=[]; previous=0; stop_hr=False
-    for n in (16,32,48,64):
+    for n in sorted({c['n'] for c in plan['configurations']}):
         stage=args.out/f'n{n:02d}'
         stage.mkdir()
         rows=cloud.grow(n,previous,stage)
@@ -90,8 +108,11 @@ def stages(args,cloud,plan,policy):
             print(key,flush=True)
             work=stage/'controller-logs'/key
             dest=stage/'analysis'/key
+            job_plan = plan
+            if case.get('campaign') == 'css-max' and n == 80:
+                job_plan = {**plan, 'settings': {**plan['settings'], 'worker_nofile_soft': 65536}}
             try:
-                asyncio.run(pl.measure(args,cloud,hosts,case,plan,policy,stage))
+                asyncio.run(pl.measure(args,cloud,hosts,case,job_plan,policy,stage))
             except RuntimeError as exc:
                 if 'AWS controller failed: TimeoutError()' not in str(exc) or not certified_timeout(work,stage/'remote-logs'/key,case):
                     raise
@@ -128,6 +149,7 @@ def stages(args,cloud,plan,policy):
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--apply',action='store_true')
+    parser.add_argument('--debug-logs', action='store_true', help='retain detailed worker logs for diagnosis')
     parser.add_argument('--cleanup',action='store_true')
     parser.add_argument('--prepared',type=Path,default=FROZEN)
     parser.add_argument('--out',type=Path,default=ROOT/'results/aws-paired40')
@@ -136,7 +158,7 @@ def main():
     parser.add_argument('--ssh-proxy', action='store_true', help='route local SSH via HTTP proxy 127.0.0.1:7890')
     args=parser.parse_args()
     args.out=args.out.resolve()
-    args.user='ubuntu'; args.port=pl.BASE; args.boot_ssh_seconds=180; args.max_replacements=1
+    args.user='ubuntu'; args.port=pl.BASE; args.boot_ssh_seconds=180
     args.trust_first_use=True
     if args.cleanup:
         if not args.apply:raise ValueError('cleanup requires --apply')
@@ -145,20 +167,24 @@ def main():
         return
     folder=args.prepared.resolve()
     plan=run.load_plan(folder,True)
-    check(plan)
-    print('Validated 32 paired runs, 16/32/48/64; local preview complete.',flush=True)
+    check(plan, folder)
+    plan['settings']['log_mode'] = 'debug' if args.debug_logs else 'formal'
+    print('Validated', len(plan['configurations']), 'runs at sizes',
+          sorted({c['n'] for c in plan['configurations']}), flush=True)
     if not args.apply:return
     cfg=read(args.config)
     cfg.update(instance_type=plan['instance_type'],cpu_credits=plan['cpu_credits'])
     args.driver=folder/plan['binaries']['driver']['path']
     args.generator=folder/plan['binaries']['generator']['path']
     args.out.mkdir(mode=0o700,parents=True,exist_ok=False)
-    shutil.copyfile(FROZEN/'plan.json',args.out/'plan.json')
+    save(args.out/'plan.json',plan)
     state=dict(fleet='scale-'+uuid.uuid4().hex[:16],regions={},requests=[],driver_sha256=digest(args.driver),instance_type=cfg['instance_type'],cpu_credits=cfg['cpu_credits'])
     cloud=PairedCloud(args.out,cfg,args,state)
+    state['max_nodes']=max(c['n'] for c in plan['configurations'])
     signal.signal(signal.SIGTERM,lambda *_:sys.exit('SIGTERM'))
     pl.execute(args,cloud,plan,{},stage_runner=stages)
-    from plot_paired import plot
-    plot(args.out)
+    if plan.get('campaign') != 'css-max':
+        from plot_paired import plot
+        plot(args.out)
 if __name__=='__main__': main()
 

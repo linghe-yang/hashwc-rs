@@ -15,6 +15,8 @@ async def local(prepared, out):
     out.mkdir(mode=0o700, parents=True, exist_ok=False)
     binaries = {k: prepared / v['path'] for k, v in plan['binaries'].items()}
     os.environ['COIN_BULK_AUDIT'] = '1'
+    if 'log_mode' in plan['settings']:
+        os.environ['COIN_LOG_MODE'] = plan['settings']['log_mode']
     timeouts = Counter()
     rows = []
     for case in plan['configurations']:

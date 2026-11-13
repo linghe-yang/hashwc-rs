@@ -202,6 +202,12 @@ impl State {
         )?;
         if matches!(self.behavior, Behavior::InvalidAx) {
             public.commitment[0] ^= 1;
+        } else if matches!(self.behavior, Behavior::InvalidCorrections) {
+            let corrections = public.base.corrections_mut();
+            ensure!(!corrections.is_empty(), "CSS correction fixture needs OR gates");
+            for block in corrections {
+                block[0] ^= 1;
+            }
         }
         self.started = true;
         self.events.push(Event::Started {

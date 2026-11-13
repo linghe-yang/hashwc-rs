@@ -13,6 +13,9 @@ from analyze import analyze_run, network_signature
 async def run_case(directory, case, binaries, settings):
     directory = Path(directory)
     directory.mkdir(parents=True, exist_ok=False, mode=0o700)
+    fault = case.get("dealer_fault", "ax-root")
+    fixture_flag = {"ax-root": "--local-invalid-ax", "css-corrections": "--local-invalid-corrections"}[fault]
+    fixture_dealers = case.get("faulty_dealers", case.get("invalid_ax_dealers", ()))
     save(directory / "case.json", case)
     save(directory / "parameters.json", case["parameters"])
     save(directory / "execution.json", settings.get("execution"))
@@ -94,9 +97,10 @@ async def run_case(directory, case, binaries, settings):
                 str(binaries["driver"]), "--protocol", MODULE[case["protocol"]],
                 "--config", str(directory / f"config/node-{i}.json"),
                 "--parameters", str(directory / "parameters.json"),
+                *([fixture_flag] if i in fixture_dealers else []),
                 stdin=asyncio.subprocess.PIPE, stdout=asyncio.subprocess.PIPE, stderr=err,
                 cwd=ROOT, env={**os.environ, "TOKIO_WORKER_THREADS": str(settings["tokio_workers"]),
-                               "COIN_PROFILE": "0", "RUST_LOG": "warn",
+                               "COIN_PROFILE": "0", "RUST_LOG": os.environ.get("RUST_LOG", "warn"),
                                **execution_environment(settings)}, limit=4 * 1024**2)
             tasks.append(asyncio.create_task(read(i, processes[i])))
         monitor_task = asyncio.create_task(monitor())
@@ -139,7 +143,7 @@ async def run_case(directory, case, binaries, settings):
                         if i in samples:
                             raise RuntimeError("duplicate sample")
                         samples[i] = e
-                signature, eligible = network_signature(samples)
+                signature, eligible = network_signature(samples, fixture_dealers)
                 current = now()
                 if not eligible:
                     since = None

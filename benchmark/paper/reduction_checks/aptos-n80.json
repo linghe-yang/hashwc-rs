@@ -1,0 +1,3053 @@
+[
+  {
+    "version": "bounded-sum-exact-integer-v2",
+    "n": 80,
+    "input_policy_sha256": "589480b59d308acd1c55e97876e56ef2ce608052a4088eeffe9a166679c9f184",
+    "original": {
+      "weights": [
+        "342802195337429",
+        "876735292653936",
+        "786656437863920",
+        "1002603592080031",
+        "719465136641153",
+        "746011609928108",
+        "1061296742538577",
+        "2080578841327044",
+        "2140362854925553",
+        "173464406972723",
+        "1062604499893805",
+        "216881577669055",
+        "1406775635229665",
+        "1029761928798077",
+        "1650151158651519",
+        "586351605117551",
+        "1546364479237726",
+        "402885108784113",
+        "321207134343208",
+        "1222571567335731",
+        "587540098544794",
+        "273441022653908",
+        "2617880576518183",
+        "1060954915925052",
+        "1613644274123251",
+        "1202120958264889",
+        "586796464864266",
+        "1514097216569930",
+        "225064209313144",
+        "999981616844512",
+        "1085154762655843",
+        "404413729532567",
+        "701385166343354",
+        "420594742352491",
+        "1063773557617955",
+        "1283839161464404",
+        "1094059341576374",
+        "432381888102728",
+        "1062515085213692",
+        "727738809508895",
+        "192561321913413",
+        "2572861598194123",
+        "939358596064873",
+        "614355816109496",
+        "1110220377884312",
+        "1256057614618959",
+        "824184942364826",
+        "794544464623960",
+        "753698836965771",
+        "1077417787211577",
+        "696853611730274",
+        "699012334591571",
+        "139740906506256",
+        "208986046420528",
+        "1908867459492745",
+        "1062598389379140",
+        "1194752794403510",
+        "1062875736133917",
+        "499242576972187",
+        "1234655658690090",
+        "1304695131717913",
+        "897826492705843",
+        "590202166417016",
+        "275986696056882",
+        "247861978872215",
+        "127075272389922",
+        "635107355473452",
+        "409894190904794",
+        "1443821284534944",
+        "1060929304524392",
+        "1063818026871065",
+        "163631955556349",
+        "106213924033132",
+        "281922182096696",
+        "823785305272877",
+        "2572903037337150",
+        "1063728261080102",
+        "1962474648609338",
+        "186913233159043",
+        "397155481880650"
+      ],
+      "threshold": "24263900734361487",
+      "total_weight": "72791702203084459",
+      "total_weight_bits": 57,
+      "sum_individual_weight_bits": 3984,
+      "max_weight_bits": 52,
+      "method": "input",
+      "certificate": {},
+      "policy_sha256": "589480b59d308acd1c55e97876e56ef2ce608052a4088eeffe9a166679c9f184"
+    },
+    "budget_factor": 1024,
+    "candidate_sum_budget": 6553600,
+    "strong": {
+      "weights": [
+        "342802195337429",
+        "876735292653936",
+        "786656437863920",
+        "1002603592080031",
+        "719465136641153",
+        "746011609928108",
+        "1061296742538577",
+        "2080578841327044",
+        "2140362854925553",
+        "173464406972723",
+        "1062604499893805",
+        "216881577669055",
+        "1406775635229665",
+        "1029761928798077",
+        "1650151158651519",
+        "586351605117551",
+        "1546364479237726",
+        "402885108784113",
+        "321207134343208",
+        "1222571567335731",
+        "587540098544794",
+        "273441022653908",
+        "2617880576518183",
+        "1060954915925052",
+        "1613644274123251",
+        "1202120958264889",
+        "586796464864266",
+        "1514097216569930",
+        "225064209313144",
+        "999981616844512",
+        "1085154762655843",
+        "404413729532567",
+        "701385166343354",
+        "420594742352491",
+        "1063773557617955",
+        "1283839161464404",
+        "1094059341576374",
+        "432381888102728",
+        "1062515085213692",
+        "727738809508895",
+        "192561321913413",
+        "2572861598194123",
+        "939358596064873",
+        "614355816109496",
+        "1110220377884312",
+        "1256057614618959",
+        "824184942364826",
+        "794544464623960",
+        "753698836965771",
+        "1077417787211577",
+        "696853611730274",
+        "699012334591571",
+        "139740906506256",
+        "208986046420528",
+        "1908867459492745",
+        "1062598389379140",
+        "1194752794403510",
+        "1062875736133917",
+        "499242576972187",
+        "1234655658690090",
+        "1304695131717913",
+        "897826492705843",
+        "590202166417016",
+        "275986696056882",
+        "247861978872215",
+        "127075272389922",
+        "635107355473452",
+        "409894190904794",
+        "1443821284534944",
+        "1060929304524392",
+        "1063818026871065",
+        "163631955556349",
+        "106213924033132",
+        "281922182096696",
+        "823785305272877",
+        "2572903037337150",
+        "1063728261080102",
+        "1962474648609338",
+        "186913233159043",
+        "397155481880650"
+      ],
+      "threshold": "24263900734361487",
+      "total_weight": "72791702203084459",
+      "total_weight_bits": 57,
+      "sum_individual_weight_bits": 3984,
+      "max_weight_bits": 52,
+      "method": "exact-policy-gcd",
+      "certificate": {
+        "divisor": "1",
+        "scope": "whole-policy"
+      },
+      "policy_sha256": "589480b59d308acd1c55e97876e56ef2ce608052a4088eeffe9a166679c9f184",
+      "reduced": false,
+      "sum_reduction_factor": "1"
+    },
+    "css_only": {
+      "weights": [
+        "342802195337429",
+        "876735292653936",
+        "786656437863920",
+        "1002603592080031",
+        "719465136641153",
+        "746011609928108",
+        "1061296742538577",
+        "2080578841327044",
+        "2140362854925553",
+        "173464406972723",
+        "1062604499893805",
+        "216881577669055",
+        "1406775635229665",
+        "1029761928798077",
+        "1650151158651519",
+        "586351605117551",
+        "1546364479237726",
+        "402885108784113",
+        "321207134343208",
+        "1222571567335731",
+        "587540098544794",
+        "273441022653908",
+        "2617880576518183",
+        "1060954915925052",
+        "1613644274123251",
+        "1202120958264889",
+        "586796464864266",
+        "1514097216569930",
+        "225064209313144",
+        "999981616844512",
+        "1085154762655843",
+        "404413729532567",
+        "701385166343354",
+        "420594742352491",
+        "1063773557617955",
+        "1283839161464404",
+        "1094059341576374",
+        "432381888102728",
+        "1062515085213692",
+        "727738809508895",
+        "192561321913413",
+        "2572861598194123",
+        "939358596064873",
+        "614355816109496",
+        "1110220377884312",
+        "1256057614618959",
+        "824184942364826",
+        "794544464623960",
+        "753698836965771",
+        "1077417787211577",
+        "696853611730274",
+        "699012334591571",
+        "139740906506256",
+        "208986046420528",
+        "1908867459492745",
+        "1062598389379140",
+        "1194752794403510",
+        "1062875736133917",
+        "499242576972187",
+        "1234655658690090",
+        "1304695131717913",
+        "897826492705843",
+        "590202166417016",
+        "275986696056882",
+        "247861978872215",
+        "127075272389922",
+        "635107355473452",
+        "409894190904794",
+        "1443821284534944",
+        "1060929304524392",
+        "1063818026871065",
+        "163631955556349",
+        "106213924033132",
+        "281922182096696",
+        "823785305272877",
+        "2572903037337150",
+        "1063728261080102",
+        "1962474648609338",
+        "186913233159043",
+        "397155481880650"
+      ],
+      "threshold": "24263900734361487",
+      "total_weight": "72791702203084459",
+      "total_weight_bits": 57,
+      "sum_individual_weight_bits": 3984,
+      "max_weight_bits": 52,
+      "method": "exact-weight-gcd",
+      "certificate": {
+        "divisor": "1",
+        "scope": "CSS-only"
+      },
+      "policy_sha256": "589480b59d308acd1c55e97876e56ef2ce608052a4088eeffe9a166679c9f184",
+      "reduced": false,
+      "sum_reduction_factor": "1"
+    },
+    "attempts": [
+      {
+        "target_sum": 80,
+        "rounding": "floor",
+        "proposal_gcd": 1,
+        "seconds": 0.20348180000019056,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 87,
+        "css_threshold_interval": [
+          47,
+          18
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          47,
+          17
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            47,
+            18
+          ],
+          "24263900734361488": [
+            47,
+            18
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 29,
+            "feasible_interval": [
+              47,
+              18
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 30,
+            "feasible_interval": [
+              47,
+              18
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 80,
+        "rounding": "nearest",
+        "proposal_gcd": 1,
+        "seconds": 0.00048160000005736947,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 96,
+        "css_threshold_interval": [
+          49,
+          22
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          49,
+          21
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            49,
+            22
+          ],
+          "24263900734361488": [
+            49,
+            22
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 32,
+            "feasible_interval": [
+              49,
+              22
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 33,
+            "feasible_interval": [
+              49,
+              22
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 80,
+        "rounding": "ceil",
+        "proposal_gcd": 1,
+        "seconds": 0.0005191999998714891,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 125,
+        "css_threshold_interval": [
+          57,
+          31
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          57,
+          30
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            57,
+            31
+          ],
+          "24263900734361488": [
+            57,
+            31
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 42,
+            "feasible_interval": [
+              57,
+              31
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 42,
+            "feasible_interval": [
+              57,
+              31
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 160,
+        "rounding": "floor",
+        "proposal_gcd": 1,
+        "seconds": 0.0004772000002049026,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 141,
+        "css_threshold_interval": [
+          59,
+          37
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          59,
+          36
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            59,
+            37
+          ],
+          "24263900734361488": [
+            59,
+            37
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 47,
+            "feasible_interval": [
+              59,
+              37
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 48,
+            "feasible_interval": [
+              59,
+              37
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 160,
+        "rounding": "nearest",
+        "proposal_gcd": 1,
+        "seconds": 0.00048039999910542974,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 168,
+        "css_threshold_interval": [
+          69,
+          46
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          69,
+          45
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            69,
+            46
+          ],
+          "24263900734361488": [
+            69,
+            46
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 56,
+            "feasible_interval": [
+              69,
+              46
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 57,
+            "feasible_interval": [
+              69,
+              46
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 160,
+        "rounding": "ceil",
+        "proposal_gcd": 1,
+        "seconds": 0.0004926999999952386,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 199,
+        "css_threshold_interval": [
+          78,
+          58
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          78,
+          57
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            78,
+            58
+          ],
+          "24263900734361488": [
+            78,
+            58
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 67,
+            "feasible_interval": [
+              78,
+              58
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 67,
+            "feasible_interval": [
+              78,
+              58
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 320,
+        "rounding": "floor",
+        "proposal_gcd": 1,
+        "seconds": 0.0005203999999139342,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 287,
+        "css_threshold_interval": [
+          106,
+          85
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          106,
+          84
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            106,
+            85
+          ],
+          "24263900734361488": [
+            106,
+            85
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 96,
+            "feasible_interval": [
+              106,
+              85
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 96,
+            "feasible_interval": [
+              106,
+              85
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 320,
+        "rounding": "nearest",
+        "proposal_gcd": 1,
+        "seconds": 0.0005398000002969638,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 326,
+        "css_threshold_interval": [
+          119,
+          100
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          119,
+          99
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            119,
+            100
+          ],
+          "24263900734361488": [
+            119,
+            100
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 109,
+            "feasible_interval": [
+              119,
+              100
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 109,
+            "feasible_interval": [
+              119,
+              100
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 320,
+        "rounding": "ceil",
+        "proposal_gcd": 1,
+        "seconds": 0.0005468000008477247,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 357,
+        "css_threshold_interval": [
+          130,
+          112
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          130,
+          111
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            130,
+            112
+          ],
+          "24263900734361488": [
+            130,
+            112
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 119,
+            "feasible_interval": [
+              130,
+              112
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 120,
+            "feasible_interval": [
+              130,
+              112
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 640,
+        "rounding": "floor",
+        "proposal_gcd": 1,
+        "seconds": 0.0006352000000333646,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 603,
+        "css_threshold_interval": [
+          210,
+          189
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          210,
+          188
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            210,
+            189
+          ],
+          "24263900734361488": [
+            210,
+            189
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 201,
+            "feasible_interval": [
+              210,
+              189
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 202,
+            "feasible_interval": [
+              210,
+              189
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 640,
+        "rounding": "nearest",
+        "proposal_gcd": 1,
+        "seconds": 0.0006509999993795645,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 638,
+        "css_threshold_interval": [
+          223,
+          203
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          223,
+          202
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            223,
+            203
+          ],
+          "24263900734361488": [
+            223,
+            203
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 213,
+            "feasible_interval": [
+              223,
+              203
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 213,
+            "feasible_interval": [
+              223,
+              203
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 640,
+        "rounding": "ceil",
+        "proposal_gcd": 1,
+        "seconds": 0.000665100000333041,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 682,
+        "css_threshold_interval": [
+          240,
+          218
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          240,
+          217
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            240,
+            218
+          ],
+          "24263900734361488": [
+            240,
+            218
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 228,
+            "feasible_interval": [
+              240,
+              218
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 228,
+            "feasible_interval": [
+              240,
+              218
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 1280,
+        "rounding": "floor",
+        "proposal_gcd": 1,
+        "seconds": 0.0008184000007531722,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 1240,
+        "css_threshold_interval": [
+          424,
+          400
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          424,
+          399
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            424,
+            400
+          ],
+          "24263900734361488": [
+            424,
+            400
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 414,
+            "feasible_interval": [
+              424,
+              400
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 414,
+            "feasible_interval": [
+              424,
+              400
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 1280,
+        "rounding": "nearest",
+        "proposal_gcd": 1,
+        "seconds": 0.0008163000002241461,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 1282,
+        "css_threshold_interval": [
+          436,
+          418
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          436,
+          417
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            436,
+            418
+          ],
+          "24263900734361488": [
+            436,
+            418
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 428,
+            "feasible_interval": [
+              436,
+              418
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 428,
+            "feasible_interval": [
+              436,
+              418
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 1280,
+        "rounding": "ceil",
+        "proposal_gcd": 1,
+        "seconds": 0.0008569000001443783,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 1320,
+        "css_threshold_interval": [
+          453,
+          432
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          453,
+          431
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            453,
+            432
+          ],
+          "24263900734361488": [
+            453,
+            432
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 440,
+            "feasible_interval": [
+              453,
+              432
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 441,
+            "feasible_interval": [
+              453,
+              432
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 2560,
+        "rounding": "floor",
+        "proposal_gcd": 1,
+        "seconds": 0.0010957000004054862,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 2522,
+        "css_threshold_interval": [
+          852,
+          826
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          852,
+          825
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            852,
+            826
+          ],
+          "24263900734361488": [
+            852,
+            826
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 841,
+            "feasible_interval": [
+              852,
+              826
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 841,
+            "feasible_interval": [
+              852,
+              826
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 2560,
+        "rounding": "nearest",
+        "proposal_gcd": 1,
+        "seconds": 0.0011053999996875064,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 2557,
+        "css_threshold_interval": [
+          863,
+          845
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          863,
+          844
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            863,
+            845
+          ],
+          "24263900734361488": [
+            863,
+            845
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 853,
+            "feasible_interval": [
+              863,
+              845
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 853,
+            "feasible_interval": [
+              863,
+              845
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 2560,
+        "rounding": "ceil",
+        "proposal_gcd": 1,
+        "seconds": 0.0011424000003898982,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 2602,
+        "css_threshold_interval": [
+          878,
+          859
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          878,
+          858
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            878,
+            859
+          ],
+          "24263900734361488": [
+            878,
+            859
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 868,
+            "feasible_interval": [
+              878,
+              859
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 868,
+            "feasible_interval": [
+              878,
+              859
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 5120,
+        "rounding": "floor",
+        "proposal_gcd": 1,
+        "seconds": 0.0017317000001639826,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 5079,
+        "css_threshold_interval": [
+          1704,
+          1681
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          1704,
+          1680
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            1704,
+            1681
+          ],
+          "24263900734361488": [
+            1704,
+            1681
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 1693,
+            "feasible_interval": [
+              1704,
+              1681
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 1694,
+            "feasible_interval": [
+              1704,
+              1681
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 5120,
+        "rounding": "nearest",
+        "proposal_gcd": 1,
+        "seconds": 0.001701399999546993,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 5121,
+        "css_threshold_interval": [
+          1717,
+          1698
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          1717,
+          1697
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            1717,
+            1698
+          ],
+          "24263900734361488": [
+            1717,
+            1698
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 1707,
+            "feasible_interval": [
+              1717,
+              1698
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 1708,
+            "feasible_interval": [
+              1717,
+              1698
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 5120,
+        "rounding": "ceil",
+        "proposal_gcd": 1,
+        "seconds": 0.0017158000000563334,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 5159,
+        "css_threshold_interval": [
+          1734,
+          1710
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          1734,
+          1709
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            1734,
+            1710
+          ],
+          "24263900734361488": [
+            1734,
+            1710
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 1720,
+            "feasible_interval": [
+              1734,
+              1710
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 1720,
+            "feasible_interval": [
+              1734,
+              1710
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 10240,
+        "rounding": "floor",
+        "proposal_gcd": 1,
+        "seconds": 0.002874899999369518,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 10200,
+        "css_threshold_interval": [
+          3411,
+          3387
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          3411,
+          3386
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            3411,
+            3387
+          ],
+          "24263900734361488": [
+            3411,
+            3387
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 3400,
+            "feasible_interval": [
+              3411,
+              3387
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 3401,
+            "feasible_interval": [
+              3411,
+              3387
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 10240,
+        "rounding": "nearest",
+        "proposal_gcd": 1,
+        "seconds": 0.002909900000304333,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 10242,
+        "css_threshold_interval": [
+          3424,
+          3405
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          3424,
+          3404
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            3424,
+            3405
+          ],
+          "24263900734361488": [
+            3424,
+            3405
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 3414,
+            "feasible_interval": [
+              3424,
+              3405
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 3415,
+            "feasible_interval": [
+              3424,
+              3405
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 10240,
+        "rounding": "ceil",
+        "proposal_gcd": 1,
+        "seconds": 0.0030419999993682723,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 10280,
+        "css_threshold_interval": [
+          3440,
+          3417
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          3440,
+          3416
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            3440,
+            3417
+          ],
+          "24263900734361488": [
+            3440,
+            3417
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 3427,
+            "feasible_interval": [
+              3440,
+              3417
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 3427,
+            "feasible_interval": [
+              3440,
+              3417
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 20480,
+        "rounding": "floor",
+        "proposal_gcd": 1,
+        "seconds": 0.0053689999995185644,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 20442,
+        "css_threshold_interval": [
+          6825,
+          6800
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          6825,
+          6799
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            6825,
+            6800
+          ],
+          "24263900734361488": [
+            6825,
+            6800
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 6814,
+            "feasible_interval": [
+              6825,
+              6800
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 6815,
+            "feasible_interval": [
+              6825,
+              6800
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 20480,
+        "rounding": "nearest",
+        "proposal_gcd": 1,
+        "seconds": 0.0056200999997599865,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 20477,
+        "css_threshold_interval": [
+          6835,
+          6818
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          6835,
+          6817
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            6835,
+            6818
+          ],
+          "24263900734361488": [
+            6835,
+            6818
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 6826,
+            "feasible_interval": [
+              6835,
+              6818
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 6826,
+            "feasible_interval": [
+              6835,
+              6818
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 20480,
+        "rounding": "ceil",
+        "proposal_gcd": 1,
+        "seconds": 0.005724300000110816,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 20522,
+        "css_threshold_interval": [
+          6854,
+          6831
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          6854,
+          6830
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            6854,
+            6831
+          ],
+          "24263900734361488": [
+            6854,
+            6831
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 6841,
+            "feasible_interval": [
+              6854,
+              6831
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 6841,
+            "feasible_interval": [
+              6854,
+              6831
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 40960,
+        "rounding": "floor",
+        "proposal_gcd": 1,
+        "seconds": 0.011452300000200921,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 40919,
+        "css_threshold_interval": [
+          13651,
+          13626
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          13651,
+          13625
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            13651,
+            13626
+          ],
+          "24263900734361488": [
+            13651,
+            13626
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 13640,
+            "feasible_interval": [
+              13651,
+              13626
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 13640,
+            "feasible_interval": [
+              13651,
+              13626
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 40960,
+        "rounding": "nearest",
+        "proposal_gcd": 1,
+        "seconds": 0.010851900000488968,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 40964,
+        "css_threshold_interval": [
+          13665,
+          13646
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          13665,
+          13645
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            13665,
+            13646
+          ],
+          "24263900734361488": [
+            13665,
+            13646
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 13655,
+            "feasible_interval": [
+              13665,
+              13646
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 13655,
+            "feasible_interval": [
+              13665,
+              13646
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 40960,
+        "rounding": "ceil",
+        "proposal_gcd": 1,
+        "seconds": 0.010969699999805016,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 40999,
+        "css_threshold_interval": [
+          13680,
+          13657
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          13680,
+          13656
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            13680,
+            13657
+          ],
+          "24263900734361488": [
+            13680,
+            13657
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 13667,
+            "feasible_interval": [
+              13680,
+              13657
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 13667,
+            "feasible_interval": [
+              13680,
+              13657
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 81920,
+        "rounding": "floor",
+        "proposal_gcd": 1,
+        "seconds": 0.02750960000048508,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 81883,
+        "css_threshold_interval": [
+          27304,
+          27282
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          27304,
+          27281
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            27304,
+            27282
+          ],
+          "24263900734361488": [
+            27304,
+            27282
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 27295,
+            "feasible_interval": [
+              27304,
+              27282
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 27295,
+            "feasible_interval": [
+              27304,
+              27282
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 81920,
+        "rounding": "nearest",
+        "proposal_gcd": 1,
+        "seconds": 0.02651540000078967,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 81917,
+        "css_threshold_interval": [
+          27315,
+          27297
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          27315,
+          27296
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            27315,
+            27297
+          ],
+          "24263900734361488": [
+            27315,
+            27297
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 27306,
+            "feasible_interval": [
+              27315,
+              27297
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 27306,
+            "feasible_interval": [
+              27315,
+              27297
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 81920,
+        "rounding": "ceil",
+        "proposal_gcd": 1,
+        "seconds": 0.026702099999965867,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 81963,
+        "css_threshold_interval": [
+          27336,
+          27311
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          27336,
+          27310
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            27336,
+            27311
+          ],
+          "24263900734361488": [
+            27336,
+            27311
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 27321,
+            "feasible_interval": [
+              27336,
+              27311
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 27322,
+            "feasible_interval": [
+              27336,
+              27311
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 163840,
+        "rounding": "floor",
+        "proposal_gcd": 1,
+        "seconds": 0.08394140000018524,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 163800,
+        "css_threshold_interval": [
+          54611,
+          54587
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          54611,
+          54586
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            54611,
+            54587
+          ],
+          "24263900734361488": [
+            54611,
+            54587
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 54600,
+            "feasible_interval": [
+              54611,
+              54587
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 54601,
+            "feasible_interval": [
+              54611,
+              54587
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 163840,
+        "rounding": "nearest",
+        "proposal_gcd": 1,
+        "seconds": 0.08458200000040961,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 163840,
+        "css_threshold_interval": [
+          54624,
+          54604
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          54624,
+          54603
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            54624,
+            54604
+          ],
+          "24263900734361488": [
+            54624,
+            54604
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 54614,
+            "feasible_interval": [
+              54624,
+              54604
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 54614,
+            "feasible_interval": [
+              54624,
+              54604
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 163840,
+        "rounding": "ceil",
+        "proposal_gcd": 1,
+        "seconds": 0.08478660000037053,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 163880,
+        "css_threshold_interval": [
+          54640,
+          54618
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          54640,
+          54617
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            54640,
+            54618
+          ],
+          "24263900734361488": [
+            54640,
+            54618
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 54627,
+            "feasible_interval": [
+              54640,
+              54618
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 54627,
+            "feasible_interval": [
+              54640,
+              54618
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 327680,
+        "rounding": "floor",
+        "proposal_gcd": 1,
+        "seconds": 0.21680409999953554,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 327640,
+        "css_threshold_interval": [
+          109224,
+          109200
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          109224,
+          109199
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            109224,
+            109200
+          ],
+          "24263900734361488": [
+            109224,
+            109200
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 109214,
+            "feasible_interval": [
+              109224,
+              109200
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 109214,
+            "feasible_interval": [
+              109224,
+              109200
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 327680,
+        "rounding": "nearest",
+        "proposal_gcd": 1,
+        "seconds": 0.22398040000007313,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 327681,
+        "css_threshold_interval": [
+          109236,
+          109219
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          109236,
+          109218
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            109236,
+            109219
+          ],
+          "24263900734361488": [
+            109236,
+            109219
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 109227,
+            "feasible_interval": [
+              109236,
+              109219
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 109228,
+            "feasible_interval": [
+              109236,
+              109219
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 327680,
+        "rounding": "ceil",
+        "proposal_gcd": 1,
+        "seconds": 0.22154169999976148,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 327720,
+        "css_threshold_interval": [
+          109253,
+          109231
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          109253,
+          109230
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            109253,
+            109231
+          ],
+          "24263900734361488": [
+            109253,
+            109231
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 109240,
+            "feasible_interval": [
+              109253,
+              109231
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 109241,
+            "feasible_interval": [
+              109253,
+              109231
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 655360,
+        "rounding": "floor",
+        "proposal_gcd": 1,
+        "seconds": 0.4639331999997012,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 655321,
+        "css_threshold_interval": [
+          218451,
+          218427
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          218451,
+          218426
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            218451,
+            218427
+          ],
+          "24263900734361488": [
+            218451,
+            218427
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 218441,
+            "feasible_interval": [
+              218451,
+              218427
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 218441,
+            "feasible_interval": [
+              218451,
+              218427
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 655360,
+        "rounding": "nearest",
+        "proposal_gcd": 1,
+        "seconds": 0.49996050000027026,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 655362,
+        "css_threshold_interval": [
+          218463,
+          218446
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          218463,
+          218445
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            218463,
+            218446
+          ],
+          "24263900734361488": [
+            218463,
+            218446
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 218454,
+            "feasible_interval": [
+              218463,
+              218446
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 218455,
+            "feasible_interval": [
+              218463,
+              218446
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 655360,
+        "rounding": "ceil",
+        "proposal_gcd": 1,
+        "seconds": 0.4773400000003676,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 655401,
+        "css_threshold_interval": [
+          218481,
+          218457
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          218481,
+          218456
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            218481,
+            218457
+          ],
+          "24263900734361488": [
+            218481,
+            218457
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 218467,
+            "feasible_interval": [
+              218481,
+              218457
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 218468,
+            "feasible_interval": [
+              218481,
+              218457
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 1310720,
+        "rounding": "floor",
+        "proposal_gcd": 1,
+        "seconds": 0.9913569999998799,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 1310683,
+        "css_threshold_interval": [
+          436905,
+          436882
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          436905,
+          436881
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            436905,
+            436882
+          ],
+          "24263900734361488": [
+            436905,
+            436882
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 436895,
+            "feasible_interval": [
+              436905,
+              436882
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 436895,
+            "feasible_interval": [
+              436905,
+              436882
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 1310720,
+        "rounding": "nearest",
+        "proposal_gcd": 1,
+        "seconds": 1.0195780000003651,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 1310721,
+        "css_threshold_interval": [
+          436917,
+          436898
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          436917,
+          436897
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            436917,
+            436898
+          ],
+          "24263900734361488": [
+            436917,
+            436898
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 436907,
+            "feasible_interval": [
+              436917,
+              436898
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 436908,
+            "feasible_interval": [
+              436917,
+              436898
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 1310720,
+        "rounding": "ceil",
+        "proposal_gcd": 1,
+        "seconds": 1.0240039000000252,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 1310763,
+        "css_threshold_interval": [
+          436936,
+          436911
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          436936,
+          436910
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            436936,
+            436911
+          ],
+          "24263900734361488": [
+            436936,
+            436911
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 436921,
+            "feasible_interval": [
+              436936,
+              436911
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 436922,
+            "feasible_interval": [
+              436936,
+              436911
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 2621440,
+        "rounding": "floor",
+        "proposal_gcd": 1,
+        "seconds": 2.090893800000231,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 2621404,
+        "css_threshold_interval": [
+          873811,
+          873789
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          873811,
+          873788
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            873811,
+            873789
+          ],
+          "24263900734361488": [
+            873811,
+            873789
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 873802,
+            "feasible_interval": [
+              873811,
+              873789
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 873802,
+            "feasible_interval": [
+              873811,
+              873789
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 2621440,
+        "rounding": "nearest",
+        "proposal_gcd": 1,
+        "seconds": 2.08081570000013,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 2621438,
+        "css_threshold_interval": [
+          873821,
+          873805
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          873821,
+          873804
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            873821,
+            873805
+          ],
+          "24263900734361488": [
+            873821,
+            873805
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 873813,
+            "feasible_interval": [
+              873821,
+              873805
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 873813,
+            "feasible_interval": [
+              873821,
+              873805
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 2621440,
+        "rounding": "ceil",
+        "proposal_gcd": 1,
+        "seconds": 2.1305908999993335,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 2621484,
+        "css_threshold_interval": [
+          873843,
+          873818
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          873843,
+          873817
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            873843,
+            873818
+          ],
+          "24263900734361488": [
+            873843,
+            873818
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 873828,
+            "feasible_interval": [
+              873843,
+              873818
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 873829,
+            "feasible_interval": [
+              873843,
+              873818
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 5242880,
+        "rounding": "floor",
+        "proposal_gcd": 1,
+        "seconds": 4.1365396999999575,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 5242842,
+        "css_threshold_interval": [
+          1747624,
+          1747601
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          1747624,
+          1747600
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            1747624,
+            1747601
+          ],
+          "24263900734361488": [
+            1747624,
+            1747601
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 1747614,
+            "feasible_interval": [
+              1747624,
+              1747601
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 1747615,
+            "feasible_interval": [
+              1747624,
+              1747601
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 5242880,
+        "rounding": "nearest",
+        "proposal_gcd": 1,
+        "seconds": 4.258152400000654,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 5242877,
+        "css_threshold_interval": [
+          1747636,
+          1747617
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          1747636,
+          1747616
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            1747636,
+            1747617
+          ],
+          "24263900734361488": [
+            1747636,
+            1747617
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 1747626,
+            "feasible_interval": [
+              1747636,
+              1747617
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 1747626,
+            "feasible_interval": [
+              1747636,
+              1747617
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 5242880,
+        "rounding": "ceil",
+        "proposal_gcd": 1,
+        "seconds": 4.271646299999702,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 5242922,
+        "css_threshold_interval": [
+          1747654,
+          1747632
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          1747654,
+          1747631
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            1747654,
+            1747632
+          ],
+          "24263900734361488": [
+            1747654,
+            1747632
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 1747641,
+            "feasible_interval": [
+              1747654,
+              1747632
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 1747641,
+            "feasible_interval": [
+              1747654,
+              1747632
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 6553520,
+        "rounding": "floor",
+        "proposal_gcd": 1,
+        "seconds": 5.184728299999733,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 6553476,
+        "css_threshold_interval": [
+          2184501,
+          2184481
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          2184501,
+          2184480
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            2184501,
+            2184481
+          ],
+          "24263900734361488": [
+            2184501,
+            2184481
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 2184492,
+            "feasible_interval": [
+              2184501,
+              2184481
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 2184493,
+            "feasible_interval": [
+              2184501,
+              2184481
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 6553520,
+        "rounding": "nearest",
+        "proposal_gcd": 1,
+        "seconds": 5.300028900000143,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 6553521,
+        "css_threshold_interval": [
+          2184517,
+          2184498
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          2184517,
+          2184497
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            2184517,
+            2184498
+          ],
+          "24263900734361488": [
+            2184517,
+            2184498
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 2184507,
+            "feasible_interval": [
+              2184517,
+              2184498
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 2184508,
+            "feasible_interval": [
+              2184517,
+              2184498
+            ],
+            "preserved": false
+          }
+        ]
+      },
+      {
+        "target_sum": 6553520,
+        "rounding": "ceil",
+        "proposal_gcd": 1,
+        "seconds": 5.34935250000035,
+        "method": "exact-min-max-dp",
+        "backend": "numpy-int64",
+        "candidate_sum": 6553556,
+        "css_threshold_interval": [
+          2184532,
+          2184510
+        ],
+        "css_threshold": null,
+        "strong_threshold_interval": [
+          2184532,
+          2184509
+        ],
+        "strong_threshold": null,
+        "cutoff_intervals": {
+          "24263900734361487": [
+            2184532,
+            2184510
+          ],
+          "24263900734361488": [
+            2184532,
+            2184510
+          ]
+        },
+        "ratio_checks": [
+          {
+            "predicate": "at_least_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 2184519,
+            "feasible_interval": [
+              2184532,
+              2184510
+            ],
+            "preserved": false
+          },
+          {
+            "predicate": "strictly_more_than_one_third",
+            "old_cutoff": "24263900734361487",
+            "new_cutoff": 2184519,
+            "feasible_interval": [
+              2184532,
+              2184510
+            ],
+            "preserved": false
+          }
+        ]
+      }
+    ],
+    "seconds": 40.55591090000053,
+    "meaning_of_failure": "No certified improvement in this proposal family and budget; not impossibility"
+  }
+]

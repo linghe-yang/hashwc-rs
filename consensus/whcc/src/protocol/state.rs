@@ -314,6 +314,9 @@ impl State {
         };
         let (mut public, shares) =
             ax::generate(&self.setup, &self.dealers[self.id].context, &opening)?;
+        if self.behavior == crate::Behavior::InvalidCorrections {
+            anyhow::ensure!(!public.base.corrections.is_empty(), "CSS correction fixture needs OR gates");
+        }
         self.behavior.corrupt_public(&mut public);
         self.start_material(list, public, shares)
     }

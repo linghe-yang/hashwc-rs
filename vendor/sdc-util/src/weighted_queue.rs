@@ -80,6 +80,12 @@ pub(super) struct Queue {
     inner: Mutex<Inner>,
     ready: Notify,
 }
+
+pub(super) enum QueueRead {
+    Message(Arc<Vec<u8>>),
+    Empty,
+    Closed,
+}
 impl Queue {
     pub fn push(&self, bytes: Arc<Vec<u8>>) -> io::Result<()> {
         let mut q = self.inner.lock().unwrap();
@@ -108,17 +114,14 @@ impl Queue {
         self.ready.notify_one();
         Ok(())
     }
-    pub fn try_pop(&self) -> io::Result<Option<Arc<Vec<u8>>>> {
+    pub fn try_pop(&self) -> io::Result<QueueRead> {
         let mut q = self.inner.lock().unwrap();
         if q.closed {
-            return Err(io::Error::new(
-                io::ErrorKind::BrokenPipe,
-                "weighted sender stopped",
-            ));
+            return Ok(QueueRead::Closed);
         }
         if let Some(b) = q.memory.pop_front() {
             q.bytes -= b.len();
-            return Ok(Some(b));
+            return Ok(QueueRead::Message(b));
         }
         if let Some(s) = q.spill.as_mut() {
             if s.read < s.write {
@@ -133,10 +136,10 @@ impl Queue {
                     s.read = 0;
                     s.write = 0;
                 }
-                return Ok(Some(Arc::new(b)));
+                return Ok(QueueRead::Message(Arc::new(b)));
             }
         }
-        Ok(None)
+        Ok(QueueRead::Empty)
     }
     pub fn close(&self) {
         let mut q = self.inner.lock().unwrap();
@@ -147,13 +150,14 @@ impl Queue {
         drop(q);
         self.ready.notify_one();
     }
-    pub async fn pop(&self) -> io::Result<Arc<Vec<u8>>> {
+    pub async fn pop(&self) -> io::Result<Option<Arc<Vec<u8>>>> {
         loop {
             let ready = self.ready.notified();
-            if let Some(b) = self.try_pop()? {
-                return Ok(b);
+            match self.try_pop()? {
+                QueueRead::Message(b) => return Ok(Some(b)),
+                QueueRead::Closed => return Ok(None),
+                QueueRead::Empty => ready.await,
             }
-            ready.await;
         }
     }
 }
@@ -174,9 +178,9 @@ mod tests {
             assert!(inner.spill.as_ref().unwrap().write > 0);
         }
         for i in 0u32..200 {
-            assert_eq!(&q.pop().await.unwrap()[..4], &i.to_le_bytes());
+            assert_eq!(&q.pop().await.unwrap().unwrap()[..4], &i.to_le_bytes());
         }
-        assert!(q.try_pop().unwrap().is_none());
+        assert!(matches!(q.try_pop().unwrap(), QueueRead::Empty));
         let inner = q.inner.lock().unwrap();
         assert_eq!(
             inner.spill.as_ref().unwrap().file.metadata().unwrap().len(),

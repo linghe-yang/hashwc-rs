@@ -16,16 +16,32 @@ from common import MODULE, ROOT, digest, execution_environment, make_config, sav
 from analyze import analyze_run, network_signature
 
 
+class SSHTransportError(RuntimeError):
+    """The SSH connection failed during a remote operation."""
+
+
 async def command(*args, timeout=180):
-    p = await asyncio.create_subprocess_exec(*map(str, args), stdout=asyncio.subprocess.PIPE)
+    p = await asyncio.create_subprocess_exec(*map(str, args), stdout=asyncio.subprocess.PIPE,
+                                             stderr=asyncio.subprocess.PIPE)
     try:
-        out, _ = await asyncio.wait_for(p.communicate(), timeout)
+        out, err = await asyncio.wait_for(p.communicate(), timeout)
+    except TimeoutError as exc:
+        if args[0] in ("ssh","scp"):
+            raise SSHTransportError(f"{args[0]} timed out") from exc
+        raise
     finally:
         if p.returncode is None:
             p.kill()
             await p.wait()
     if p.returncode:
-        raise RuntimeError(f"{args[0]} failed ({p.returncode}): {str(args[-1])[:160]}")
+        detail = err.decode(errors="replace").strip()
+        connection = re.search(r"connection (?:reset|closed|refused|timed out)|broken pipe|banner exchange|"
+                               r"no route to host|network is unreachable|lost connection|connection to .* closed", detail, re.I)
+        identity = re.search(r"permission denied|host key verification failed|remote host identification has changed|"
+                             r"bad permissions|no such identity|could not resolve hostname",detail,re.I)
+        if args[0] in ("ssh","scp") and not identity and (connection or (p.returncode==255 and not detail)):
+            raise SSHTransportError(f"{args[0]} transport failed: {detail}")
+        raise RuntimeError(f"{args[0]} failed ({p.returncode}): {detail[:500]}")
     return out.decode().strip()
 
 
@@ -57,6 +73,36 @@ async def before_upload(hosts):
     failed = await ssh_failures(hosts)
     if failed:
         raise RuntimeError(f"SSH pre-upload check failed for slots {failed}")
+
+
+ENA_COUNTERS = ("bw_in_allowance_exceeded", "bw_out_allowance_exceeded", "pps_allowance_exceeded")
+ENA_PROBE = """set -e
+for dev in /sys/class/net/*; do
+    driver=$(readlink "$dev/device/driver") || continue
+    [ "${driver##*/}" = ena ] || continue
+    printf 'interface %s\n' "${dev##*/}"
+    ethtool -S "${dev##*/}" || exit 1
+done"""
+
+
+async def ena_snapshot(host):
+    try:
+        async with asyncio.timeout(15):
+            raw = await host.shell(ENA_PROBE)
+        interfaces = {}
+        for line in raw.splitlines():
+            if line.startswith("interface "):
+                current = {}
+                interfaces[line.split(maxsplit=1)[1]] = current
+            else:
+                key, sep, value = line.strip().partition(":")
+                if sep and key in ENA_COUNTERS:
+                    current[key] = int(value)
+        if not interfaces:
+            return {"error": "no ENA interface found"}
+        return {"interfaces": interfaces}
+    except (OSError, RuntimeError, TimeoutError, ValueError) as exc:
+        return {"error": repr(exc)}
 
 
 class Host:
@@ -91,8 +137,63 @@ async def deploy(host, driver, sha):
     await host.shell(f"echo '{sha}  {tmp}' | sha256sum -c - >/dev/null && chmod 700 {tmp} && {tmp} --help >/dev/null && mv {tmp} {dest}")
 
 
+def formal_record(record):
+    """Keep evidence used by the analyzer and protocol/transport error diagnostics."""
+    event = record.get("event", {})
+    if event.get("kind") in ("shared", "gathered", "public_delivered", "token_released",
+                             "seed_release", "seed_opened", "committee"):
+        return None
+    if event.get("kind") == "terminal_checked" and event.get("accepted") is True:
+        return None
+    if event.get("kind") == "reconstructed":
+        event.pop("value", None)
+    resources = record.get("resources")
+    if resources:
+        for counters in resources["network"].values():
+            for field in list(counters):
+                if field.startswith(("io_", "ack_read_", "ack_write_", "receive_")) and field not in (
+                    "io_disconnects", "receive_backpressure_waits", "receive_backpressure_ns",
+                ):
+                    del counters[field]
+            counters.pop("ack_sent_bytes", None)
+            counters.pop("ack_received_bytes", None)
+    return record
+
+
+LOG_ERROR = re.compile(r'\b(?:ERROR|FATAL|PANIC)\b|^(?i:error|fatal)\s*:|\bpanicked at\b|out of memory|oom-kill')
+
+
+def worker_command(remote, invoke, flag, nofile=None):
+    # Mirror stderr to the SSH channel while retaining the original worker file.
+    if nofile is not None:
+        if type(nofile) is not int or nofile <= 0:
+            raise ValueError("invalid worker nofile soft limit")
+        # exec preserves the pipeline child's PID across env and driver exec.
+        invoke = f"(ulimit -Sn {nofile} && echo \"$BASHPID\" >worker.pid && exec {invoke}{flag})"
+        flag = ""
+    return f"cd {remote} && {invoke}{flag} 2> >(tee stderr.log >&2) | tee stdout.jsonl"
+
+
+async def worker_nofile(host, folder, sha, requested):
+    probe = r"""import json, os, pathlib, re, sys
+folder, sha = sys.argv[1:]
+pid = int((pathlib.Path(folder)/'worker.pid').read_text())
+p = pathlib.Path('/proc')/str(pid)
+if not os.path.samefile(p/'exe', pathlib.Path.home()/'.hashwc/bin'/sha):
+    raise RuntimeError('PID does not match the benchmark executable')
+m = re.search(r'^Max open files\s+(\d+)\s+(\d+|unlimited)\s+', (p/'limits').read_text(), re.M)
+print(json.dumps(dict(pid=pid, soft=int(m[1]), hard=m[2])))"""
+    result = json.loads(await host.shell(shlex.join(["python3","-c",probe,folder,sha])))
+    if result["soft"] != requested:
+        raise RuntimeError(f"worker {host.ip} RLIMIT_NOFILE {result['soft']}, expected {requested}")
+    return result
+
+
 async def experiment(args, hosts, case, settings, sha, directory):
     n = case["n"]
+    mode = settings.get("log_mode", "formal")
+    if mode not in ("formal", "debug"):
+        raise ValueError(f"unknown log mode: {mode}")
     directory.mkdir(mode=0o700, parents=True, exist_ok=False)
     tag = uuid.uuid4().hex
     remote = f".hashwc/runs/{tag}"
@@ -101,6 +202,11 @@ async def experiment(args, hosts, case, settings, sha, directory):
     save(directory / "parameters.json", case["parameters"])
     save(directory / "execution.json", settings["execution"])
     w, threshold = validate_input(case)
+    faulty = set(case.get("faulty_dealers", []))
+    if faulty or case.get("dealer_fault"):
+        if (case.get("dealer_fault") != "css-corrections" or case["protocol"] not in ("warmup", "whcc")
+                or not faulty or not faulty <= set(range(n)) or sum(w[i] for i in faulty) >= threshold):
+            raise ValueError("invalid CSS benchmark committee")
     make_config(args.generator.resolve(), directory / "config", w, threshold, args.port)
     async def prepare(i, h):
         cfg = directory / f"config/node-{i}.json"
@@ -113,18 +219,21 @@ async def experiment(args, hosts, case, settings, sha, directory):
     await before_upload(hosts)
     await parallel(prepare(i, h) for i, h in enumerate(hosts))
     env = execution_environment(settings)
-    env.update(TOKIO_WORKER_THREADS=str(settings["tokio_workers"]), COIN_PROFILE="0", RUST_LOG="warn")
+    env.update(TOKIO_WORKER_THREADS=str(settings["tokio_workers"]), COIN_PROFILE="0",
+               COIN_LOG_MODE=mode, RUST_LOG="debug" if mode == "debug" else "warn")
     if settings.get("bulk_audit"):
         env["COIN_BULK_AUDIT"] = "1"
     invoke = shlex.join(["env", *(f"{k}={v}" for k,v in env.items()), f"../../bin/{sha}",
                          "--protocol", MODULE[case["protocol"]], "--config", "node.json",
                          "--parameters", "parameters.json"])
-    script = f"cd {remote} && {invoke} 2>stderr.log | tee stdout.jsonl"
     procs, readers, counts = {}, [], [0]*n
     queue = asyncio.Queue()
+    active = asyncio.current_task()
+    monitoring = True
+    log_error = None
     origin = time.monotonic_ns()
     now = lambda: time.monotonic_ns() - origin
-    control = dict(error=None, quiet_required_s=settings["quiet_seconds"], quiet_observed_s=0,
+    control = dict(error=None, phase="prepare", log_mode=mode, quiet_required_s=settings["quiet_seconds"], quiet_observed_s=0,
                    sampled_peak_aggregate_rss_kib=None, returncodes={})
     async def read(i, proc):
         try:
@@ -133,19 +242,36 @@ async def experiment(args, hosts, case, settings, sha, directory):
                     event = json.loads(line)
                     if event.get("party") != i:
                         raise ValueError("wrong party")
-                    event.update(observer_ns=now(), sequence=counts[i])
+                    observed = now()
+                    if mode == "formal" and formal_record(event) is None:
+                        continue
+                    event.update(observer_ns=observed, sequence=counts[i])
                     counts[i] += 1
-                    log.write(json.dumps(event) + "\n")
+                    log.write(json.dumps(event, separators=(",", ":")) + "\n")
                     await queue.put((i,event))
         except Exception as exc:
             await queue.put((i,dict(kind="failure",reason=str(exc))))
         finally:
             await queue.put((i,dict(kind="exit")))
+    async def watch_stderr(i, proc):
+        nonlocal log_error
+        # Drain even after the first error so worker shutdown cannot block.
+        while line := await proc.stderr.readline():
+            message = line.decode(errors="replace").strip()
+            if log_error is None and LOG_ERROR.search(message):
+                log_error = f"party {i} stderr: {message[:1000]}"
+                if monitoring:
+                    active.cancel()
+
     async def launch(i, h):
+        flag = " --css-benchmark-dealer" if i in faulty else ""
+        script = worker_command(remote, invoke, flag, settings.get("worker_nofile_soft"))
         proc = await asyncio.create_subprocess_exec(*h.ssh, "bash -o pipefail -c " + shlex.quote(script),
-                    stdin=asyncio.subprocess.PIPE, stdout=asyncio.subprocess.PIPE, limit=4*1024**2)
+                    stdin=asyncio.subprocess.PIPE, stdout=asyncio.subprocess.PIPE,
+                    stderr=asyncio.subprocess.PIPE, limit=4*1024**2)
         procs[i] = proc
         readers.append(asyncio.create_task(read(i,proc)))
+        readers.append(asyncio.create_task(watch_stderr(i,proc)))
     async def send(msg):
         for p in procs.values():
             p.stdin.write((msg+"\n").encode())
@@ -166,7 +292,14 @@ async def experiment(args, hosts, case, settings, sha, directory):
         async with asyncio.timeout(settings["prepare_timeout_s"]):
             await parallel(launch(i,h) for i,h in enumerate(hosts))
             await collect("ready")
+            if "worker_nofile_soft" in settings:
+                target = settings["worker_nofile_soft"]
+                control["worker_nofile_requested"] = target
+                control["worker_nofile_before_start"] = await parallel(
+                    worker_nofile(h, remote, sha, target) for h in hosts)
+        control["ena_before_start"] = await parallel(ena_snapshot(h) for h in hosts)
         control["start_ns"]=now()
+        control["phase"]="send_start"
         async with asyncio.timeout(settings["coin_timeout_s"]):
             await send("start")
             control["phase"]="await_outputs"
@@ -179,7 +312,7 @@ async def experiment(args, hosts, case, settings, sha, directory):
             while True:
                 await send("sample")
                 samples=await collect("sample")
-                signature,eligible=network_signature(samples)
+                signature,eligible=network_signature(samples, faulty)
                 if eligible:
                     if previous!=signature:
                         control["service_start_ns"]=now()
@@ -189,13 +322,17 @@ async def experiment(args, hosts, case, settings, sha, directory):
                         break
                 previous=signature if eligible else None
                 await asyncio.sleep(settings["drain_sample_seconds"])
+        control["phase"]="shutdown"
         async with asyncio.timeout(settings["shutdown_timeout_s"]):
             await send("stop")
             await asyncio.gather(*(p.wait() for p in procs.values()))
     except BaseException as exc:
-        control["error"]=repr(exc)
+        control["error"]=log_error or repr(exc)
+        if log_error:
+            raise RuntimeError(log_error) from exc
         raise
     finally:
+        monitoring = False
         for p in procs.values():
             p.stdin.close()
         try:
@@ -206,17 +343,31 @@ async def experiment(args, hosts, case, settings, sha, directory):
                     p.kill()
             await asyncio.gather(*(p.wait() for p in procs.values()))
         await asyncio.gather(*readers)
+        if log_error:
+            control["error"] = log_error
         control["returncodes"]={str(i):p.returncode for i,p in procs.items()}
+        if "ena_before_start" in control:
+            control["ena_after_stop"] = await parallel(ena_snapshot(h) for h in hosts)
         save(directory/"control.json",control)
-        await fetch(directory, hosts, remote)
-    result=analyze_run(directory,case)
+        failed = control["error"] is not None or any(control["returncodes"].values())
+        if not getattr(args, "local_log_collection", False):
+            await fetch(directory, hosts, remote, stdout=mode == "debug" or failed)
+    if log_error:
+        raise RuntimeError(log_error)
+    try:
+        result=analyze_run(directory,case)
+    except Exception:
+        if mode == "formal" and not failed and not getattr(args, "local_log_collection", False):
+            await fetch(directory, hosts, remote)
+        raise
     result["max_node_elapsed_to_output_ms"]=max(e["elapsed_us"] for e in outputs.values())/1000
     result["latency_scope"]="latency_all_ms includes controller SSH start and observation delay"
     save(directory/"result.json",result)
-    await cleanup(hosts,remote)
+    if not getattr(args, "local_log_collection", False):
+        await cleanup(hosts,remote)
 
 
-async def fetch(directory, hosts, remote):
+async def fetch(directory, hosts, remote, stdout=True):
     async def one(i,h,name):
         src=f"{remote}/{name}"
         dst=directory/f"remote-{i}-{name}"
@@ -238,13 +389,14 @@ async def fetch(directory, hosts, remote):
                 if attempt==5:
                     raise RuntimeError(f"could not verify {src} at slot {i}") from exc
                 await asyncio.sleep(2**(attempt-1))
-    await parallel(one(i,h,name) for i,h in enumerate(hosts) for name in ("stdout.jsonl","stderr.log"))
+    names = ("stdout.jsonl", "stderr.log") if stdout else ("stderr.log",)
+    await parallel(one(i,h,name) for i,h in enumerate(hosts) for name in names)
 
 
 async def cleanup(hosts,remote):
     if not re.fullmatch(r"\.hashwc/runs/[0-9a-f]{32}",remote):
         raise ValueError("unexpected remote path")
-    await parallel(h.shell(f"rm -f {remote}/stdout.jsonl {remote}/stderr.log {remote}/node.json {remote}/parameters.json && rmdir {remote}") for h in hosts)
+    await parallel(h.shell(f"rm -f {remote}/stdout.jsonl {remote}/stderr.log {remote}/node.json {remote}/parameters.json {remote}/worker.pid && rmdir {remote}") for h in hosts)
 
 
 async def main(args):
@@ -265,6 +417,8 @@ async def main(args):
         await parallel(deploy(h,args.driver,sha) for h in hosts)
         return
     plan=json.loads(args.plan.read_text())
+    if args.debug_logs:
+        plan["settings"]["log_mode"] = "debug"
     cases=[c for c in plan["configurations"] if c["protocol"]==args.protocol and c["case_id"]==args.case]
     if len(cases)!=1 or cases[0]["preflight_status"]!="ready":
         raise ValueError("case missing, ambiguous or skipped by frozen preflight")
@@ -290,6 +444,7 @@ if __name__=="__main__":
     parser.add_argument("--protocol",choices=MODULE)
     parser.add_argument("--out",type=Path)
     parser.add_argument("--repeat",type=int,default=1)
+    parser.add_argument("--debug-logs", action="store_true", help="retain verbose worker logs")
     args=parser.parse_args()
     if args.action=="run" and not all((args.plan,args.case,args.protocol,args.out)):
         parser.error("run requires --plan --case --protocol --out")

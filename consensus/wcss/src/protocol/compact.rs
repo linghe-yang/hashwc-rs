@@ -17,6 +17,10 @@ impl Public {
     pub fn byte_len(&self) -> usize {
         self.inner.byte_len()
     }
+    /// Mutable OR corrections in the same gate order as the certified representation.
+    pub fn corrections_mut(&mut self) -> &mut [Block] {
+        &mut self.inner.corrections
+    }
     pub fn valid_shape(&self, setup: &Setup) -> bool {
         sharing::valid_shape(setup, &self.inner, false)
     }

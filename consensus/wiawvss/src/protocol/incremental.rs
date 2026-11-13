@@ -115,10 +115,20 @@ impl IncrementalRecovery {
                 )?);
             }
         }
-        self.terminal
-            .as_ref()
-            .map(|t| certified::certify(setup, codec, header, &self.file, t.clone()))
-            .transpose()
+        let Some(terminal) = self.terminal.as_ref() else {
+            return Ok(None);
+        };
+        // Isolate building the authenticated evidence after fault detection.
+        let start = (matches!(terminal, Terminal::ModuleFault { .. })
+            && sdc_util::observation::bulk_audit::enabled())
+            .then(std::time::Instant::now);
+        let cert = certified::certify(setup, codec, header, &self.file, terminal.clone())?;
+        if let Some(start) = start {
+            sdc_util::observation::bulk_audit::add(
+                context.instance.dealer, "module_generate_ns", start.elapsed().as_nanos() as usize,
+            );
+        }
+        Ok(Some(cert))
     }
 }
 

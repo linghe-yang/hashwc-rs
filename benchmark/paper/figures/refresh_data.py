@@ -1,4 +1,5 @@
-"""Refresh the inline PGFPlots tables from the archived Paris benchmark."""
+"""Refresh all six WAN panels from the archived measurements."""
+import argparse
 import csv
 import hashlib
 import json
@@ -43,6 +44,9 @@ def freeze_at_last_output(row, digest):
     return elapsed[last]["frozen"] / 1e6
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--out", type=Path, default=HERE / "coin-comparison.tex")
+    out = parser.parse_args().out
     with (RESULTS / "measurements.csv").open() as source:
         rows = list(csv.DictReader(source))
     sha = {r["job"]: r["archive_sha256"] for r in json.loads((RESULTS / "verified.json").read_text())["logs"]}
@@ -80,7 +84,21 @@ def main():
     original = figure.read_text(encoding="utf-8")
     prefix, rest = original.split("% BEGIN MEASUREMENTS\n")
     _, suffix = rest.split("% END MEASUREMENTS")
-    figure.write_text(prefix+"% BEGIN MEASUREMENTS\n"+"\n".join(tables)+"\n% END MEASUREMENTS"+suffix,encoding="utf-8")
+    with (RESULTS / "faulty/path-summary.csv").open(newline="") as stream:
+        faulty = list(csv.DictReader(stream))
+    if [int(r["n"]) for r in faulty] != [32, 48, 64, 80]:
+        raise ValueError("incomplete faulty-dealer measurements")
+    lines = ["n pvrMiB rbcMiB pvrSec rbcSec"]
+    for r in faulty:
+        lines.append(f"{r['n']} {float(r['pvr_sampling_mib']):.8f} "
+                     f"{float(r['rbc_full_mib']):.8f} {float(r['pvr_sampling_s']):.6f} "
+                     f"{float(r['rbc_full_s']):.6f}")
+    marker = "}\\faultypaths"
+    old_faulty, tail = suffix.split(marker)
+    lead, _ = old_faulty.split("\\pgfplotstableread{\n")
+    suffix = lead + "\\pgfplotstableread{\n" + "\n".join(lines) + "\n" + marker + tail
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(prefix+"% BEGIN MEASUREMENTS\n"+"\n".join(tables)+"\n% END MEASUREMENTS"+suffix,encoding="utf-8")
 
 if __name__ == "__main__":
     main()

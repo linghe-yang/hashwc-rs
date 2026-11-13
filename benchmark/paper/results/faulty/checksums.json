@@ -1,0 +1,10 @@
+{
+  "aptos-n32--whcc-r1": "4ff7c9580d54a0f3379b568f104235cf33f8f6e11e562f1dc750c70a7fc96a05",
+  "aptos-n32--warmup-r1": "68411305dfd77cd76c300616b528fe8edc04d520e9413839e0c8c0c6879df457",
+  "aptos-n48--whcc-r1": "fbabf7afe89b97eb2c9c5b7dc8ba1f8b6e1ba65d1cba63f074e2b4782424f5be",
+  "aptos-n48--warmup-r1": "e4ed84abcbe810a4200bf639ded11328819fc250bb733c5886401dd9840e6d6d",
+  "aptos-n64--whcc-r1": "3be27045ba39458156f257da991bbd0e6d6b8c9fdf152ac7f5ea4eb17fe5357a",
+  "aptos-n64--warmup-r1": "6d9e763b2e0b9c2dbd21a11c17398bd19739699a4821b86b780e5894ad257cce",
+  "aptos-n80--whcc-r1": "7e68469bed51ce3c93036206b77eee83f1357921e6aa18f7f67bb802a4c02b33",
+  "aptos-n80--warmup-r1": "9018e2dba6977d78cd667de92d71b3eb6c10057fd7b56eff5574bfa64e52d97e"
+}
