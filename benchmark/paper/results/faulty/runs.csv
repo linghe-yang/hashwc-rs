@@ -1,0 +1,17 @@
+n,protocol,round,honest,path_mib_per_honest,max_honest_recovery_s,reject_mib_per_honest,archive
+32,whcc,1,14,37.846492767333984,1.140296,11.681103842599052,aptos-n32--whcc-r1/cloud-logs.tar.gz
+32,whcc,2,14,38.106966154915945,1.154169,11.837936128888812,aptos-n32--whcc-r2/cloud-logs.tar.gz
+32,warmup,1,14,33.7774441582816,1.044773,0.0,aptos-n32--warmup-r1/cloud-logs.tar.gz
+32,warmup,2,14,33.7774441582816,1.0637070000000002,0.0,aptos-n32--warmup-r2/cloud-logs.tar.gz
+48,whcc,1,22,92.30470783060247,3.424742,35.874567552046344,aptos-n48--whcc-r1/cloud-logs.tar.gz
+48,whcc,2,22,93.41713458841497,2.921851,37.27365493774414,aptos-n48--whcc-r2/cloud-logs.tar.gz
+48,warmup,1,22,87.0073938369751,2.6689589999999996,0.0,aptos-n48--warmup-r1/cloud-logs.tar.gz
+48,warmup,2,22,87.0073938369751,2.595864,0.0,aptos-n48--warmup-r2/cloud-logs.tar.gz
+64,whcc,1,29,177.7804649944963,6.3210299999999995,76.51786107030408,aptos-n64--whcc-r1/cloud-logs.tar.gz
+64,whcc,2,29,177.9192612746666,6.157470999999999,76.94156396800074,aptos-n64--whcc-r2/cloud-logs.tar.gz
+64,warmup,1,29,187.2628268208997,5.5732,0.0,aptos-n64--warmup-r1/cloud-logs.tar.gz
+64,warmup,2,29,187.2628268208997,5.440357,0.0,aptos-n64--warmup-r2/cloud-logs.tar.gz
+80,whcc,1,34,301.38298618092256,14.799653000000001,146.1123932389652,aptos-n80--whcc-r1/cloud-logs.tar.gz
+80,whcc,2,34,301.86877461040723,13.751154,147.14157901090735,aptos-n80--whcc-r2/cloud-logs.tar.gz
+80,warmup,1,34,334.18086169747744,8.839413,0.0,aptos-n80--warmup-r1/cloud-logs.tar.gz
+80,warmup,2,34,334.18086169747744,8.361006,0.0,aptos-n80--warmup-r2/cloud-logs.tar.gz
