@@ -56,21 +56,7 @@
     </cargoProject>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6529c925-dcb5-4232-b31b-2202f78b18d4" name="更改" comment="whcc">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/benchmark/clean_comparison/analyze.py" beforeDir="false" afterPath="$PROJECT_DIR$/benchmark/clean_comparison/analyze.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/benchmark/paper/figures/aptos-paired.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/benchmark/paper/figures/aptos-paired.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/benchmark/paper/figures/aptos-paired.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/benchmark/paper/figures/coin-comparison.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/benchmark/paper/figures/sui-paired.pdf" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/benchmark/paper/figures/sui-paired.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/benchmark/paper/figures/sui-paired.svg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/sdc-util/src/weighted.rs" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/sdc-util/src/weighted.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/sdc-util/src/weighted_queue.rs" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/sdc-util/src/weighted_queue.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/sdc-util/src/weighted_sender.rs" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/sdc-util/src/weighted_sender.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/sdc-util/src/weighted_tests.rs" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/sdc-util/src/weighted_tests.rs" afterDir="false" />
-    </list>
+    <list default="true" id="6529c925-dcb5-4232-b31b-2202f78b18d4" name="更改" comment="faulty dealers" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -242,6 +228,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="whcc" />
-    <option name="LAST_COMMIT_MESSAGE" value="whcc" />
+    <MESSAGE value="faulty dealers" />
+    <option name="LAST_COMMIT_MESSAGE" value="faulty dealers" />
   </component>
 </project>

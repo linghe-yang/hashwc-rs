@@ -51,15 +51,14 @@ n sent senterr lat laterr shared sharederr pre preerr
 }\aptoswhcc
 % END MEASUREMENTS
 \pgfplotstableread{
-n  pvrMiB       rbcMiB       pvrSec     rbcSec
-32  37.84649277  33.77744416  1.140296   1.044773
-48  92.30470783  87.00739384  3.424742   2.668959
-64 177.78046499 187.26282682  6.321030   5.573200
-80 301.38298618 334.18086170 14.799653   8.839413
+n pvrMiB pvrMiBerr rbcMiB rbcMiBerr pvrSec pvrSecerr rbcSec rbcSecerr
+32 37.97672946 0.13023669 33.77744416 0.00000000 1.14723250 0.00693650 1.05424000 0.00946700
+48 92.86092121 0.55621338 87.00739384 0.00000000 3.17329650 0.25144550 2.63241150 0.03654750
+64 177.84986313 0.06939814 187.26282682 0.00000000 6.23925050 0.08177950 5.50677850 0.06642150
+80 301.62588040 0.24289421 334.18086170 0.00000000 14.27540350 0.52424950 8.60020950 0.23920350
 }\faultypaths
 \pgfplotsset{
   faulty axis/.style={xmin=28,xmax=84,xtick={32,48,64,80}},
-  path line/.style={line width=.95pt,mark size=2pt},
 }
 \newcommand{\series}[3]{%
   \addplot+[run pair,#1,forget plot] table[x=n,y=#2,y error=#2err]{#3};}
@@ -99,8 +98,8 @@ n  pvrMiB       rbcMiB       pvrSec     rbcSec
   \basekey{Shared control}
 \nextgroupplot[faulty axis,title={Aptos recovery (faulty dealers)},xticklabels=\empty,
                ylabel={MiB / honest party},ymin=0,ymax=360,ytick={0,100,200,300}]
-  \addplot[path line,whcc line] table[x=n,y=pvrMiB]{\faultypaths};
-  \addplot[path line,warm line] table[x=n,y=rbcMiB]{\faultypaths};
+  \series{whcc line}{pvrMiB}{\faultypaths}
+  \series{warm line}{rbcMiB}{\faultypaths}
 \nextgroupplot[ylabel={Latency (s)},ymode=log,ymin=2,ymax=240,
                ytick={3,10,30,100,180},yticklabels={3,10,30,100,180},minor y tick num=0]
   \series{hr line}{lat}{\suihr}
@@ -113,8 +112,8 @@ n  pvrMiB       rbcMiB       pvrSec     rbcSec
   \stackpairbar{warm}{1.6}{lat}{pre}{warm!65}{basefill}{\aptoswarm}
   \basekey{Start to Freeze}
 \nextgroupplot[faulty axis,ylabel={Recovery time (s)},ymin=0,ymax=16,ytick={0,4,8,12,16}]
-  \addplot[path line,whcc line] table[x=n,y=pvrSec]{\faultypaths};
-  \addplot[path line,warm line] table[x=n,y=rbcSec]{\faultypaths};
+  \series{whcc line}{pvrSec}{\faultypaths}
+  \series{warm line}{rbcSec}{\faultypaths}
 \end{groupplot}
 \node[anchor=north] at ($(group c2r2.south)+(0,-4.6mm)$) {Parties};
 \foreach \pos/\style/\label in {.15/whcc line/{WHCC (PVR + sampling)},

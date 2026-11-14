@@ -4,6 +4,12 @@ This Rust workspace implements WHCC, the CSS-HashCoin warm-up, and a single-outp
 
 [Paper results, raw logs, figures and reproduction instructions](benchmark/paper/README.md) cover both Linux loopback and the five-region AWS experiment. The published figure is available as a [PDF](benchmark/paper/figures/coin-comparison.pdf).
 
+| Dataset | Individual runs | Figure data |
+| --- | --- | --- |
+| Honest dealers, full coin (§9.2) | [Measurements](benchmark/paper/results/measurements.csv) | [Paired means](benchmark/paper/results/paired-summary.csv) |
+| Faulty dealers, recovery only (§9.3) | [16 runs and their raw log paths](benchmark/paper/results/faulty/runs.csv) | [Two-run means and ranges](benchmark/paper/results/faulty/path-summary.csv) |
+| Recovery quotas (§7) | [Source snapshot](benchmark/paper/data/aptos/manifest.json) | [Quota table](benchmark/paper/results/sampling-quota.csv) |
+
 Build the two experiment binaries from the repository root on Linux:
 
 ```sh

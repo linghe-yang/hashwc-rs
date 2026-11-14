@@ -88,11 +88,16 @@ def main():
         faulty = list(csv.DictReader(stream))
     if [int(r["n"]) for r in faulty] != [32, 48, 64, 80]:
         raise ValueError("incomplete faulty-dealer measurements")
-    lines = ["n pvrMiB rbcMiB pvrSec rbcSec"]
+    fields = [("pvrMiB", "pvr_sampling_mib"), ("rbcMiB", "rbc_full_mib"),
+              ("pvrSec", "pvr_sampling_s"), ("rbcSec", "rbc_full_s")]
+    lines = ["n " + " ".join(f"{label} {label}err" for label, _ in fields)]
     for r in faulty:
-        lines.append(f"{r['n']} {float(r['pvr_sampling_mib']):.8f} "
-                     f"{float(r['rbc_full_mib']):.8f} {float(r['pvr_sampling_s']):.6f} "
-                     f"{float(r['rbc_full_s']):.6f}")
+        if int(r["runs_per_protocol"]) != 2:
+            raise ValueError("faulty-dealer means require two runs per protocol")
+        cells = [r["n"]]
+        for _, key in fields:
+            cells.extend(f"{float(r[key + suffix]):.8f}" for suffix in ("", "_half_range"))
+        lines.append(" ".join(cells))
     marker = "}\\faultypaths"
     old_faulty, tail = suffix.split(marker)
     lead, _ = old_faulty.split("\\pgfplotstableread{\n")
