@@ -1,8 +1,8 @@
 # Integer-weight threshold overlay
 
 `sdc-types` and `sdc-config` are copied from
-https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols
-at commit `731e0b81166125ea756c5a047ab813ccb8af7111`.
+https://github.com/anonymous/Secure-Distributed-Computing-Protocols
+at commit `anonymous`.
 They are source patches for the upstream packages `types` and `config`.
 Version 0.1.1 distinguishes these local copies from this repository's existing
 packages of the same names. The Cargo Git cache is never modified.

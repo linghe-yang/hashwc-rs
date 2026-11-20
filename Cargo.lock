@@ -295,7 +295,7 @@ name = "config"
 version = "0.1.1"
 dependencies = [
  "bincode",
- "crypto 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111)",
+ "crypto 0.1.0 (git+https://github.com/anonymous/Secure-Distributed-Computing-Protocols.git?rev=anonymous)",
  "fnv",
  "log",
  "serde",
@@ -358,7 +358,7 @@ dependencies = [
 [[package]]
 name = "crypto"
 version = "0.1.0"
-source = "git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111#731e0b81166125ea756c5a047ab813ccb8af7111"
+source = "git+https://github.com/anonymous/Secure-Distributed-Computing-Protocols.git?rev=anonymous#anonymous"
 dependencies = [
  "aes",
  "aes-gcm",
@@ -628,7 +628,7 @@ dependencies = [
  "clap",
  "config 0.1.0",
  "crypto 0.1.0",
- "crypto 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111)",
+ "crypto 0.1.0 (git+https://github.com/anonymous/Secure-Distributed-Computing-Protocols.git?rev=anonymous)",
  "env_logger",
  "getrandom 0.4.3",
  "log",
@@ -1544,7 +1544,7 @@ dependencies = [
  "base64",
  "bincode",
  "bytes",
- "crypto 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111)",
+ "crypto 0.1.0 (git+https://github.com/anonymous/Secure-Distributed-Computing-Protocols.git?rev=anonymous)",
  "fnv",
  "linked-hash-map",
  "log",
@@ -1588,7 +1588,7 @@ dependencies = [
  "bincode",
  "bytes",
  "config 0.1.1",
- "crypto 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111)",
+ "crypto 0.1.0 (git+https://github.com/anonymous/Secure-Distributed-Computing-Protocols.git?rev=anonymous)",
  "libc",
  "log",
  "serde",
@@ -1619,7 +1619,7 @@ dependencies = [
  "anyhow",
  "bincode",
  "config 0.1.1",
- "crypto 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111)",
+ "crypto 0.1.0 (git+https://github.com/anonymous/Secure-Distributed-Computing-Protocols.git?rev=anonymous)",
  "log",
  "num-bigint 0.2.6",
  "num-traits",
@@ -1637,7 +1637,7 @@ dependencies = [
  "anyhow",
  "bincode",
  "config 0.1.1",
- "crypto 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111)",
+ "crypto 0.1.0 (git+https://github.com/anonymous/Secure-Distributed-Computing-Protocols.git?rev=anonymous)",
  "log",
  "num-bigint 0.2.6",
  "num-traits",
@@ -1661,12 +1661,12 @@ dependencies = [
 [[package]]
 name = "wgather"
 version = "0.1.0"
-source = "git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111#731e0b81166125ea756c5a047ab813ccb8af7111"
+source = "git+https://github.com/anonymous/Secure-Distributed-Computing-Protocols.git?rev=anonymous#anonymous"
 dependencies = [
  "anyhow",
  "bincode",
  "config 0.1.1",
- "crypto 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111)",
+ "crypto 0.1.0 (git+https://github.com/anonymous/Secure-Distributed-Computing-Protocols.git?rev=anonymous)",
  "log",
  "num-bigint 0.2.6",
  "num-traits",
@@ -1766,12 +1766,12 @@ dependencies = [
 [[package]]
 name = "wra"
 version = "0.1.0"
-source = "git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111#731e0b81166125ea756c5a047ab813ccb8af7111"
+source = "git+https://github.com/anonymous/Secure-Distributed-Computing-Protocols.git?rev=anonymous#anonymous"
 dependencies = [
  "anyhow",
  "bincode",
  "config 0.1.1",
- "crypto 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111)",
+ "crypto 0.1.0 (git+https://github.com/anonymous/Secure-Distributed-Computing-Protocols.git?rev=anonymous)",
  "log",
  "num-bigint 0.2.6",
  "num-traits",
@@ -1788,7 +1788,7 @@ dependencies = [
  "anyhow",
  "bincode",
  "config 0.1.1",
- "crypto 0.1.0 (git+https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git?rev=731e0b81166125ea756c5a047ab813ccb8af7111)",
+ "crypto 0.1.0 (git+https://github.com/anonymous/Secure-Distributed-Computing-Protocols.git?rev=anonymous)",
  "log",
  "num-bigint 0.2.6",
  "num-traits",

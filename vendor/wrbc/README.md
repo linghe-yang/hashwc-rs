@@ -1,7 +1,7 @@
 # Local WRBC overlay
 
 Source: `broadcast/wrbc` from
-<https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols/tree/731e0b81166125ea756c5a047ab813ccb8af7111/broadcast/wrbc>.
+<https://github.com/anonymous/Secure-Distributed-Computing-Protocols/tree/anonymous/broadcast/wrbc>.
 Dependencies remain pinned to the same revision, with this workspace's existing
 WAVID/util overlays. Existing constructors retain their original behavior.
 

@@ -1,7 +1,7 @@
 # Measurement-only transport overlay
 
-Source: `https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git`,
-revision `731e0b81166125ea756c5a047ab813ccb8af7111`, crate `util`.
+Source: `https://github.com/anonymous/Secure-Distributed-Computing-Protocols.git`,
+revision `anonymous`, crate `util`.
 
 This local patch adds `weighted::metrics::snapshot()` and atomic socket byte,
 queued-message, and acknowledged-message counters. Counted AsyncRead/AsyncWrite

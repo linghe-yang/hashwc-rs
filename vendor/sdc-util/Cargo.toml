@@ -14,10 +14,10 @@ toml = "0.5"
 bincode = "1"
 tokio = {version = "1.0", features = ["full"]}
 bytes = "1"
-types = { package = "types", git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "731e0b81166125ea756c5a047ab813ccb8af7111" }
+types = { package = "types", git = "https://github.com/anonymous/Secure-Distributed-Computing-Protocols.git", rev = "anonymous" }
 tokio-util = {version="0.6", features= ["full"]}
 log = "*"
-config = { package = "config", git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "731e0b81166125ea756c5a047ab813ccb8af7111" }
-crypto = { package = "crypto", git = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git", rev = "731e0b81166125ea756c5a047ab813ccb8af7111" }
+config = { package = "config", git = "https://github.com/anonymous/Secure-Distributed-Computing-Protocols.git", rev = "anonymous" }
+crypto = { package = "crypto", git = "https://github.com/anonymous/Secure-Distributed-Computing-Protocols.git", rev = "anonymous" }
 anyhow = "1"
 libc = "0.2"

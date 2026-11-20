@@ -1,7 +1,7 @@
 # Weighted BinAA selected-coordinate overlay
 
-Source: linghe-yang/Secure-Distributed-Computing-Protocols,
-revision 731e0b81166125ea756c5a047ab813ccb8af7111, consensus/wbinaa.
+Source: anonymous/Secure-Distributed-Computing-Protocols,
+revision anonymous, consensus/wbinaa.
 
 The existing Start interface and full-vector wire format are unchanged.
 StartSelected / State::start_selected run only agreed physical-dealer

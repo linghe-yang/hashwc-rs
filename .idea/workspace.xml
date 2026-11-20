@@ -56,7 +56,9 @@
     </cargoProject>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6529c925-dcb5-4232-b31b-2202f78b18d4" name="更改" comment="faulty dealers" />
+    <list default="true" id="6529c925-dcb5-4232-b31b-2202f78b18d4" name="更改" comment="faulty dealers2">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -69,13 +71,13 @@
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
     &quot;state&quot;: &quot;OPEN&quot;,
-    &quot;assignee&quot;: &quot;linghe-yang&quot;
+    &quot;assignee&quot;: &quot;anonymous&quot;
   }
 }</component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/linghe-yang/hashwc-rs.git&quot;,
-    &quot;accountId&quot;: &quot;48b5e718-840a-4d9e-b262-a67146157717&quot;
+    &quot;url&quot;: &quot;https://github.com/anonymous/hashwc-rs.git&quot;,
+    &quot;accountId&quot;: &quot;anonymous&quot;
   }
 }</component>
   <component name="MacroExpansionManager">
@@ -229,6 +231,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="whcc" />
     <MESSAGE value="faulty dealers" />
-    <option name="LAST_COMMIT_MESSAGE" value="faulty dealers" />
+    <MESSAGE value="faulty dealers2" />
+    <option name="LAST_COMMIT_MESSAGE" value="faulty dealers2" />
   </component>
 </project>

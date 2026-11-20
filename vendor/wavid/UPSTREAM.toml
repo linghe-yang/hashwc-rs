@@ -1,5 +1,5 @@
-repository = "https://github.com/linghe-yang/Secure-Distributed-Computing-Protocols.git"
-revision = "731e0b81166125ea756c5a047ab813ccb8af7111"
+repository = "https://github.com/anonymous/Secure-Distributed-Computing-Protocols.git"
+revision = "anonymous"
 subdirectory = "dissemination/wavid"
 patch = "single-pass canonical dispersal and selected receipt proofs"
 wire_format_changed = false
